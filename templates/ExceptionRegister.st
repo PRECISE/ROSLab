@@ -1,0 +1,1 @@
+registerEventListener("$dev_inst_name$", PredefinedExceptions.$exception_type$, new $exception_identification$_exceptionEventListener());

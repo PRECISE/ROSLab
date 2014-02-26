@@ -1,0 +1,1 @@
+        self.$port_name$_subscriber_plot = self.ui.inputPlot.plot(self.$port_name$_subscriber_data)
