@@ -1,79 +1,59 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="ROSLab : " />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>ROSLab</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>ROSLab by PRECISE</title>
   </head>
 
   <body>
+    <div id="container">
+      <div class="inner">
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/PRECISE/ROSLab">View on GitHub</a>
-
-          <h1 id="project_title">ROSLab</h1>
-          <h2 id="project_tagline"></h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/PRECISE/ROSLab/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/PRECISE/ROSLab/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+        <header>
+          <h1>ROSLab</h1>
+          <h2>A High-level Programming Language for Robotic Applications</h2>
         </header>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/PRECISE/ROSLab/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/PRECISE/ROSLab/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/PRECISE/ROSLab" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+        <hr>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+        <section id="main_content">
+          <h3>
+<a name="why-was-roslab-developed" class="anchor" href="#why-was-roslab-developed"><span class="octicon octicon-link"></span></a>Why was ROSLab developed?</h3>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>In recent years, we have witnessed an increase in the use of robots for different applications spanning from military to civilian operations. The robotics community has been very active in creating algorithms and theories to optimally navigate single and multiple agents in complex environments. While this growing of capabilities makes robotics more suitable and attractive for everyday applications, experiments become more and more complex and time-consuming. Currently, roboticists need to have a deep knowledge of programming languages such as C, C++, Java, and Python, to name few popular ones, that are often not intuitive and easy to understand and implement, especially for beginner users. To overcame this limitation, we propose a simplified high-level programming language based on blocks and links dragged on a workspace which generates the skeleton code for robotic applications involving different types of robots.</p>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="how-does-it-work" class="anchor" href="#how-does-it-work"><span class="octicon octicon-link"></span></a>How does it work?</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>In order to develop such a high-level programming language that still can guarantee flexibility in terms of implementation, our approach takes advantage of the <a href="http://www.ros.org">Robot Operating System</a>. ROS is an open source meta-operating system that provides a message passing structure between different processes (or nodes) across a network. In our framework, we consider a hierarchical approach in which at the base there is ROS that allows inter-process communication between nodes in a robot and on the top we create a high-level language that interacts with ROS and thus with the real robot. The high-level language can be viewed as an extra layer added to simplify lower level code generation. The developed high-level programming language which we call ROSLab allows: (i) to easily program operations involving aerial and ground vehicles and (ii) to verify several properties about the generated code such as execution time and information flow.</p>
 
 <h3>
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>Nicola Bezzo (<a href="https://github.com/nicbezzo" class="user-mention">@nicbezzo</a>), Junkil Park, Andrew King, Peter Gebhard (<a href="https://github.com/pgebhard" class="user-mention">@pgebhard</a>), Radoslav Ivanov, and Insup Lee </p>
+        </section>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+        <footer>
+          ROSLab is maintained by <a href="https://github.com/PRECISE">PRECISE</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
+        
+      </div>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">ROSLab maintained by <a href="https://github.com/PRECISE">PRECISE</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
   </body>
 </html>
