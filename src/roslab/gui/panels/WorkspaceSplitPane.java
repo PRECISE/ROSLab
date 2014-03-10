@@ -1417,7 +1417,6 @@ public class WorkspaceSplitPane extends JSplitPane {
 						"<review status=\"unreviewed\" notes=\"\"/>\n" +
 						"<url>http://ros.org/wiki/" + inst + "</url>\n" +
 						"<depend package=\"roscpp\"/>\n" +
-						"<depend package=\"quadrotor_msgs\"/>\n" +
 						"<depend package=\"sensor_msgs\"/>\n"+
 						"<depend package=\"geometry_msgs\"/>\n"+
 						//"<depend package=\"nav_msgs\"/>\n"+
