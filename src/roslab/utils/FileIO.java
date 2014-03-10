@@ -26,7 +26,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+import roslab.artifacts.ModuleSpec;
 import roslab.artifacts.UserSettings;
 import roslab.artifacts.WorkspaceSpec;
 import roslab.gui.misc.FileConstants;
@@ -34,6 +37,9 @@ import roslab.gui.misc.FileConstants;
 
 //import mdcf.core.app.AppSpec;
 //import mdcf.core.ctypes.ComponentSignature;
+
+
+
 
 
 
@@ -59,67 +65,23 @@ public class FileIO {
 		File file = new File(fName);
 		return loadText(file);
 	}
-	
-//	public static ComponentSignature loadSignatureFromFile(File f) {
-//		ComponentSignature ret = null;
-//		try {
-//			ComponentSignature comp = null;
-//			String fileText = FileIO.loadText(f);
-//			comp = (ComponentSignature)xstream.fromXML(fileText);
-//			
-//			ArrayList<PortName> sendPortNames = new ArrayList<PortName>();
-//			ArrayList<PortName> recvPortNames = new ArrayList<PortName>();
-//			ArrayList<PortType> sendPortTypes = new ArrayList<PortType>();
-//			ArrayList<PortType> recvPortTypes = new ArrayList<PortType>();
-//			ArrayList<TaskDescriptor> taskDescriptors = new ArrayList<TaskDescriptor>();
-//			
-//			for(int index = 0; index < comp.getSendPortNames().size(); index++){
-//				String portName = comp.getSendPortNames().get(index);
-//				sendPortNames.add(new PortName(portName));
-//				String portType = comp.getSendPortTypes().get(index);
-//				sendPortTypes.add(new PortType(portType));
-//			}
-//			
-//			for(int index = 0; index < comp.getRecvPortNames().size(); index++){
-//				String portName = comp.getRecvPortNames().get(index);
-//				recvPortNames.add(new PortName(portName));
-//				String portType = comp.getRecvPortTypes().get(index);
-//				recvPortTypes.add(new PortType(portType));
-//			}
-//			
-//			ret = new ComponentSignature(comp.getType(),
-//					sendPortNames, recvPortNames, sendPortTypes, recvPortTypes, taskDescriptors);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		catch (ClassCastException e){
-//			e.printStackTrace();
-//		}
-//		return ret;
-//	}
-	
-//	public static AppSpec loadAppConfigurationFromFile(File f) {
-//		AppSpec ret = null;
-//		try {
-//			String fileText = FileIO.loadText(f);
-//			ret = (AppSpec) xstream.fromXML(fileText);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (ClassCastException e) {
-//			e.printStackTrace();
-//		}
-//		return ret;
-//	}
 
 	public static WorkspaceSpec loadWorkspace(String fName) throws IOException{
 		return loadWorkspace(new File(fName));
 	}
 	
 	public static WorkspaceSpec loadWorkspace(File file) throws IOException{
-		String objectTxt = loadText(file);
-		Object obj = xstream.fromXML(objectTxt);
+		Object obj = xstream.fromXML(loadText(file));
 		if(obj instanceof WorkspaceSpec){
 			return (WorkspaceSpec)obj;
+		}
+		return null;
+	}
+	
+	public static Map<String, ModuleSpec> loadModules() throws IOException{
+		Object obj = xstream.fromXML(loadText(new File("modules.xml")));
+		if(obj instanceof Map<?, ?>){
+			return (Map<String, ModuleSpec>) obj;
 		}
 		return null;
 	}
