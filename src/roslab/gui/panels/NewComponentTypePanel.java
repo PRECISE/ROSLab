@@ -53,7 +53,6 @@ public class NewComponentTypePanel extends JPanel {
 	private JTextField nameTextField = null;
 	private JComboBox roleComboBox = null;
 	private int numTasks = 0;
-	//private Solution solution = null;
 	
 	private List<String> rolesList;
 	private JTextField taskNameTextField;
@@ -66,8 +65,6 @@ public class NewComponentTypePanel extends JPanel {
 	 */
 	{
 		rolesList = new ArrayList<String>();
-		//rolesList.add(CompRoles.APPPANEL_NAME);
-		//rolesList.add(CompRoles.DEVICE_NAME);
 		rolesList.add(CompRoles.ROS_NODE);
 		initialize();
 	}
@@ -96,8 +93,8 @@ public class NewComponentTypePanel extends JPanel {
 		typeNameLabel = new JLabel();
 		typeNameLabel.setBounds(new Rectangle(28, 29, 65, 16));
 		typeNameLabel.setText("Name:");
-		this.setSize(332, 95);
-		this.setPreferredSize(new Dimension(333, 398));
+		this.setSize(332, 195);
+		this.setPreferredSize(new Dimension(333, 98));
 		this.setLayout(null);
 		this.add(typeNameLabel, null);
 		this.add(roleLabel, null);
@@ -106,7 +103,7 @@ public class NewComponentTypePanel extends JPanel {
 		
 		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(28, 163, 279, 218);
-		add(tabbedPane);
+		//add(tabbedPane);
 		tabbedPane.setEnabled(false);
 		
 		final JPanel panel = new JPanel();
@@ -190,7 +187,7 @@ public class NewComponentTypePanel extends JPanel {
 				dispatchTypeLbl, periodLbl, lblTaskName, wcetLbl,
 				portTypeCombo, deadlineLbl, panel, tabbedPane));
 		btnAddTask.setBounds(99, 110, 117, 29);
-		add(btnAddTask);
+		//add(btnAddTask);
 	}
 
 	/**

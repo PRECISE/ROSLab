@@ -206,7 +206,7 @@ public class WorkspaceSplitPane extends JSplitPane {
 			importMenuItem.addActionListener(new importComponentTypeMenuListener());
 			// menuItem.addActionListener(this);
 			this.componentTypePopup.add(menuItem);
-			this.componentTypePopup.add(importMenuItem);
+			//this.componentTypePopup.add(importMenuItem);
 		}
 		return this.componentTypePopup;
 	}
@@ -295,18 +295,18 @@ public class WorkspaceSplitPane extends JSplitPane {
 			synthMenuItem.addActionListener(new generateDeviceComponentSignatureMenuListener());
 
 			JMenuItem skelMenuItem = new JMenuItem(
-					"Generate MDCF/Java skeleton");
+					"Generate Java skeleton");
 			skelMenuItem.addActionListener(new generateDeviceComponentSkelMenuListener());
 
 			JMenuItem newTaskMenuItem = new JMenuItem("New task...");
 			newTaskMenuItem.addActionListener(new addTaskToComponentMenuListener());
 
 			this.deviceComponentTypeInstPopup.add(newPortMenuItem);
-			this.deviceComponentTypeInstPopup.add(newTaskMenuItem);
+			//this.deviceComponentTypeInstPopup.add(newTaskMenuItem);
 			this.deviceComponentTypeInstPopup.add(editMenuItem);
 			this.deviceComponentTypeInstPopup.add(delMenuItem);
-			this.deviceComponentTypeInstPopup.add(synthMenuItem);
-			this.deviceComponentTypeInstPopup.add(skelMenuItem);
+			//this.deviceComponentTypeInstPopup.add(synthMenuItem);
+			//this.deviceComponentTypeInstPopup.add(skelMenuItem);
 		}
 		return this.deviceComponentTypeInstPopup;
 	}
@@ -329,7 +329,7 @@ public class WorkspaceSplitPane extends JSplitPane {
 			JMenuItem newTaskMenuItem = new JMenuItem("New task...");
 			newTaskMenuItem.addActionListener(new addTaskToComponentMenuListener());
 
-			this.serverComponentTypeInstPopup.add(newTaskMenuItem);
+			//this.serverComponentTypeInstPopup.add(newTaskMenuItem);
 			this.serverComponentTypeInstPopup.add(menuItem);
 			this.serverComponentTypeInstPopup.add(editMenuItem);
 			this.serverComponentTypeInstPopup.add(delMenuItem);
@@ -408,9 +408,9 @@ public class WorkspaceSplitPane extends JSplitPane {
 			JMenuItem delItem = new JMenuItem("Delete");
 			delItem.addActionListener(new deleteAppConfigComponentMenuListener());
 
-			this.configurationServerCompInstPopup.add(synthMenuItem);
-			this.configurationServerCompInstPopup.add(skelMenuItem);
-			this.configurationServerCompInstPopup.add(exceptionMenuItem);
+			//this.configurationServerCompInstPopup.add(synthMenuItem);
+			//this.configurationServerCompInstPopup.add(skelMenuItem);
+			//this.configurationServerCompInstPopup.add(exceptionMenuItem);
 			this.configurationServerCompInstPopup.add(delItem);
 		}
 		return this.configurationServerCompInstPopup;
@@ -434,7 +434,7 @@ public class WorkspaceSplitPane extends JSplitPane {
 	 */
 	private JScrollPane getWorkspaceTreeScrollPane() {
 		if (workspaceTreeScrollPane == null) {
-			DefaultMutableTreeNode solRoot = new DefaultMutableTreeNode("PDE Workspace");
+			DefaultMutableTreeNode solRoot = new DefaultMutableTreeNode("Workspace");
 			DefaultMutableTreeNode typesRoot = new DefaultMutableTreeNode("Types");
 
 			portTypes = new DefaultMutableTreeNode("Port Types");

@@ -28,8 +28,6 @@ int main(int argc, char **argv) {
 	$sub_callback_setup$
 
 	//set the ros update interval
-	//in the future lets make this a 
-	//configurable setting from ROSLab
 	ros::Rate r(50.0); 
 
 // ---------------------------------------------------------------- WHILE LOOP	

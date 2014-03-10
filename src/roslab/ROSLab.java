@@ -109,7 +109,7 @@ public class ROSLab extends JFrame implements WindowListener {
 			fileMenu.add(getOpenMenuItem());
 			fileMenu.add(getSaveMenuItem());
 			fileMenu.add(getSaveAsMenuItem());
-			fileMenu.add(setAppDevPathMenuItem());
+			//fileMenu.add(setAppDevPathMenuItem());
 			fileMenu.add(getQuitMenuItem());
 		}
 		return fileMenu;
