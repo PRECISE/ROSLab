@@ -1,0 +1,1 @@
+        self.$port_name$_subscriber_plot.setData(self.$port_name$_subscriber_data)
