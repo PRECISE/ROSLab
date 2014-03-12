@@ -1,0 +1,1 @@
+IMdcfReceiver $port_name$Receiver = null;

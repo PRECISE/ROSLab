@@ -1,0 +1,1 @@
+$port_name$ = node.advertise<$port_type$>("$port_topic$", 1); 
