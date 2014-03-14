@@ -55,30 +55,43 @@
   </content>
 </ScrollPane><TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
   <tabs>
-    <Tab text="Untitled Tab 1">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
-    </Tab>
-    <Tab text="Untitled Tab 2">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
+    <Tab text="Software">
+<content><ScrollPane prefHeight="200.0" prefWidth="200.0">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+  </content>
+</ScrollPane>
+</content>
+    </Tab><Tab text="Hardware">
+<content><ScrollPane prefHeight="200.0" prefWidth="200.0">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+  </content>
+</ScrollPane>
+</content>
+</Tab>
+    <Tab text="Electronics">
+<content><ScrollPane prefHeight="200.0" prefWidth="200.0">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+  </content>
+</ScrollPane>
+</content>
     </Tab>
   </tabs>
 </TabPane><Accordion>
   <panes>
-    <TitledPane animated="false" text="untitled 1">
+    <TitledPane animated="false" text="Properties">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
       </content>
     </TitledPane>
-    <TitledPane animated="false" text="untitled 2">
+    <TitledPane animated="false" text="Layout">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
       </content>
     </TitledPane>
-    <TitledPane animated="false" text="untitled 3">
+    <TitledPane animated="false" text="Hierarchy">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
       </content>
