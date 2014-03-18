@@ -1,4 +1,48 @@
 <map>
+  <!--
+  <entry>
+    <string>EXAMPLE</string>
+    <roslab.artifacts.ModuleSpec>
+      <builtin>false</builtin>
+      <type>EXAMPLE</type>
+      <role>ROS Service</role>
+      <sig>
+        <type>EXAMPLE</type>
+        <sendPortNames>
+          <roslab.types.builtins.PortName>
+            <portName>/imu_data</portName>
+          </roslab.types.builtins.PortName>
+        </sendPortNames>
+        <recvPortNames>
+          <roslab.types.builtins.PortName>
+            <portName>/cmd_vel</portName>
+          </roslab.types.builtins.PortName>
+        </recvPortNames>
+        <sendPortTypes>
+          <roslab.types.builtins.PortType>
+            <portType>Orientation</portType>
+            <rosType>sensor_msgs::Imu</rosType>
+            <includeDeps>
+              <string>sensor_msgs/Imu.h</string>
+            </includeDeps>
+          </roslab.types.builtins.PortType>
+        </sendPortTypes>
+        <recvPortTypes>
+          <roslab.types.builtins.PortType>
+            <portType>Twist</portType>
+            <rosType>geometry_msgs::Twist</rosType>
+            <includeDeps>
+              <string>geometry_msgs/Twist.h</string>
+            </includeDeps>
+          </roslab.types.builtins.PortType>
+        </recvPortTypes>
+        <taskDescriptors/>
+        <shareable>false</shareable>
+      </sig>
+      <includeDeps/>
+    </roslab.artifacts.ModuleSpec>
+  </entry>
+  -->
   <entry>
     <string>IMU</string>
     <roslab.artifacts.ModuleSpec>
