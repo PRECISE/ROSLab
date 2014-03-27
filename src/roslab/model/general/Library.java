@@ -11,12 +11,12 @@ import java.util.List;
  */
 public class Library {
 
-	List<Node> nodes;
+	List<? extends Node> nodes;
 
 	/**
 	 * @param nodes
 	 */
-	public Library(List<Node> nodes) {
+	public Library(List<? extends Node> nodes) {
 		this.nodes = nodes;
 	}
 	

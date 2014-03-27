@@ -11,16 +11,16 @@ import java.util.List;
  */
 public class Configuration {
 
-	List<Node> nodes;
-	List<Channel> channels;
+	List<? extends Node> nodes;
+	List<? extends Link> links;
 	
 	/**
 	 * @param nodes
-	 * @param channels
+	 * @param links
 	 */
-	public Configuration(List<Node> nodes, List<Channel> channels) {
+	public Configuration(List<? extends Node> nodes, List<? extends Link> links) {
 		this.nodes = nodes;
-		this.channels = channels;
+		this.links = links;
 	}
 	
 }

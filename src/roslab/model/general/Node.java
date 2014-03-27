@@ -12,19 +12,19 @@ import java.util.Set;
  */
 public class Node {
 	
-	String name;
-	Map<String, Property> properties;
-	Set<Annotation> annotations;
+	protected String name;
+	protected Map<String, ? extends Feature> features;
+	protected Set<Annotation> annotations;
 	
 	/**
 	 * @param name
-	 * @param properties
+	 * @param feature
 	 * @param annotations
 	 */
-	public Node(String name, Map<String, Property> properties,
+	public Node(String name, Map<String, ? extends Feature> features,
 			Set<Annotation> annotations) {
 		this.name = name;
-		this.properties = properties;
+		this.features = features;
 		this.annotations = annotations;
 	}
 
