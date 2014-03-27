@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ROSLabController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -43,61 +43,64 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem mnemonicParsing="false" text="About ROSLab" />
           </items>
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-      <items><ScrollPane prefHeight="200.0" prefWidth="200.0">
-  <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-  </content>
-</ScrollPane><TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-  <tabs>
-    <Tab text="Software">
-<content><ScrollPane prefHeight="200.0" prefWidth="200.0">
-  <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-  </content>
-</ScrollPane>
-</content>
-    </Tab><Tab text="Hardware">
-<content><ScrollPane prefHeight="200.0" prefWidth="200.0">
-  <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-  </content>
-</ScrollPane>
-</content>
-</Tab>
-    <Tab text="Electronics">
-<content><ScrollPane prefHeight="200.0" prefWidth="200.0">
-  <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-  </content>
-</ScrollPane>
-</content>
-    </Tab>
-  </tabs>
-</TabPane><Accordion>
-  <panes>
-    <TitledPane animated="false" text="Properties">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
-    </TitledPane>
-    <TitledPane animated="false" text="Layout">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
-    </TitledPane>
-    <TitledPane animated="false" text="Hierarchy">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
-    </TitledPane>
-  </panes>
-</Accordion>
+    <SplitPane dividerPositions="0.3062360801781737, 0.7160356347438753" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+        <TreeView fx:id="tree" prefHeight="254.0" prefWidth="150.0" />
+        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+          <tabs>
+            <Tab text="Software">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </Tab>
+            <Tab text="Hardware">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </Tab>
+            <Tab text="Electronics">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </Tab>
+          </tabs>
+        </TabPane>
+        <Accordion>
+          <panes>
+            <TitledPane animated="false" text="Features">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </TitledPane>
+            <TitledPane animated="false" text="Layout">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </TitledPane>
+            <TitledPane animated="false" text="Hierarchy">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </TitledPane>
+          </panes>
+        </Accordion>
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
