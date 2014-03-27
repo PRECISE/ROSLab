@@ -7,7 +7,7 @@ package roslab.model.general;
  * @author shaz
  *
  */
-public class Channel {
+public class Link {
 
 	String name;
 	Endpoint src;
@@ -18,7 +18,7 @@ public class Channel {
 	 * @param src
 	 * @param dest
 	 */
-	public Channel(String name, Endpoint src, Endpoint dest) {
+	public Link(String name, Endpoint src, Endpoint dest) {
 		this.name = name;
 		this.src = src;
 		this.dest = dest;

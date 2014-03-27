@@ -12,15 +12,15 @@ import java.util.List;
 public class Configuration {
 
 	List<Node> nodes;
-	List<Channel> channels;
+	List<Link> links;
 	
 	/**
 	 * @param nodes
-	 * @param channels
+	 * @param links
 	 */
-	public Configuration(List<Node> nodes, List<Channel> channels) {
+	public Configuration(List<Node> nodes, List<Link> links) {
 		this.nodes = nodes;
-		this.channels = channels;
+		this.links = links;
 	}
 	
 }
