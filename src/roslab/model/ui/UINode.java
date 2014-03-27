@@ -3,50 +3,34 @@
  */
 package roslab.model.ui;
 
+import java.util.List;
+
+import roslab.model.general.Node;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 /**
- * @author shaz
+ * @author Peter Gebhard
  *
  */
 public class UINode extends Rectangle {
+	
+	String name;
+	List<UIEndpoint> endpoints;
+	Node node;
 
 	/**
-	 * 
-	 */
-	public UINode() {
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param width
-	 * @param height
-	 */
-	public UINode(double width, double height) {
-		super(width, height);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param width
-	 * @param height
-	 * @param fill
-	 */
-	public UINode(double width, double height, Paint fill) {
-		super(width, height, fill);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
+	 * @param name
+	 * @param endpoints
+	 * @param node
 	 * @param x
 	 * @param y
-	 * @param width
-	 * @param height
 	 */
-	public UINode(double x, double y, double width, double height) {
-		super(x, y, width, height);
-		// TODO Auto-generated constructor stub
+	public UINode(String name, List<UIEndpoint> endpoints, Node node, double x, double y) {
+		super(x, y, 15, 15);
+		this.name = name;
+		this.endpoints = endpoints;
+		this.node = node;
 	}
 
 }

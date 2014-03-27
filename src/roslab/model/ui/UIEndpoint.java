@@ -3,58 +3,32 @@
  */
 package roslab.model.ui;
 
+import roslab.model.general.Endpoint;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 /**
- * @author shaz
+ * @author Peter Gebhard
  *
  */
 public class UIEndpoint extends Circle {
+	
+	String name;
+	UINode parent;
+	Endpoint endpoint;
 
 	/**
-	 * 
-	 */
-	public UIEndpoint() {
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param radius
-	 */
-	public UIEndpoint(double radius) {
-		super(radius);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param radius
-	 * @param fill
-	 */
-	public UIEndpoint(double radius, Paint fill) {
-		super(radius, fill);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
+	 * @param name
+	 * @param parent
+	 * @param endpoint
 	 * @param centerX
 	 * @param centerY
-	 * @param radius
 	 */
-	public UIEndpoint(double centerX, double centerY, double radius) {
-		super(centerX, centerY, radius);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param centerX
-	 * @param centerY
-	 * @param radius
-	 * @param fill
-	 */
-	public UIEndpoint(double centerX, double centerY, double radius, Paint fill) {
-		super(centerX, centerY, radius, fill);
-		// TODO Auto-generated constructor stub
+	public UIEndpoint(String name, UINode parent, Endpoint endpoint, double centerX, double centerY) {
+		super(centerX, centerY, 0.5);
+		this.name = name;
+		this.parent = parent;
+		this.endpoint = endpoint;
 	}
 
 }
