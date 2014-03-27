@@ -8,13 +8,21 @@ import java.util.Set;
 import roslab.model.general.Annotation;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Node;
+<<<<<<< HEAD
 import roslab.model.general.Feature;
+=======
+import roslab.model.general.Property;
+>>>>>>> FETCH_HEAD
 
 /**
  * @author Peter Gebhard
  *
  */
+<<<<<<< HEAD
 public class ROSPort extends Feature implements Endpoint {
+=======
+public class ROSPort extends Property implements Endpoint {
+>>>>>>> FETCH_HEAD
 	
 	ROSPortType type;
 	boolean direction;
@@ -30,7 +38,11 @@ public class ROSPort extends Feature implements Endpoint {
 	 * @param fanIn
 	 * @param fanOut
 	 */
+<<<<<<< HEAD
 	public ROSPort(String name, ROSNode parent, Set<Annotation> annotations, ROSPortType type, boolean direction, boolean fanIn, boolean fanOut) {
+=======
+	public ROSPort(String name, Node parent, Set<Annotation> annotations, ROSPortType type, boolean direction, boolean fanIn, boolean fanOut) {
+>>>>>>> FETCH_HEAD
 		super(name, parent, annotations);
 		this.type = type;
 		this.direction = direction;
