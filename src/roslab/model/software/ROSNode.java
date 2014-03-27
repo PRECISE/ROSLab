@@ -11,7 +11,7 @@ import roslab.model.general.Node;
 import roslab.model.general.Feature;
 
 /**
- * @author Peter Gebhard
+ * @author shaz
  *
  */
 public class ROSNode extends Node {
