@@ -28,4 +28,54 @@ public class Node {
 		this.annotations = annotations;
 	}
 
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the features
+	 */
+	public Map<String, ? extends Feature> getFeatures() {
+		return features;
+	}
+
+	/**
+	 * @param features the features to set
+	 */
+	public void setFeatures(Map<String, ? extends Feature> features) {
+		this.features = features;
+	}
+
+	/**
+	 * @return the annotations
+	 */
+	public Set<Annotation> getAnnotations() {
+		return annotations;
+	}
+
+	/**
+	 * @param annotations the annotations to set
+	 */
+	public void setAnnotations(Set<Annotation> annotations) {
+		this.annotations = annotations;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return name;
+	}
+
 }

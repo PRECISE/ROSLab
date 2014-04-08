@@ -8,7 +8,6 @@ import java.util.Set;
 
 import roslab.model.general.Annotation;
 import roslab.model.general.Node;
-import roslab.model.general.Feature;
 
 /**
  * @author shaz

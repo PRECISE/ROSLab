@@ -19,7 +19,7 @@ public class UILink extends Path {
 	String name;
 	UIEndpoint src;
 	UIEndpoint dest;
-	List<Link> links;
+	Link link;
 
 	/**
 	 * @param name
@@ -27,11 +27,11 @@ public class UILink extends Path {
 	 * @param dest
 	 * @param link
 	 */
-	public UILink(String name, UIEndpoint src, UIEndpoint dest, List<Link> links) {
+	public UILink(String name, UIEndpoint src, UIEndpoint dest, Link link) {
 		this.name = name;
 		this.src = src;
 		this.dest = dest;
-		this.links = links;
+		this.link = link;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class UILink extends Path {
 		this.name = name;
 		this.src = src;
 		this.dest = dest;
-		this.links = links;
+		this.link = link;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class UILink extends Path {
 		this.name = name;
 		this.src = src;
 		this.dest = dest;
-		this.links = links;
+		this.link = link;
 	}
 
 }
