@@ -19,7 +19,7 @@ public final class ROSLabTreeCell extends TreeCell<Node> {
 	 * @param menu
 	 */
 	public ROSLabTreeCell() {
-		if (this.getTreeItem().getValue())
+		//if (this.getTreeItem().getValue())
 	}
 	
 }

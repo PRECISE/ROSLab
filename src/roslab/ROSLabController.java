@@ -41,7 +41,7 @@ public class ROSLabController implements Initializable {
 		TreeItem<Node> dummyRoot = new TreeItem<Node>();
 		TreeItem<Node> libraryNode = new TreeItem<Node>(new Node("Library", null, null));
 		for (Node n : library.getNodes()) {
-			libraryNode.getChildren().add(new)
+			//libraryNode.getChildren().add(new Object());
 		}
 		TreeItem<Node> configNode = new TreeItem<Node>(new Node("Configuration", null, null));
 		dummyRoot.getChildren().addAll(libraryNode, configNode);
