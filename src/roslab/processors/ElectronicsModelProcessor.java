@@ -23,9 +23,8 @@ public class ElectronicsModelProcessor extends ModelProcessor {
 	 * @see roslab.processors.ModelProcessor#output()
 	 */
 	@Override
-	public void output() {
-		// TODO Auto-generated method stub
-
+	public String output() {
+		return st.render();
 	}
 
 }
