@@ -14,7 +14,7 @@ public class Node {
 	
 	protected String name;
 	protected Map<String, ? extends Feature> features;
-	protected Set<Annotation> annotations;
+	protected Map<String, String> annotations;
 	
 	/**
 	 * @param name
@@ -22,7 +22,7 @@ public class Node {
 	 * @param annotations
 	 */
 	public Node(String name, Map<String, ? extends Feature> features,
-			Set<Annotation> annotations) {
+			Map<String, String> annotations) {
 		this.name = name;
 		this.features = features;
 		this.annotations = annotations;
@@ -59,15 +59,29 @@ public class Node {
 	/**
 	 * @return the annotations
 	 */
-	public Set<Annotation> getAnnotations() {
+	public Map<String, String> getAnnotations() {
 		return annotations;
 	}
 
 	/**
 	 * @param annotations the annotations to set
 	 */
-	public void setAnnotations(Set<Annotation> annotations) {
+	public void setAnnotations(Map<String, String> annotations) {
 		this.annotations = annotations;
+	}
+
+	/**
+	 * @return the annotations
+	 */
+	public String getAnnotation(String s) {
+		return annotations.get(s);
+	}
+
+	/**
+	 * @param annotations the annotations to set
+	 */
+	public void setAnnotation(String key, String value) {
+		this.annotations.put(key, value);
 	}
 
 	/* (non-Javadoc)

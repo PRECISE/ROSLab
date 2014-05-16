@@ -3,9 +3,8 @@
  */
 package roslab.model.hardware;
 
-import java.util.Set;
+import java.util.Map;
 
-import roslab.model.general.Annotation;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Feature;
 
@@ -25,7 +24,7 @@ public class Joint extends Feature implements Endpoint {
 	 * @param fanIn
 	 * @param fanOut
 	 */
-	public Joint(String name, HWBlock parent, Set<Annotation> annotations, boolean fanIn, boolean fanOut) {
+	public Joint(String name, HWBlock parent, Map<String, String> annotations, boolean fanIn, boolean fanOut) {
 		super(name, parent, annotations);
 		this.fanIn = fanIn;
 		this.fanOut = fanOut;

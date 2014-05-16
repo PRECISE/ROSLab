@@ -4,9 +4,8 @@
 package roslab.model.electronics;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-import roslab.model.general.Annotation;
 import roslab.model.general.Feature;
 
 /**
@@ -22,7 +21,7 @@ public class Pin extends Feature {
 	 * @param parent
 	 * @param annotations
 	 */
-	public Pin(String name, Circuit parent, Set<Annotation> annotations, List<PinService> services) {
+	public Pin(String name, Circuit parent, Map<String, String> annotations, List<PinService> services) {
 		super(name, parent, annotations);
 		this.services = services;
 	}

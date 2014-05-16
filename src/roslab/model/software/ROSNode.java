@@ -4,9 +4,7 @@
 package roslab.model.software;
 
 import java.util.Map;
-import java.util.Set;
 
-import roslab.model.general.Annotation;
 import roslab.model.general.Node;
 
 /**
@@ -24,7 +22,7 @@ public class ROSNode extends Node {
 	 * @param spec
 	 */
 	public ROSNode(String name, Map<String, ROSPort> ports,
-			Set<Annotation> annotations, ROSNode spec) {
+			Map<String, String> annotations, ROSNode spec) {
 		super(name, ports, annotations);
 		this.spec = spec;
 	}

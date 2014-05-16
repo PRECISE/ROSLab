@@ -3,9 +3,8 @@
  */
 package roslab.model.software;
 
-import java.util.Set;
+import java.util.Map;
 
-import roslab.model.general.Annotation;
 import roslab.model.general.Node;
 import roslab.model.general.Feature;
 
@@ -20,9 +19,8 @@ public class ROSTask extends Feature {
 	 * @param parent
 	 * @param annotations
 	 */
-	public ROSTask(String name, Node parent, Set<Annotation> annotations) {
+	public ROSTask(String name, Node parent, Map<String, String> annotations) {
 		super(name, parent, annotations);
-		// TODO Auto-generated constructor stub
 	}
 
 }

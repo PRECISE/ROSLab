@@ -4,9 +4,7 @@
 package roslab.model.hardware;
 
 import java.util.Map;
-import java.util.Set;
 
-import roslab.model.general.Annotation;
 import roslab.model.general.Node;
 
 /**
@@ -25,7 +23,7 @@ public class HWBlock extends Node {
 	 * @param spec
 	 */
 	public HWBlock(String name, Map<String, Joint> joints,
-			Set<Annotation> annotations, HWBlock spec, HWBlockType type) {
+			Map<String, String> annotations, HWBlock spec, HWBlockType type) {
 		super(name, joints, annotations);
 		this.spec = spec;
 		this.type = type;

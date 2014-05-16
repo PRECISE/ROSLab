@@ -3,9 +3,8 @@
  */
 package roslab.model.software;
 
-import java.util.Set;
+import java.util.Map;
 
-import roslab.model.general.Annotation;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Feature;
 
@@ -29,7 +28,7 @@ public class ROSPort extends Feature implements Endpoint {
 	 * @param fanIn
 	 * @param fanOut
 	 */
-	public ROSPort(String name, ROSNode parent, Set<Annotation> annotations, ROSPortType type, boolean direction, boolean fanIn, boolean fanOut) {
+	public ROSPort(String name, ROSNode parent, Map<String, String> annotations, ROSPortType type, boolean direction, boolean fanIn, boolean fanOut) {
 		super(name, parent, annotations);
 		this.type = type;
 		this.direction = direction;

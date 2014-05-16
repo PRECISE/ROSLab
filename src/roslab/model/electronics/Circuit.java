@@ -4,9 +4,7 @@
 package roslab.model.electronics;
 
 import java.util.Map;
-import java.util.Set;
 
-import roslab.model.general.Annotation;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Node;
 
@@ -27,7 +25,7 @@ public class Circuit extends Node implements Endpoint {
 	 * @param spec
 	 */
 	public Circuit(String name, Map<String, Pin> pins,
-			Set<Annotation> annotations, Circuit spec) {
+			Map<String, String> annotations, Circuit spec) {
 		super(name, pins, annotations);
 		this.spec = spec;
 	}
