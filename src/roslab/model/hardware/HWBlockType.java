@@ -8,7 +8,7 @@ package roslab.model.hardware;
  *
  */
 public enum HWBlockType {
-	Brain,
-	Motion,
-	Sensor
+	Brains,
+	HalfAnt,
+	HalfSeg
 }
