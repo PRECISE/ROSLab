@@ -3,17 +3,20 @@
  */
 package roslab.processors;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
-import org.stringtemplate.v4.ST;
+import java.util.Map;
 
 import roslab.model.general.Configuration;
-import roslab.model.general.Link;
 import roslab.model.general.Node;
 import roslab.model.hardware.HWBlock;
+import roslab.model.hardware.HWBlockType;
+import roslab.model.hardware.Joint;
+import roslab.model.ui.UILink;
 
 /**
- * @author shaz
+ * @author Peter Gebhard
  *
  */
 public class HardwareModelProcessor extends ModelProcessor {
@@ -31,17 +34,18 @@ public class HardwareModelProcessor extends ModelProcessor {
 	 */
 	@Override
 	public String output() {
+		List<HWBlock> blocks = new ArrayList<HWBlock>();
 		for (Node n : config.getNodes()) {
 			if (n instanceof HWBlock) {
-				List<Link> hwlinks = config.getLinks(n);
+				blocks.add((HWBlock) n);
 			}
 		}
-		st.add("add_components", printAddComponentsSection());
-		st.add("set_sub_parameters", printSetSubParametersSection());
-		st.add("append_components", printAppendComponentsSection());
-		st.add("attach_components", printAttachComponentsSection());
-		st.add("add_tabs", printAddTabsSection());
-		st.add("set_parameters", printSetParametersSection());
+		st.add("add_components", printAddComponentsSection(blocks));
+		st.add("set_sub_parameters", printSetSubParametersSection(blocks));
+		st.add("append_components", printAppendComponentsSection(blocks));
+		st.add("attach_components", printAttachComponentsSection(config.getUILinksOfType(Joint.class)));
+		st.add("add_tabs", printAddTabsSection(blocks));
+		st.add("set_parameters", printSetParametersSection(blocks));
 		return st.render();
 	}
 	
@@ -53,28 +57,69 @@ public class HardwareModelProcessor extends ModelProcessor {
 		return str;
 	}
 	
-	private String printSetSubParametersSection() {
+	private String printSetSubParametersSection(List<HWBlock> blocks) {
 		String str = "";
+		for (HWBlock block : blocks) {
+			for (Map.Entry<String, String> entry : block.getAnnotations().entrySet()) {
+				str.concat("self.setSubParameter(\"" + block.getName() + "\", \"" + entry.getKey() + "\", " + entry.getValue() + ")\n");
+			}
+		}
 		return str;
 	}
 	
-	private String printAppendComponentsSection() {
+	private String printAppendComponentsSection(List<HWBlock> blocks) {
 		String str = "";
+		for (HWBlock block : blocks) {
+			if (block.getType().equals(HWBlockType.Brains)) {
+				str.concat("self.append(\"" + block.getName() + "\", \"core\")\n");
+			}
+		}
 		return str;
 	}
 	
-	private String printAttachComponentsSection() {
+	private String printAttachComponentsSection(List<UILink> links) {
 		String str = "";
+		for (UILink l : links) {
+			HWBlock src = (HWBlock) l.getSrc().getParentNode();
+			HWBlock dest = (HWBlock) l.getDest().getParentNode();
+			String srcPrefix = src.getName();  // Just using the component's own name also as the prefix (are prefixes actually important here?)
+			String destPrefix = dest.getName();
+			if (src.getType().equals(HWBlockType.Brains)) {
+				srcPrefix = "core";
+			}
+			if (dest.getType().equals(HWBlockType.Brains)) {
+				destPrefix = "core";
+			}
+			str.concat("self.attach((\"" + src.getName() + "\", \"" + srcPrefix + "\", \"" + l.getSrc().getName() + "\"), (\"" + dest.getName() + "\", \"" + destPrefix + "\", \"" + l.getDest().getName() + "\"), Fold(-180))\n");
+		}
 		return str;
 	}
 	
-	private String printAddTabsSection() {
+	private String printAddTabsSection(List<HWBlock> blocks) {
 		String str = "";
+		Iterator<HWBlock> it = blocks.iterator();
+		while (it.hasNext()) {
+			HWBlock block = it.next();
+			if (!block.getType().equals(HWBlockType.Brains)) {
+				str.concat("self.addTabs((Tab(), \"tab" + block.getName() + "\", 9), (\"" + block.getName() + "\", \"" + block.getName() + "\", \"botedge.2\"), (\"" + block.getName() + "\", \"" + block.getName() + "\", \"topedge.3\")\n");
+			}
+		}
 		return str;
 	}
 	
-	private String printSetParametersSection() {
+	private String printSetParametersSection(List<HWBlock> blocks) {
 		String str = "";
+		HWBlock core = null;
+		for (HWBlock block : blocks) {
+			if (block.getType().equals(HWBlockType.Brains)) {
+				core = block;
+			}
+			if (block.getAnnotation("hardware") != null) {
+				str.concat("f.setParameter(\"" + block.getName() + "\", " + block.getAnnotation("hardware") + ")\n");
+			}
+		}
+		str.concat("f.setParameter(\"length\", " + core.getAnnotation("length") + ")\n");
+		str.concat("f.setParameter(\"height\", " + core.getAnnotation("height") + ")\n");
 		return str;
 	}
 
