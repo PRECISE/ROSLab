@@ -12,10 +12,9 @@ import roslab.model.general.Node;
  *
  */
 public class UIEndpoint extends Circle {
-	
-	String name;
-	UINode uiparent;
+
 	Endpoint endpoint;
+	UINode uiparent;
 
 	/**
 	 * @param name
@@ -24,25 +23,17 @@ public class UIEndpoint extends Circle {
 	 * @param centerX
 	 * @param centerY
 	 */
-	public UIEndpoint(String name, UINode uiparent, Endpoint endpoint, double centerX, double centerY) {
+	public UIEndpoint(Endpoint endpoint, UINode uiparent, double centerX, double centerY) {
 		super(centerX, centerY, 0.5);
-		this.name = name;
-		this.uiparent = uiparent;
 		this.endpoint = endpoint;
+		this.uiparent = uiparent;
 	}
 
 	/**
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
+		return this.endpoint.getName();
 	}
 
 	/**

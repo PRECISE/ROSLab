@@ -13,37 +13,27 @@ import roslab.model.general.Node;
  *
  */
 public class UINode extends Rectangle {
-	
-	String name;
-	List<UIEndpoint> endpoints;
+
 	Node node;
+	List<UIEndpoint> endpoints;
 
 	/**
-	 * @param name
-	 * @param endpoints
 	 * @param node
+	 * @param endpoints
 	 * @param x
 	 * @param y
 	 */
-	public UINode(String name, List<UIEndpoint> endpoints, Node node, double x, double y) {
+	public UINode(Node node, List<UIEndpoint> endpoints, double x, double y) {
 		super(x, y, 15, 15);
-		this.name = name;
-		this.endpoints = endpoints;
 		this.node = node;
+		this.endpoints = endpoints;
 	}
 
 	/**
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
+		return this.node.getName();
 	}
 
 	/**

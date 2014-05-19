@@ -11,11 +11,10 @@ import roslab.model.general.Link;
  *
  */
 public class UILink extends Path {
-	
-	String name;
+
+	Link link;
 	UIEndpoint src;
 	UIEndpoint dest;
-	Link link;
 
 	/**
 	 * @param name
@@ -23,25 +22,17 @@ public class UILink extends Path {
 	 * @param dest
 	 * @param link
 	 */
-	public UILink(String name, UIEndpoint src, UIEndpoint dest, Link link) {
-		this.name = name;
+	public UILink(Link link, UIEndpoint src, UIEndpoint dest) {
+		this.link = link;
 		this.src = src;
 		this.dest = dest;
-		this.link = link;
 	}
 
 	/**
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
+		return this.link.getName();
 	}
 
 	/**
