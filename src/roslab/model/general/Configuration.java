@@ -96,4 +96,19 @@ public class Configuration {
 		return links;
 	}
 	
+	/**
+	 * @return the links that include Node n
+	 */
+	public List<UILink> getUILinksOfType(Class<? extends Endpoint> clazz) {
+		List<UILink> links = new ArrayList<UILink>();
+		
+		for (UILink l : this.links) {
+			if (l.getLink().getSrc().getClass().equals(clazz) || l.getLink().getDest().getClass().equals(clazz)) {
+				links.add(l);
+			}
+		}
+		
+		return links;
+	}
+	
 }
