@@ -9,17 +9,14 @@ package roslab.model.general;
  */
 public class Link {
 
-	String name;
 	Endpoint src;
 	Endpoint dest;
 	
 	/**
-	 * @param name
 	 * @param src
 	 * @param dest
 	 */
 	public Link(String name, Endpoint src, Endpoint dest) {
-		this.name = name;
 		this.src = src;
 		this.dest = dest;
 	}
@@ -28,14 +25,7 @@ public class Link {
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
+		return this.src.getName() + " -- " + this.dest.getName();
 	}
 
 	/**
