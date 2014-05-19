@@ -47,10 +47,9 @@ if __name__ == "__main__":
   from utils.dimensions import tgy1370a, proMini
   #f.setParameter("servo", tgy1370a)
   #f.setParameter("brain", proMini)
+  #f.setParameter("length", $length_param$)
+  #f.setParameter("height", $height_param$)
   $set_parameters$
-
-  f.setParameter("length", $length_param$)
-  f.setParameter("height", $height_param$)
 
   print "Compiling robot designs...",
   sys.stdout.flush()
