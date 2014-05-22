@@ -13,6 +13,7 @@ public class Main extends Application {
 		try {
 			VBox root = (VBox)FXMLLoader.load(getClass().getResource("ROSLab.fxml"));
 			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("main.css").toString());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("ROSLab Development Environment Prototype");
 			primaryStage.show();

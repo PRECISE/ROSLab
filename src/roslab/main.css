@@ -1,0 +1,40 @@
+.UINode {
+    -fx-arc-height: 30;
+    -fx-arc-width: 30;
+    -fx-fill: white;
+    -fx-stroke: blue;
+    -fx-stroke-width: 5;
+}
+
+.Circuit {
+    -fx-stroke: red;
+}
+
+.HWBlock {
+    -fx-stroke: brown;
+}
+
+.ROSNode {
+    -fx-stroke: green;
+}
+
+
+.UIEndpoint {
+    -fx-fill: blue;
+    -fx-stroke: black;
+    -fx-stroke-width: 2;
+}
+
+.Joint {
+    -fx-fill: green;
+}
+
+.ROSPort {
+    -fx-fill: blue;
+}
+
+.SelectionRectangle {
+    -fx-fill: rgba(0,0,255,0.07);
+    -fx-stroke: blue;
+    -fx-stroke-width: 1;
+}
