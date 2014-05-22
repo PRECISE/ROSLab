@@ -17,12 +17,11 @@ public class WireBundle extends Link {
 	List<Wire> wires;
 
 	/**
-	 * @param name
 	 * @param src
 	 * @param dest
 	 */
-	public WireBundle(String name, Endpoint src, Endpoint dest, List<Wire> wires) {
-		super(name, src, dest);
+	public WireBundle(Endpoint src, Endpoint dest, List<Wire> wires) {
+		super(src, dest);
 		this.wires = wires;
 	}
 

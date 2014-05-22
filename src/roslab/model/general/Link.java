@@ -16,7 +16,7 @@ public class Link {
 	 * @param src
 	 * @param dest
 	 */
-	public Link(String name, Endpoint src, Endpoint dest) {
+	public Link(Endpoint src, Endpoint dest) {
 		this.src = src;
 		this.dest = dest;
 	}
