@@ -5,6 +5,7 @@ package roslab.model.ui;
 
 import java.util.List;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import roslab.model.general.Node;
 
@@ -24,7 +25,8 @@ public class UINode extends Rectangle {
 	 * @param y
 	 */
 	public UINode(Node node, List<UIEndpoint> endpoints, double x, double y) {
-		super(x, y, 15, 15);
+		super(x, y, 50, 50);
+		this.setFill(Color.BLUE);
 		this.node = node;
 		this.endpoints = endpoints;
 	}
