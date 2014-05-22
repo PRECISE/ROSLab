@@ -6,7 +6,7 @@ package roslab.processors;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import roslab.model.general.Configuration;
 import roslab.model.general.Node;
@@ -52,7 +52,7 @@ public class HardwareModelProcessor extends ModelProcessor {
 	private String printAddComponentsSection(List<HWBlock> blocks) {
 		String str = "";
 		for (HWBlock block : blocks) {
-			str.concat("self.addComponent(\"" + block.getName() + "\", " + block.getType().name() + ", None)\n");
+			str += "self.addComponent(\"" + block.getName() + "\", " + block.getType().name() + ", None)\n";
 		}
 		return str;
 	}
@@ -60,8 +60,8 @@ public class HardwareModelProcessor extends ModelProcessor {
 	private String printSetSubParametersSection(List<HWBlock> blocks) {
 		String str = "";
 		for (HWBlock block : blocks) {
-			for (Map.Entry<String, String> entry : block.getAnnotations().entrySet()) {
-				str.concat("self.setSubParameter(\"" + block.getName() + "\", \"" + entry.getKey() + "\", " + entry.getValue() + ")\n");
+			for (Entry<String, String> entry : block.getAnnotations().entrySet()) {
+				str += "self.setSubParameter(\"" + block.getName() + "\", \"" + entry.getKey() + "\", " + entry.getValue() + ")\n";
 			}
 		}
 		return str;
@@ -71,7 +71,7 @@ public class HardwareModelProcessor extends ModelProcessor {
 		String str = "";
 		for (HWBlock block : blocks) {
 			if (block.getType().equals(HWBlockType.Brains)) {
-				str.concat("self.append(\"" + block.getName() + "\", \"core\")\n");
+				str += "self.append(\"" + block.getName() + "\", \"core\")\n";
 			}
 		}
 		return str;
@@ -90,7 +90,7 @@ public class HardwareModelProcessor extends ModelProcessor {
 			if (dest.getType().equals(HWBlockType.Brains)) {
 				destPrefix = "core";
 			}
-			str.concat("self.attach((\"" + src.getName() + "\", \"" + srcPrefix + "\", \"" + l.getSrc().getName() + "\"), (\"" + dest.getName() + "\", \"" + destPrefix + "\", \"" + l.getDest().getName() + "\"), Fold(-180))\n");
+			str += "self.attach((\"" + src.getName() + "\", \"" + srcPrefix + "\", \"" + l.getSrc().getName() + "\"), (\"" + dest.getName() + "\", \"" + destPrefix + "\", \"" + l.getDest().getName() + "\"), Fold(-180))\n";
 		}
 		return str;
 	}
@@ -101,7 +101,7 @@ public class HardwareModelProcessor extends ModelProcessor {
 		while (it.hasNext()) {
 			HWBlock block = it.next();
 			if (!block.getType().equals(HWBlockType.Brains)) {
-				str.concat("self.addTabs((Tab(), \"tab" + block.getName() + "\", 9), (\"" + block.getName() + "\", \"" + block.getName() + "\", \"botedge.2\"), (\"" + block.getName() + "\", \"" + block.getName() + "\", \"topedge.3\")\n");
+				str += "self.addTabs((Tab(), \"tab" + block.getName() + "\", 9), (\"" + block.getName() + "\", \"" + block.getName() + "\", \"botedge.2\"), (\"" + block.getName() + "\", \"" + block.getName() + "\", \"topedge.3\")\n";
 			}
 		}
 		return str;
@@ -115,11 +115,11 @@ public class HardwareModelProcessor extends ModelProcessor {
 				core = block;
 			}
 			if (block.getAnnotation("hardware") != null) {
-				str.concat("f.setParameter(\"" + block.getName() + "\", " + block.getAnnotation("hardware") + ")\n");
+				str += "f.setParameter(\"" + block.getName() + "\", " + block.getAnnotation("hardware") + ")\n";
 			}
 		}
-		str.concat("f.setParameter(\"length\", " + core.getAnnotation("length") + ")\n");
-		str.concat("f.setParameter(\"height\", " + core.getAnnotation("height") + ")\n");
+		str += "f.setParameter(\"length\", " + core.getAnnotation("length") + ")\n";
+		str += "f.setParameter(\"height\", " + core.getAnnotation("height") + ")\n";
 		return str;
 	}
 
