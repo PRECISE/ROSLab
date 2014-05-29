@@ -1,6 +1,7 @@
 package roslab;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -13,13 +14,12 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import roslab.model.electronics.Circuit;
 import roslab.model.general.Configuration;
 import roslab.model.general.Library;
 import roslab.model.general.Node;
 import roslab.model.software.ROSNode;
+import roslab.model.software.ROSPort;
 import roslab.model.ui.UINode;
 
 public class ROSLabController implements Initializable {
@@ -52,8 +52,13 @@ public class ROSLabController implements Initializable {
 		//enableSelectionRectangle(eePane);
 		loadTree();
 		Random r = new Random();
-		for(int i = 0; i < 1000; i++) {
-			swPane.getChildren().add(UINode.buildUINode(new ROSNode("test", null, null, null), null, r.nextInt(2000), r.nextInt(2000)));
+		for (int i = 0; i < 200; i++) {
+			HashMap<String, ROSPort> m = new HashMap<String, ROSPort>();
+			for (int j = 0; j < r.nextInt(100); j++) {
+				String name = String.valueOf(r.nextInt(1000000000));
+				m.put(name, new ROSPort(name, null, null, null, r.nextBoolean(), r.nextBoolean(), r.nextBoolean()));
+			}
+			swPane.getChildren().add(UINode.buildUINode(new ROSNode("test", m, new HashMap<String, String>(), null), r.nextInt(1000), r.nextInt(1000)));
 		}
 		//swPane.getChildren().add(UINode.buildUINode(new Circuit("test", null, null, null), null, r.nextInt(2000), r.nextInt(2000)));
 		tree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);

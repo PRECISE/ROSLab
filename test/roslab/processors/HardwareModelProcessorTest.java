@@ -77,16 +77,16 @@ public class HardwareModelProcessorTest {
 		Joint j34 = new Joint("botleft", half2, null, false, false);
 		half2.setFeatures(jmap3);
 		
-		UINode n1 = new UINode(brain, null, 0, 0);
-		UINode n2 = new UINode(half1, null, 0, 0);
-		UINode n3 = new UINode(half2, null, 0, 0);
+		UINode n1 = new UINode(brain, 0, 0);
+		UINode n2 = new UINode(half1, 0, 0);
+		UINode n3 = new UINode(half2, 0, 0);
 		
 		nodes.add(n1);
 		nodes.add(n2);
 		nodes.add(n3);
 		
-		links.add(new UILink(new Link(j13, j21), new UIEndpoint(j13, n1, 0, 0), new UIEndpoint(j21, n2, 0, 0)));
-		links.add(new UILink(new Link(j12, j31), new UIEndpoint(j12, n1, 0, 0), new UIEndpoint(j31, n3, 0, 0)));
+		links.add(new UILink(new Link(j13, j21), new UIEndpoint(j13, n1, 0, 0, false), new UIEndpoint(j21, n2, 0, 0, false)));
+		links.add(new UILink(new Link(j12, j31), new UIEndpoint(j12, n1, 0, 0, false), new UIEndpoint(j31, n3, 0, 0, false)));
 
 		c = new Configuration(nodes, links);
 		str = new String(Files.readAllBytes(Paths.get("test/roslab/processors/HWBotTest.py")));
