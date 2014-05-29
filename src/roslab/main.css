@@ -22,7 +22,7 @@
 .UIEndpoint {
     -fx-fill: blue;
     -fx-stroke: black;
-    -fx-stroke-width: 2;
+    -fx-stroke-width: 1;
 }
 
 .Joint {
