@@ -21,11 +21,12 @@ import roslab.model.general.Node;
 import roslab.model.software.ROSNode;
 import roslab.model.software.ROSPort;
 import roslab.model.ui.UINode;
+import roslab.ui.ROSLabTreeCell;
 
 public class ROSLabController implements Initializable {
 	
 	@FXML
-	TreeView<Node> tree;
+	TreeView<String> tree;
 	
 	@FXML
 	AnchorPane swPane;
@@ -113,11 +114,11 @@ public class ROSLabController implements Initializable {
 	}
 	
 	private void loadTree() {
-		TreeItem<Node> dummyRoot = new TreeItem<Node>();
+		ROSLabTreeCell dummyRoot = new TreeItem<Node>();
 		TreeItem<Node> libraryNode = new TreeItem<Node>(new Node("Library", null, null));
-		//for (Node n : library.getNodes()) {
-			//libraryNode.getChildren().add(new Object());
-		//}
+		for (Node n : library.getNodes()) {
+			libraryNode.getChildren().add(new TreeItem<Node>(n));
+		}
 		TreeItem<Node> configNode = new TreeItem<Node>(new Node("Configuration", null, null));
 		dummyRoot.getChildren().addAll(libraryNode, configNode);
 		
