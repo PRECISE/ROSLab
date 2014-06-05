@@ -7,11 +7,11 @@
 }
 
 .Circuit {
-    -fx-stroke: red;
+    -fx-stroke: orange;
 }
 
 .HWBlock {
-    -fx-stroke: brown;
+    -fx-stroke: red;
 }
 
 .ROSNode {
