@@ -3,6 +3,9 @@
  */
 package roslab.model.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
@@ -24,6 +27,7 @@ public class UIEndpoint extends Group {
 	Circle endpointCircle;
 	Text endpointText;
 	UINode uiparent;
+	List<UILink> uilinks = new ArrayList<UILink>();
 	boolean rightSideText;	
 	
 	// X AND Y position of mouse during actions
@@ -76,6 +80,21 @@ public class UIEndpoint extends Group {
 	}
 
 	/**
+	 * @return the endpoint
+	 */
+	public Endpoint getEndpoint() {
+		return endpoint;
+	}
+
+	/**
+	 * @param endpoint the endpoint to set
+	 */
+	public void setEndpoint(Endpoint endpoint) {
+		this.endpoint = endpoint;
+		setupEndpointText(this.endpoint, this.rightSideText);
+	}
+
+	/**
 	 * @return the parent
 	 */
 	public UINode getParentUINode() {
@@ -97,18 +116,31 @@ public class UIEndpoint extends Group {
 	}
 
 	/**
-	 * @return the endpoint
+	 * @return the uilinks
 	 */
-	public Endpoint getEndpoint() {
-		return endpoint;
+	public List<UILink> getUILinks() {
+		return uilinks;
 	}
 
 	/**
-	 * @param endpoint the endpoint to set
+	 * @param uilinks the uilinks to set
 	 */
-	public void setEndpoint(Endpoint endpoint) {
-		this.endpoint = endpoint;
-		setupEndpointText(this.endpoint, this.rightSideText);
+	public void setUILinks(List<UILink> uilinks) {
+		this.uilinks = uilinks;
+	}
+	
+	/**
+	 * @param uilink the uilink to add
+	 */
+	public void addUILink(UILink uilink) {
+		this.uilinks.add(uilink);
+	}
+	
+	/**
+	 * @param uilink the uilink to add
+	 */
+	public void removeUILink(UILink uilink) {
+		this.uilinks.remove(uilink);
 	}
 
 	public void setMouse(MouseEvent mouseEvent) {
@@ -125,4 +157,11 @@ public class UIEndpoint extends Group {
 		endpointText.setY(mouseEvent.getY() + mouseyText);
 	}
 
+	public double getCenterX() {
+		return this.endpointCircle.getCenterX();
+	}
+	
+	public double getCenterY() {
+		return this.endpointCircle.getCenterY();
+	}
 }

@@ -3,6 +3,7 @@
  */
 package roslab.model.ui;
 
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import roslab.model.general.Link;
 
@@ -10,7 +11,7 @@ import roslab.model.general.Link;
  * @author Peter Gebhard
  *
  */
-public class UILink extends Path {
+public class UILink extends Line {
 
 	Link link;
 	UIEndpoint src;
@@ -23,6 +24,7 @@ public class UILink extends Path {
 	 * @param link
 	 */
 	public UILink(Link link, UIEndpoint src, UIEndpoint dest) {
+		super(src.getCenterX(), src.getCenterY(), dest.getCenterX(), dest.getCenterY());
 		this.link = link;
 		this.src = src;
 		this.dest = dest;

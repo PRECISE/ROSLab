@@ -17,8 +17,12 @@ public class Link {
 	 * @param dest
 	 */
 	public Link(Endpoint src, Endpoint dest) {
-		this.src = src;
-		this.dest = dest;
+		if(src.canConnect(dest)) {
+			this.src = src;
+			this.dest = dest;
+		} else {
+			throw new IllegalArgumentException("Cannot connect incompatible endpoints.");
+		}
 	}
 
 	/**
