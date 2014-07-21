@@ -1,7 +1,9 @@
 package roslab;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -30,7 +32,7 @@ import roslab.ui.ROSLabTreeCell;
 public class ROSLabController implements Initializable {
 	
 	@FXML
-	TreeView<Node> tree;
+	TreeView<String> tree;
 	
 	@FXML
 	AnchorPane swPane;
@@ -41,7 +43,7 @@ public class ROSLabController implements Initializable {
 	@FXML
 	AnchorPane eePane;
 	
-	Library library;
+	Library library = new Library(new ArrayList<Node>());
 	Configuration config;
 	Rectangle selectionRectangle;
 	double selectionX;
@@ -55,7 +57,6 @@ public class ROSLabController implements Initializable {
 		//enableSelectionRectangle(swPane);
 		//enableSelectionRectangle(hwPane);
 		//enableSelectionRectangle(eePane);
-		//loadTree();
 		Random r = new Random();
 		for (int i = 0; i < 100; i++) {
 			HashMap<String, ROSPort> m = new HashMap<String, ROSPort>();
@@ -73,11 +74,17 @@ public class ROSLabController implements Initializable {
 				String name = String.valueOf(r.nextInt(1000000));
 				m3.put(name, new Joint(name, null, null, r.nextBoolean(), r.nextBoolean()));
 			}
-			swPane.getChildren().add(UINode.buildUINode(new ROSNode("test", m, new HashMap<String, String>(), null), r.nextInt(1000), r.nextInt(1000)));
-			eePane.getChildren().add(UINode.buildUINode(new Circuit("test", m2, new HashMap<String, String>(), null), r.nextInt(1000), r.nextInt(1000)));
-			hwPane.getChildren().add(UINode.buildUINode(new HWBlock("test", m3, new HashMap<String, String>(), null, null), r.nextInt(1000), r.nextInt(1000)));
+			ROSNode rn = new ROSNode("test", m, new HashMap<String, String>(), null);
+			library.addNode(rn);
+			Circuit cn = new Circuit("test", m2, new HashMap<String, String>(), null);
+			library.addNode(cn);
+			HWBlock hw = new HWBlock("test", m3, new HashMap<String, String>(), null, null);
+			library.addNode(hw);
+			swPane.getChildren().add(UINode.buildUINode(rn, r.nextInt(1000), r.nextInt(1000)));
+			eePane.getChildren().add(UINode.buildUINode(cn, r.nextInt(1000), r.nextInt(1000)));
+			hwPane.getChildren().add(UINode.buildUINode(hw, r.nextInt(1000), r.nextInt(1000)));
 		}
-		//swPane.getChildren().add(UINode.buildUINode(new Circuit("test", null, null, null), null, r.nextInt(2000), r.nextInt(2000)));
+		loadTree();
 		tree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		
 		
@@ -130,12 +137,13 @@ public class ROSLabController implements Initializable {
 	}
 	
 	private void loadTree() {
-		TreeItem<Node> dummyRoot = new TreeItem<Node>();
-		TreeItem<Node> libraryNode = new TreeItem<Node>(new Node("Library", null, null));
+		TreeItem<String> dummyRoot = new TreeItem<String>();
+		TreeItem<String> libraryNode = new TreeItem<String>("Library");
 		for (Node n : library.getNodes()) {
-			libraryNode.getChildren().add(new TreeItem<Node>(n));
+			ROSLabTreeCell c = new ROSLabTreeCell(n);
+			libraryNode.getChildren().add(c.getTreeItem());
 		}
-		TreeItem<Node> configNode = new TreeItem<Node>(new Node("Configuration", null, null));
+		TreeItem<String> configNode = new TreeItem<String>("Configuration");
 		dummyRoot.getChildren().addAll(libraryNode, configNode);
 		
 		tree.setRoot(dummyRoot);
