@@ -193,4 +193,34 @@
       <includeDeps/>
     </roslab.artifacts.ModuleSpec>
   </entry>
+  <entry>
+    <string>VelocityStamped</string>
+    <roslab.artifacts.ModuleSpec>
+      <builtin>false</builtin>
+      <type>VelocityStamped</type>
+      <role>ROS Service</role>
+      <sig>
+        <type>VelocityStamped</type>
+        <sendPortNames/>
+        <recvPortNames>
+          <roslab.types.builtins.PortName>
+            <portName>/cmd_vel</portName>
+          </roslab.types.builtins.PortName>
+        </recvPortNames>
+        <sendPortTypes/>
+        <recvPortTypes>
+          <roslab.types.builtins.PortType>
+            <portType>TwistStamped</portType>
+            <rosType>geometry_msgs::TwistStamped</rosType>
+            <includeDeps>
+              <string>geometry_msgs/TwistStamped.h</string>
+            </includeDeps>
+          </roslab.types.builtins.PortType>
+        </recvPortTypes>
+        <taskDescriptors/>
+        <shareable>false</shareable>
+      </sig>
+      <includeDeps/>
+    </roslab.artifacts.ModuleSpec>
+  </entry>
 </map>
