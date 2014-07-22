@@ -188,8 +188,7 @@ public class WorkspaceSplitPane extends JSplitPane {
 			editItem.addActionListener(new modifyComponentTypePortMenuListener());
 
 			JMenuItem deleteItem = new JMenuItem("Delete");
-			deleteItem
-					.addActionListener(new deleteComponentTypePortMenuListener());
+			deleteItem.addActionListener(new deleteComponentTypePortMenuListener());
 			this.portTypeInstPopup.add(editItem);
 			this.portTypeInstPopup.add(deleteItem);
 		}
@@ -294,8 +293,7 @@ public class WorkspaceSplitPane extends JSplitPane {
 			JMenuItem synthMenuItem = new JMenuItem("Generate signature...");
 			synthMenuItem.addActionListener(new generateDeviceComponentSignatureMenuListener());
 
-			JMenuItem skelMenuItem = new JMenuItem(
-					"Generate Java skeleton");
+			JMenuItem skelMenuItem = new JMenuItem("Generate Java skeleton");
 			skelMenuItem.addActionListener(new generateDeviceComponentSkelMenuListener());
 
 			JMenuItem newTaskMenuItem = new JMenuItem("New task...");
@@ -2164,7 +2162,7 @@ public class WorkspaceSplitPane extends JSplitPane {
 			TreeNode parent = o.getParent();
 			if (parent != null) {
 				parent = parent.getParent();
-				if (parent != null && parent.toString().equals("Component Types")) {
+				if (parent != null && parent.toString().equals("User Defined Nodes")) {
 					return true;
 				}
 			}
@@ -2283,21 +2281,6 @@ public class WorkspaceSplitPane extends JSplitPane {
 						channelS);
 				node.add(newNode);
 				connectionInstances.get(appConfigName).put(channelS, newNode);
-				model.reload(node);
-			}
-		}
-	}
-
-	public void addExceptionHandlerInstToUI(String appConfigName, String label) {
-		DefaultMutableTreeNode node = configurationExceptionHandlingMap
-				.get(appConfigName);
-		String channelS = label; // channel.toString();
-		if (node != null) {
-			if (!exceptionInstances.get(appConfigName).containsKey(channelS)) {
-				DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(
-						channelS);
-				node.add(newNode);
-				exceptionInstances.get(appConfigName).put(channelS, newNode);
 				model.reload(node);
 			}
 		}
