@@ -3,6 +3,7 @@
  */
 package roslab.model.general;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,19 @@ public class Library {
 	 */
 	public List<Node> getNodes() {
 		return nodes;
+	}
+
+	/**
+	 * @return the nodes
+	 */
+	public List<Node> getNodesOfClass(Class<?> clazz) {
+		List<Node> subset = new ArrayList<Node>();
+		for (Node n : nodes) {
+			if (n.getClass().equals(clazz)) {
+				subset.add(n);
+			}
+		}
+		return subset;
 	}
 
 	/**
