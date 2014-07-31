@@ -6,15 +6,25 @@ package roslab.model.general;
 import java.util.Map;
 import java.util.Set;
 
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
+import roslab.model.ui.UINode;
+
 /**
  * @author shaz
  *
  */
 public class Node {
 	
-	protected String name;
-	protected Map<String, ? extends Feature> features;
-	protected Map<String, String> annotations;
+	protected StringProperty name;
+	protected MapProperty<String, ? extends Feature> features;
+	protected MapProperty<String, String> annotations;
+	protected ObjectProperty<UINode> uiNode;
 	
 	/**
 	 * @param name
@@ -23,9 +33,9 @@ public class Node {
 	 */
 	public Node(String name, Map<String, ? extends Feature> features,
 			Map<String, String> annotations) {
-		this.name = name;
-		this.features = features;
-		this.annotations = annotations;
+		this.name = new SimpleStringProperty(name);
+		this.features = new SimpleMapProperty(FXCollections.observableMap(features));
+		this.annotations = new SimpleMapProperty(FXCollections.observableMap(annotations));
 	}
 
 	/**
@@ -84,12 +94,30 @@ public class Node {
 		this.annotations.put(key, value);
 	}
 
+	/**
+	 * @return the uiNode
+	 */
+	public UINode getUiNode() {
+		return uiNode;
+	}
+
+	/**
+	 * @param uiNode the uiNode to set
+	 */
+	public void setUiNode(UINode uiNode) {
+		this.uiNode = uiNode;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return name;
+	}
+	
+	public static void addLink(Node src, Node dest) {
+		
 	}
 
 }
