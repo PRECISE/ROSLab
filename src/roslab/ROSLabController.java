@@ -27,6 +27,7 @@ import roslab.model.hardware.Joint;
 import roslab.model.software.ROSNode;
 import roslab.model.software.ROSPort;
 import roslab.model.ui.UINode;
+import roslab.model.ui.UILink;
 import roslab.ui.ROSLabTreeCell;
 
 public class ROSLabController implements Initializable {
@@ -57,8 +58,9 @@ public class ROSLabController implements Initializable {
 		//enableSelectionRectangle(swPane);
 		//enableSelectionRectangle(hwPane);
 		//enableSelectionRectangle(eePane);
+		config = new Configuration(new ArrayList<UINode>(), new ArrayList<UILink>());
 		Random r = new Random();
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 20; i++) {
 			HashMap<String, ROSPort> m = new HashMap<String, ROSPort>();
 			HashMap<String, Pin> m2 = new HashMap<String, Pin>();
 			HashMap<String, Joint> m3 = new HashMap<String, Joint>();
@@ -80,14 +82,17 @@ public class ROSLabController implements Initializable {
 			library.addNode(cn);
 			HWBlock hw = new HWBlock("test", m3, new HashMap<String, String>(), null, null);
 			library.addNode(hw);
-			swPane.getChildren().add(UINode.buildUINode(rn, r.nextInt(1000), r.nextInt(1000)));
+			swPane.getChildren().add(UINode.buildUINode(rn, r.nextInt(1000), r.nextInt(1000)));			
 			eePane.getChildren().add(UINode.buildUINode(cn, r.nextInt(1000), r.nextInt(1000)));
 			hwPane.getChildren().add(UINode.buildUINode(hw, r.nextInt(1000), r.nextInt(1000)));
 		}
+		List<Node> rosNodesList = library.getNodesOfClass(ROSNode.class);
+		for (int i = 0; i < 20; i++) {
+			ROSNode rn1 = (ROSNode) rosNodesList.get(r.nextInt(rosNodesList.size()));
+			ROSNode rn2 = (ROSNode) rosNodesList.get(r.nextInt(rosNodesList.size()));
+		}
 		loadTree();
 		tree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		
-		
 	}
 	
 	private void enableSelectionRectangle(final Pane p) {
