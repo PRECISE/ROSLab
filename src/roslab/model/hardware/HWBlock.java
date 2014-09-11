@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package roslab.model.hardware;
 
@@ -9,52 +9,57 @@ import roslab.model.general.Node;
 
 /**
  * @author shaz
- *
  */
 public class HWBlock extends Node {
-	
-	HWBlock spec;
-	HWBlockType type;
 
-	/**
-	 * @param name
-	 * @param joints
-	 * @param annotations
-	 * @param spec
-	 */
-	public HWBlock(String name, Map<String, Joint> joints,
-			Map<String, String> annotations, HWBlock spec, HWBlockType type) {
-		super(name, joints, annotations);
-		this.spec = spec;
-		this.type = type;
-	}
+    HWBlock spec;
+    HWBlockType type;
 
-	/**
-	 * @return the spec
-	 */
-	public HWBlock getSpec() {
-		return spec;
-	}
+    /**
+     * @param name
+     * @param joints
+     * @param annotations
+     * @param spec
+     */
+    public HWBlock(String name, Map<String, Joint> joints, Map<String, String> annotations, HWBlock spec, HWBlockType type) {
+        super(name, joints, annotations);
+        this.spec = spec;
+        this.type = type;
+    }
 
-	/**
-	 * @param spec the spec to set
-	 */
-	public void setSpec(HWBlock spec) {
-		this.spec = spec;
-	}
+    /**
+     * @return the spec
+     */
+    public HWBlock getSpec() {
+        return spec;
+    }
 
-	/**
-	 * @return the type
-	 */
-	public HWBlockType getType() {
-		return type;
-	}
+    /**
+     * @param spec
+     *            the spec to set
+     */
+    public void setSpec(HWBlock spec) {
+        this.spec = spec;
+    }
 
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(HWBlockType type) {
-		this.type = type;
-	}
+    /**
+     * @return the type
+     */
+    public HWBlockType getType() {
+        return type;
+    }
+
+    /**
+     * @param type
+     *            the type to set
+     */
+    public void setType(HWBlockType type) {
+        this.type = type;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addJoint(Joint j) {
+        ((Map<String, Joint>) this.features).put(j.getName(), j);
+    }
 
 }
