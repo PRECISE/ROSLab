@@ -8,7 +8,7 @@ import java.util.Map;
 import roslab.model.general.Node;
 
 /**
- * @author shaz
+ * @author Peter Gebhard
  */
 public class HWBlock extends Node {
 

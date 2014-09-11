@@ -31,6 +31,19 @@ public class Circuit extends Node implements Endpoint {
         this.spec = spec;
     }
 
+    public Circuit getSpec() {
+        return spec;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addPin(Pin p) {
+        ((Map<String, Pin>) this.features).put(p.getName(), p);
+    }
+
+    public Pin getPin(String name) {
+        return (Pin) this.features.get(name);
+    }
+
     @SuppressWarnings("unchecked")
     public Map<String, Pin> getPins() {
         return (Map<String, Pin>) features;
