@@ -26,133 +26,136 @@ import roslab.model.hardware.HWBlock;
 import roslab.model.hardware.Joint;
 import roslab.model.software.ROSNode;
 import roslab.model.software.ROSPort;
-import roslab.model.ui.UINode;
 import roslab.model.ui.UILink;
+import roslab.model.ui.UINode;
 import roslab.ui.ROSLabTreeCell;
 
 public class ROSLabController implements Initializable {
-	
-	@FXML
-	TreeView<String> tree;
-	
-	@FXML
-	AnchorPane swPane;
-	
-	@FXML
-	AnchorPane hwPane;
-	
-	@FXML
-	AnchorPane eePane;
-	
-	Library library = new Library(new ArrayList<Node>());
-	Configuration config;
-	Rectangle selectionRectangle;
-	double selectionX;
-	double selectionY;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		assert tree != null : "fx:id\"tree\" was not injected";
-		//System.out.println(this.getClass().getSimpleName() + ".initialize");
-		//TODO: get highlighting and selection of Nodes based on selection rectangle
-		//enableSelectionRectangle(swPane);
-		//enableSelectionRectangle(hwPane);
-		//enableSelectionRectangle(eePane);
-		config = new Configuration(new ArrayList<UINode>(), new ArrayList<UILink>());
-		Random r = new Random();
-		for (int i = 0; i < 20; i++) {
-			HashMap<String, ROSPort> m = new HashMap<String, ROSPort>();
-			HashMap<String, Pin> m2 = new HashMap<String, Pin>();
-			HashMap<String, Joint> m3 = new HashMap<String, Joint>();
-			for (int j = 0; j < r.nextInt(100); j++) {
-				String name = String.valueOf(r.nextInt(1000000));
-				m.put(name, new ROSPort(name, null, null, null, r.nextBoolean(), r.nextBoolean(), r.nextBoolean()));
-			}
-			for (int j = 0; j < r.nextInt(100); j++) {
-				String name = String.valueOf(r.nextInt(1000000));
-				m2.put(name, new Pin(name, null, null, null));
-			}
-			for (int j = 0; j < r.nextInt(100); j++) {
-				String name = String.valueOf(r.nextInt(1000000));
-				m3.put(name, new Joint(name, null, null, r.nextBoolean(), r.nextBoolean()));
-			}
-			ROSNode rn = new ROSNode("test", m, new HashMap<String, String>(), null);
-			library.addNode(rn);
-			Circuit cn = new Circuit("test", m2, new HashMap<String, String>(), null);
-			library.addNode(cn);
-			HWBlock hw = new HWBlock("test", m3, new HashMap<String, String>(), null, null);
-			library.addNode(hw);
-			swPane.getChildren().add(UINode.buildUINode(rn, r.nextInt(1000), r.nextInt(1000)));			
-			eePane.getChildren().add(UINode.buildUINode(cn, r.nextInt(1000), r.nextInt(1000)));
-			hwPane.getChildren().add(UINode.buildUINode(hw, r.nextInt(1000), r.nextInt(1000)));
-		}
-		List<Node> rosNodesList = library.getNodesOfClass(ROSNode.class);
-		for (int i = 0; i < 20; i++) {
-			ROSNode rn1 = (ROSNode) rosNodesList.get(r.nextInt(rosNodesList.size()));
-			ROSNode rn2 = (ROSNode) rosNodesList.get(r.nextInt(rosNodesList.size()));
-		}
-		loadTree();
-		tree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-	}
-	
-	private void enableSelectionRectangle(final Pane p) {
-		p.setOnMousePressed(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				selectionX = mouseEvent.getX();
-				selectionY = mouseEvent.getY();
-				selectionRectangle = new Rectangle(selectionX, selectionY, 0, 0);
-				selectionRectangle.getStyleClass().add("SelectionRectangle");
-				p.getChildren().add(selectionRectangle);
-			}
-		});
-		p.setOnMouseReleased(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				p.getChildren().remove(selectionRectangle);
-			}
-		});
-		p.setOnMouseDragged(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				double x = mouseEvent.getX();
-				double y = mouseEvent.getY();
-				if (x < selectionX) {
-					selectionRectangle.setX(x);
-					selectionRectangle.setWidth(selectionX - x);
-				} else {
-					selectionRectangle.setWidth(x - selectionRectangle.getX());
-				}
-				if (y < selectionY) {
-					selectionRectangle.setY(y);
-					selectionRectangle.setHeight(selectionY - y);
-				} else {
-					selectionRectangle.setHeight(y - selectionRectangle.getY());
-				}
-			}
-		});
-	}
+    @FXML
+    TreeView<String> tree;
 
-	private void openLibrary() {
-		
-	}
-	
-	private void openConfiguration() {
-		
-	}
-	
-	private void loadTree() {
-		TreeItem<String> dummyRoot = new TreeItem<String>();
-		TreeItem<String> libraryNode = new TreeItem<String>("Library");
-		for (Node n : library.getNodes()) {
-			ROSLabTreeCell c = new ROSLabTreeCell(n);
-			libraryNode.getChildren().add(c.getTreeItem());
-		}
-		TreeItem<String> configNode = new TreeItem<String>("Configuration");
-		dummyRoot.getChildren().addAll(libraryNode, configNode);
-		
-		tree.setRoot(dummyRoot);
-		tree.setShowRoot(false);
-	}
-	
+    @FXML
+    AnchorPane swPane;
+
+    @FXML
+    AnchorPane hwPane;
+
+    @FXML
+    AnchorPane eePane;
+
+    Library library = new Library(new ArrayList<Node>());
+    Configuration config;
+    Rectangle selectionRectangle;
+    double selectionX;
+    double selectionY;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        assert tree != null : "fx:id\"tree\" was not injected";
+        // System.out.println(this.getClass().getSimpleName() + ".initialize");
+        // TODO: get highlighting and selection of Nodes based on selection
+        // rectangle
+        // enableSelectionRectangle(swPane);
+        // enableSelectionRectangle(hwPane);
+        // enableSelectionRectangle(eePane);
+        config = new Configuration(new ArrayList<UINode>(), new ArrayList<UILink>());
+        Random r = new Random();
+        for (int i = 0; i < 20; i++) {
+            HashMap<String, ROSPort> m = new HashMap<String, ROSPort>();
+            HashMap<String, Pin> m2 = new HashMap<String, Pin>();
+            HashMap<String, Joint> m3 = new HashMap<String, Joint>();
+            for (int j = 0; j < r.nextInt(100); j++) {
+                String name = String.valueOf(r.nextInt(1000000));
+                m.put(name, new ROSPort(name, null, null, null, r.nextBoolean(), r.nextBoolean(), r.nextBoolean()));
+            }
+            for (int j = 0; j < r.nextInt(100); j++) {
+                String name = String.valueOf(r.nextInt(1000000));
+                m2.put(name, new Pin(name, null, null, null));
+            }
+            for (int j = 0; j < r.nextInt(100); j++) {
+                String name = String.valueOf(r.nextInt(1000000));
+                m3.put(name, new Joint(name, null, null, r.nextBoolean(), r.nextBoolean()));
+            }
+            ROSNode rn = new ROSNode("test", m, new HashMap<String, String>(), null);
+            library.addNode(rn);
+            Circuit cn = new Circuit("test", m2, new HashMap<String, String>(), null);
+            library.addNode(cn);
+            HWBlock hw = new HWBlock("test", m3, new HashMap<String, String>(), null, null);
+            library.addNode(hw);
+            swPane.getChildren().add(UINode.buildUINode(rn, r.nextInt(1000), r.nextInt(1000)));
+            eePane.getChildren().add(UINode.buildUINode(cn, r.nextInt(1000), r.nextInt(1000)));
+            hwPane.getChildren().add(UINode.buildUINode(hw, r.nextInt(1000), r.nextInt(1000)));
+        }
+        List<Node> rosNodesList = library.getNodesOfClass(ROSNode.class);
+        for (int i = 0; i < 20; i++) {
+            ROSNode rn1 = (ROSNode) rosNodesList.get(r.nextInt(rosNodesList.size()));
+            ROSNode rn2 = (ROSNode) rosNodesList.get(r.nextInt(rosNodesList.size()));
+        }
+        loadTree();
+        tree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+
+    private void enableSelectionRectangle(final Pane p) {
+        p.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                selectionX = mouseEvent.getX();
+                selectionY = mouseEvent.getY();
+                selectionRectangle = new Rectangle(selectionX, selectionY, 0, 0);
+                selectionRectangle.getStyleClass().add("SelectionRectangle");
+                p.getChildren().add(selectionRectangle);
+            }
+        });
+        p.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                p.getChildren().remove(selectionRectangle);
+            }
+        });
+        p.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                double x = mouseEvent.getX();
+                double y = mouseEvent.getY();
+                if (x < selectionX) {
+                    selectionRectangle.setX(x);
+                    selectionRectangle.setWidth(selectionX - x);
+                }
+                else {
+                    selectionRectangle.setWidth(x - selectionRectangle.getX());
+                }
+                if (y < selectionY) {
+                    selectionRectangle.setY(y);
+                    selectionRectangle.setHeight(selectionY - y);
+                }
+                else {
+                    selectionRectangle.setHeight(y - selectionRectangle.getY());
+                }
+            }
+        });
+    }
+
+    private void openLibrary() {
+
+    }
+
+    private void openConfiguration() {
+
+    }
+
+    private void loadTree() {
+        TreeItem<String> dummyRoot = new TreeItem<String>();
+        TreeItem<String> libraryNode = new TreeItem<String>("Library");
+        for (Node n : library.getNodes()) {
+            ROSLabTreeCell c = new ROSLabTreeCell(n);
+            libraryNode.getChildren().add(c.getTreeItem());
+        }
+        TreeItem<String> configNode = new TreeItem<String>("Configuration");
+        dummyRoot.getChildren().addAll(libraryNode, configNode);
+
+        tree.setRoot(dummyRoot);
+        tree.setShowRoot(false);
+    }
+
 }
