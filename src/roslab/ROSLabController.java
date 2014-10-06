@@ -28,7 +28,6 @@ import roslab.model.software.ROSNode;
 import roslab.model.software.ROSPort;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
-import roslab.ui.ROSLabTreeCell;
 
 public class ROSLabController implements Initializable {
 
@@ -61,7 +60,7 @@ public class ROSLabController implements Initializable {
         // enableSelectionRectangle(eePane);
         config = new Configuration(new ArrayList<UINode>(), new ArrayList<UILink>());
         Random r = new Random();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 5; i++) {
             HashMap<String, ROSPort> m = new HashMap<String, ROSPort>();
             HashMap<String, Pin> m2 = new HashMap<String, Pin>();
             HashMap<String, Joint> m3 = new HashMap<String, Joint>();
@@ -77,11 +76,11 @@ public class ROSLabController implements Initializable {
                 String name = String.valueOf(r.nextInt(1000000));
                 m3.put(name, new Joint(name, null, null, r.nextBoolean(), r.nextBoolean()));
             }
-            ROSNode rn = new ROSNode("test", m, new HashMap<String, String>(), null);
+            ROSNode rn = new ROSNode("test" + i, m, new HashMap<String, String>(), null);
             library.addNode(rn);
-            Circuit cn = new Circuit("test", m2, new HashMap<String, String>(), null);
+            Circuit cn = new Circuit("test" + i, m2, new HashMap<String, String>(), null);
             library.addNode(cn);
-            HWBlock hw = new HWBlock("test", m3, new HashMap<String, String>(), null, null);
+            HWBlock hw = new HWBlock("test" + i, m3, new HashMap<String, String>(), null, null);
             library.addNode(hw);
             swPane.getChildren().add(UINode.buildUINode(rn, r.nextInt(1000), r.nextInt(1000)));
             eePane.getChildren().add(UINode.buildUINode(cn, r.nextInt(1000), r.nextInt(1000)));
@@ -137,19 +136,41 @@ public class ROSLabController implements Initializable {
     }
 
     private void openLibrary() {
-
+        // Use XStream here!
     }
 
     private void openConfiguration() {
-
+        // Use XStream here!
     }
 
+    private void saveLibrary() {
+        // Use XStream here!
+    }
+
+    private void saveConfiguration() {
+        // Use XStream here!
+    }
+
+    // TODO: Improve Tree to stay in sync with Library data structure...how can
+    // they be integrated?
     private void loadTree() {
         TreeItem<String> dummyRoot = new TreeItem<String>();
         TreeItem<String> libraryNode = new TreeItem<String>("Library");
+        boolean nodeAdded;
         for (Node n : library.getNodes()) {
-            ROSLabTreeCell c = new ROSLabTreeCell(n);
-            libraryNode.getChildren().add(c.getTreeItem());
+            nodeAdded = false;
+            for (TreeItem<String> s : libraryNode.getChildren()) {
+                if (n.getClass().getSimpleName().equals(s.getValue())) {
+                    s.getChildren().add(new TreeItem<String>(n.getName()));
+                    nodeAdded = true;
+                }
+            }
+            if (!nodeAdded) {
+                TreeItem<String> newItem = new TreeItem<String>(n.getClass().getSimpleName());
+                newItem.getChildren().add(new TreeItem<String>(n.getName()));
+                libraryNode.getChildren().add(newItem);
+                nodeAdded = true;
+            }
         }
         TreeItem<String> configNode = new TreeItem<String>("Configuration");
         dummyRoot.getChildren().addAll(libraryNode, configNode);
@@ -157,5 +178,4 @@ public class ROSLabController implements Initializable {
         tree.setRoot(dummyRoot);
         tree.setShowRoot(false);
     }
-
 }
