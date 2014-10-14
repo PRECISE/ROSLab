@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package roslab.processors;
 
@@ -11,23 +11,22 @@ import roslab.model.general.Configuration;
 
 /**
  * @author Peter Gebhard
- *
  */
 public abstract class ModelProcessor {
-	
-	Configuration config;
-	STGroup stg = new STRawGroupDir("templates");
-	ST st;
 
-	/**
-	 * 
-	 */
-	public ModelProcessor(Configuration config) {
-		this.config = config;
-		stg.delimiterStartChar = '$';
-		stg.delimiterStopChar = '$';
-	}
-	
-	public abstract String output();
+    protected Configuration config;
+    protected STGroup stg = new STRawGroupDir("templates");
+    protected ST st;
+
+    /**
+     *
+     */
+    public ModelProcessor(Configuration config) {
+        this.config = config;
+        stg.delimiterStartChar = '$';
+        stg.delimiterStopChar = '$';
+    }
+
+    public abstract String output();
 
 }
