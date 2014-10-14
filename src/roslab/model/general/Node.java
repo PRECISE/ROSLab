@@ -102,7 +102,7 @@ public class Node {
     /**
      * @return the uiNode
      */
-    public UINode getUiNode() {
+    public UINode getUINode() {
         return uiNode;
     }
 
@@ -110,7 +110,7 @@ public class Node {
      * @param uiNode
      *            the uiNode to set
      */
-    public void setUiNode(UINode uiNode) {
+    public void setUINode(UINode uiNode) {
         this.uiNode = uiNode;
     }
 
@@ -122,9 +122,4 @@ public class Node {
     public String toString() {
         return name;
     }
-
-    public static void addLink(Node src, Node dest) {
-
-    }
-
 }
