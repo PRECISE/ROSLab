@@ -12,6 +12,8 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/ST-4.0.8.jar"/>
 	<classpathentry kind="lib" path="lib/xstream-1.4.7/lib/xstream-1.4.7.jar" sourcepath="lib/xstream-src-1.4.7/xstream/src/java"/>
+	<classpathentry kind="lib" path="lib/snakeyaml-1.13.jar" sourcepath="lib/snakeyaml-src"/>
+	<classpathentry kind="lib" path="lib/jython-2.7.b2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
