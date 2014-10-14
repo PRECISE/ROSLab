@@ -6,3 +6,4 @@
 
 bin
 user.settings
+*.pyc

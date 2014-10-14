@@ -1,0 +1,8 @@
+connections: []
+interfaces:
+  front: {interface: front, subcomponent: leg}
+  back: {interface: back, subcomponent: leg}
+  left: {interface: left, subcomponent: leg}
+  right: {interface: right, subcomponent: leg}
+parameters: {beamwidth: null, length: null}
+subcomponents: {}
