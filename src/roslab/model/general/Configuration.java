@@ -26,6 +26,14 @@ public class Configuration {
         this.links = links;
     }
 
+    public boolean addUINode(UINode node) {
+        return nodes.add(node);
+    }
+
+    public boolean removeUINode(UINode node) {
+        return nodes.remove(node);
+    }
+
     /**
      * @return the UI nodes
      */
@@ -52,6 +60,14 @@ public class Configuration {
         }
 
         return nodes;
+    }
+
+    public boolean addUILink(UILink link) {
+        return links.add(link);
+    }
+
+    public boolean removeUILink(UILink link) {
+        return links.remove(link);
     }
 
     /**
