@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
@@ -42,6 +43,15 @@ public class ROSLabController implements Initializable {
 
     @FXML
     AnchorPane eePane;
+
+    @FXML
+    Tab swTab;
+
+    @FXML
+    Tab hwTab;
+
+    @FXML
+    Tab eeTab;
 
     Library library = new Library(new ArrayList<Node>());
     Configuration config;
@@ -90,6 +100,7 @@ public class ROSLabController implements Initializable {
         for (int i = 0; i < 20; i++) {
             ROSNode rn1 = (ROSNode) rosNodesList.get(r.nextInt(rosNodesList.size()));
             ROSNode rn2 = (ROSNode) rosNodesList.get(r.nextInt(rosNodesList.size()));
+
         }
         loadTree();
         tree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -149,6 +160,11 @@ public class ROSLabController implements Initializable {
 
     private void saveConfiguration() {
         // Use XStream here!
+    }
+
+    @FXML
+    private void tabChanged() {
+
     }
 
     // TODO: Improve Tree to stay in sync with Library data structure...how can

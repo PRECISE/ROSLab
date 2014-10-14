@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="roslab.ROSLabController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ROSLabController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -53,28 +53,31 @@
         <TreeView fx:id="tree" prefHeight="254.0" prefWidth="150.0" />
         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
           <tabs>
-            <Tab closable="false" text="Software">
+            <Tab fx:id="swTab" closable="false" onSelectionChanged="#tabChanged" text="Software">
               <content>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
-                           <content>
-                              <AnchorPane fx:id="swPane" prefHeight="200.0" prefWidth="200.0" />
-                           </content></ScrollPane>
+                  <content>
+                    <AnchorPane fx:id="swPane" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
               </content>
             </Tab>
-            <Tab closable="false" text="Hardware">
+            <Tab fx:id="hwTab" closable="false" onSelectionChanged="#tabChanged" text="Hardware">
               <content>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
-                           <content>
-                              <AnchorPane fx:id="hwPane" prefHeight="200.0" prefWidth="200.0" />
-                           </content></ScrollPane>
+                  <content>
+                    <AnchorPane fx:id="hwPane" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
               </content>
             </Tab>
-            <Tab closable="false" text="Electronics">
+            <Tab fx:id="eeTab" closable="false" onSelectionChanged="#tabChanged" text="Electronics">
               <content>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
-                           <content>
-                              <AnchorPane fx:id="eePane" prefHeight="200.0" prefWidth="200.0" />
-                           </content></ScrollPane>
+                  <content>
+                    <AnchorPane fx:id="eePane" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
               </content>
             </Tab>
           </tabs>
