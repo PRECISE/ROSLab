@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ROSLabController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml" fx:controller="roslab.ROSLabController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -51,7 +51,7 @@
     <SplitPane dividerPositions="0.3062360801781737, 0.7160356347438753" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
         <TreeView fx:id="tree" prefHeight="254.0" prefWidth="150.0" />
-        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane prefHeight="200.0" prefWidth="200.0" side="TOP" tabClosingPolicy="UNAVAILABLE">
           <tabs>
             <Tab fx:id="swTab" closable="false" onSelectionChanged="#tabChanged" text="Software">
               <content>
@@ -62,7 +62,7 @@
                 </ScrollPane>
               </content>
             </Tab>
-            <Tab fx:id="hwTab" closable="false" onSelectionChanged="#tabChanged" text="Hardware">
+            <Tab fx:id="hwTab" closable="false" onSelectionChanged="#tabChanged" text="Mechanical">
               <content>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
                   <content>
@@ -71,7 +71,7 @@
                 </ScrollPane>
               </content>
             </Tab>
-            <Tab fx:id="eeTab" closable="false" onSelectionChanged="#tabChanged" text="Electronics">
+            <Tab fx:id="eeTab" closable="false" onSelectionChanged="#tabChanged" text="Electrical">
               <content>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
                   <content>
@@ -86,17 +86,29 @@
           <panes>
             <TitledPane animated="false" text="Features">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
               </content>
             </TitledPane>
-            <TitledPane animated="false" expanded="false" text="Layout">
+            <TitledPane animated="false" expanded="true" text="Layout">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
               </content>
             </TitledPane>
             <TitledPane animated="false" expanded="false" text="Hierarchy">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
               </content>
             </TitledPane>
           </panes>
