@@ -1,19 +1,18 @@
 /**
- * 
+ *
  */
-package roslab.processors;
+package roslab.processors.electronics;
 
 /**
  * @author shaz
- *
  */
 public class EagleXMLParser {
 
-	/**
-	 * 
-	 */
-	public EagleXMLParser() {
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     *
+     */
+    public EagleXMLParser() {
+        // TODO Auto-generated constructor stub
+    }
 
 }
