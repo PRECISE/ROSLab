@@ -27,7 +27,6 @@ import roslab.model.hardware.Joint;
 import roslab.model.ui.UIEndpoint;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
-import roslab.processors.mechanics.HardwareModelProcessor;
 
 /**
  * @author Peter Gebhard
