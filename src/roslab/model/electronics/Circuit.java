@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import roslab.model.general.Endpoint;
 import roslab.model.general.Feature;
+import roslab.model.general.Link;
 import roslab.model.general.Node;
 
 /**
@@ -105,5 +106,11 @@ public class Circuit extends Node implements Endpoint {
         }
         return false;
     }
+
+	@Override
+	public Link connect(Endpoint e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

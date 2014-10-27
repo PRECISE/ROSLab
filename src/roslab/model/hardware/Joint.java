@@ -7,6 +7,7 @@ import java.util.Map;
 
 import roslab.model.general.Endpoint;
 import roslab.model.general.Feature;
+import roslab.model.general.Link;
 
 /**
  * @author Peter Gebhard
@@ -56,5 +57,11 @@ public class Joint extends Feature implements Endpoint {
     public boolean canConnect(Endpoint e) {
         return true;
     }
+
+	@Override
+	public Link connect(Endpoint e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
