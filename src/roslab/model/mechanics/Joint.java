@@ -1,7 +1,7 @@
 /**
  *
  */
-package roslab.model.hardware;
+package roslab.model.mechanics;
 
 import java.util.Map;
 
@@ -58,10 +58,10 @@ public class Joint extends Feature implements Endpoint {
         return true;
     }
 
-	@Override
-	public Link connect(Endpoint e) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Link connect(Endpoint e) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

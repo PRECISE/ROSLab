@@ -1,7 +1,7 @@
 /**
  * 
  */
-package roslab.model.hardware;
+package roslab.model.mechanics;
 
 /**
  * @author shaz

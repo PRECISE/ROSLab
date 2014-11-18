@@ -5,4 +5,4 @@
  * @author shaz
  *
  */
-package roslab.model.hardware;
+package roslab.model.mechanics;

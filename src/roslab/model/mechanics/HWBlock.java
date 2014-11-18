@@ -1,8 +1,9 @@
 /**
  *
  */
-package roslab.model.hardware;
+package roslab.model.mechanics;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import roslab.model.general.Node;
@@ -23,6 +24,9 @@ public class HWBlock extends Node {
      */
     public HWBlock(String name, Map<String, Joint> joints, Map<String, String> annotations, HWBlock spec, HWBlockType type) {
         super(name, joints, annotations);
+        if (joints == null) {
+            this.features = new HashMap<String, Joint>();
+        }
         this.spec = spec;
         this.type = type;
     }

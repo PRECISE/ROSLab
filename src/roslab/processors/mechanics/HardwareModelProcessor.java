@@ -10,9 +10,9 @@ import java.util.Map.Entry;
 
 import roslab.model.general.Configuration;
 import roslab.model.general.Node;
-import roslab.model.hardware.HWBlock;
-import roslab.model.hardware.HWBlockType;
-import roslab.model.hardware.Joint;
+import roslab.model.mechanics.HWBlock;
+import roslab.model.mechanics.HWBlockType;
+import roslab.model.mechanics.Joint;
 import roslab.model.ui.UILink;
 import roslab.processors.ModelProcessor;
 
