@@ -3,6 +3,7 @@
  */
 package roslab.model.general;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import roslab.model.ui.UINode;
@@ -25,9 +26,19 @@ public class Node {
     public Node(String name, Map<String, ? extends Feature> features, Map<String, String> annotations) {
         // TODO: Use StringProperty and other <x>Property types for better
         // integration in GUI?
-        this.name = name;
+        if (name == null) {
+            throw new IllegalArgumentException("Bad name.");
+        }
+        else {
+            this.name = name;
+        }
         this.features = features;
-        this.annotations = annotations;
+        if (annotations == null) {
+            this.annotations = new HashMap<String, String>();
+        }
+        else {
+            this.annotations = annotations;
+        }
     }
 
     /**

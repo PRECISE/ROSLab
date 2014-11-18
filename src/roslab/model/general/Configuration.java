@@ -14,6 +14,7 @@ import roslab.model.ui.UINode;
  */
 public class Configuration {
 
+    String name;
     List<UINode> nodes;
     List<UILink> links;
 
@@ -21,9 +22,40 @@ public class Configuration {
      * @param nodes
      * @param links
      */
-    public Configuration(List<UINode> nodes, List<UILink> links) {
-        this.nodes = nodes;
-        this.links = links;
+    public Configuration(String name, List<UINode> nodes, List<UILink> links) {
+        if (name == null) {
+            throw new IllegalArgumentException("Bad name input.");
+        }
+        else {
+            this.name = name;
+        }
+        if (nodes == null) {
+            this.nodes = new ArrayList<UINode>();
+        }
+        else {
+            this.nodes = nodes;
+        }
+        if (links == null) {
+            this.links = new ArrayList<UILink>();
+        }
+        else {
+            this.links = links;
+        }
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean addUINode(UINode node) {
