@@ -30,6 +30,18 @@ public class Joint extends Feature implements Endpoint {
         this.fanOut = fanOut;
     }
 
+    /**
+     * @param name
+     * @param parent
+     * @param fanIn
+     * @param fanOut
+     */
+    public Joint(String name, HWBlock parent, boolean fanIn, boolean fanOut) {
+        super(name, parent);
+        this.fanIn = fanIn;
+        this.fanOut = fanOut;
+    }
+
     /*
      * (non-Javadoc)
      * @see roslab.model.general.Endpoint#isFanIn()

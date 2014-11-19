@@ -3,6 +3,7 @@
  */
 package roslab.model.electronics;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -32,17 +33,27 @@ public class Circuit extends Node implements Endpoint {
         this.spec = spec;
     }
 
+    /**
+     * @param name
+     * @param pins
+     * @param annotations
+     * @param spec
+     */
+    public Circuit(String name) {
+        super(name, new HashMap<String, Pin>(), new HashMap<String, String>());
+    }
+
     public Circuit getSpec() {
         return spec;
     }
 
     @SuppressWarnings("unchecked")
     public void addPin(Pin p) {
-        ((Map<String, Pin>) this.features).put(p.getName(), p);
+        ((Map<String, Pin>) features).put(p.getName(), p);
     }
 
     public Pin getPin(String name) {
-        return (Pin) this.features.get(name);
+        return (Pin) features.get(name);
     }
 
     @SuppressWarnings("unchecked")
@@ -107,10 +118,10 @@ public class Circuit extends Node implements Endpoint {
         return false;
     }
 
-	@Override
-	public Link connect(Endpoint e) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Link connect(Endpoint e) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

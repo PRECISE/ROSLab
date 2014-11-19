@@ -21,6 +21,7 @@ public class HWBlock extends Node {
      * @param joints
      * @param annotations
      * @param spec
+     * @param type
      */
     public HWBlock(String name, Map<String, Joint> joints, Map<String, String> annotations, HWBlock spec, HWBlockType type) {
         super(name, joints, annotations);
@@ -28,6 +29,15 @@ public class HWBlock extends Node {
             this.features = new HashMap<String, Joint>();
         }
         this.spec = spec;
+        this.type = type;
+    }
+
+    /**
+     * @param name
+     * @param type
+     */
+    public HWBlock(String name, HWBlockType type) {
+        super(name, new HashMap<String, Joint>());
         this.type = type;
     }
 
