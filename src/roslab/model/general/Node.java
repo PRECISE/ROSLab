@@ -15,7 +15,7 @@ public class Node {
 
     protected String name;
     protected Map<String, ? extends Feature> features;
-    protected Map<String, String> annotations;
+    protected Map<String, String> annotations = new HashMap<String, String>();
     protected UINode uiNode;
 
     /**
@@ -33,12 +33,26 @@ public class Node {
             this.name = name;
         }
         this.features = features;
-        if (annotations == null) {
-            this.annotations = new HashMap<String, String>();
-        }
-        else {
+        if (annotations != null) {
             this.annotations = annotations;
         }
+    }
+
+    /**
+     * @param name
+     * @param feature
+     * @param annotations
+     */
+    public Node(String name, Map<String, ? extends Feature> features) {
+        // TODO: Use StringProperty and other <x>Property types for better
+        // integration in GUI?
+        if (name == null) {
+            throw new IllegalArgumentException("Bad name.");
+        }
+        else {
+            this.name = name;
+        }
+        this.features = features;
     }
 
     /**
@@ -96,18 +110,30 @@ public class Node {
     }
 
     /**
-     * @return the annotation
+     * @param a
+     *            the annotation to get
+     * @return the annotation value
      */
-    public String getAnnotation(String s) {
-        return annotations.get(s);
+    public String getAnnotation(String a) {
+        return annotations.get(a);
     }
 
     /**
-     * @param annotations
-     *            the annotations to set
+     * @param key
+     *            the key to set
+     * @param value
+     *            the value to set
      */
     public void addAnnotation(String key, String value) {
         this.annotations.put(key, value);
+    }
+
+    /**
+     * @param key
+     *            the key to remove
+     */
+    public void removeAnnotation(String key) {
+        this.annotations.remove(key);
     }
 
     /**

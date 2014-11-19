@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author shaz
+ * @author Peter Gebhard
  */
 public class Feature {
 
-    String name;
-    Node parent;
-    Map<String, String> annotations;
+    protected String name;
+    protected Node parent;
+    protected Map<String, String> annotations = new HashMap<String, String>();
 
     /**
      * @param name
@@ -33,11 +33,28 @@ public class Feature {
         else {
             this.parent = parent;
         }
-        if (annotations == null) {
-            this.annotations = new HashMap<String, String>();
+        if (annotations != null) {
+            this.annotations = annotations;
+        }
+    }
+
+    /**
+     * @param name
+     * @param parent
+     * @param annotations
+     */
+    public Feature(String name, Node parent) {
+        if (name == null) {
+            throw new IllegalArgumentException("Bad name input.");
         }
         else {
-            this.annotations = annotations;
+            this.name = name;
+        }
+        if (parent == null) {
+            throw new IllegalArgumentException("Bad parent input.");
+        }
+        else {
+            this.parent = parent;
         }
     }
 
