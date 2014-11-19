@@ -1,7 +1,7 @@
 /**
  *
  */
-package roslab.processors;
+package roslab.processors.mechanics;
 
 import java.io.IOException;
 import java.nio.file.Files;
