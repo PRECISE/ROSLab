@@ -3,9 +3,8 @@
  */
 package roslab.processors;
 
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STRawGroupDir;
+import org.antlr.stringtemplate.StringTemplate;
+import org.antlr.stringtemplate.StringTemplateGroup;
 
 import roslab.model.general.Configuration;
 
@@ -15,16 +14,14 @@ import roslab.model.general.Configuration;
 public abstract class ModelProcessor {
 
     protected Configuration config;
-    protected STGroup stg = new STRawGroupDir("templates");
-    protected ST st;
+    protected StringTemplateGroup stg = new StringTemplateGroup("templates");
+    protected StringTemplate st;
 
     /**
      *
      */
     public ModelProcessor(Configuration config) {
         this.config = config;
-        stg.delimiterStartChar = '$';
-        stg.delimiterStopChar = '$';
     }
 
     public abstract String output();

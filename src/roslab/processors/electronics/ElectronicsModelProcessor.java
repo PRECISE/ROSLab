@@ -25,7 +25,7 @@ public class ElectronicsModelProcessor extends ModelProcessor {
      */
     @Override
     public String output() {
-        return st.render();
+        return st.toString();
     }
 
 }

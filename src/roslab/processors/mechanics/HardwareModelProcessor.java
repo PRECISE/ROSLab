@@ -41,13 +41,13 @@ public class HardwareModelProcessor extends ModelProcessor {
                 blocks.add((HWBlock) n);
             }
         }
-        st.add("add_components", printAddComponentsSection(blocks));
-        st.add("set_sub_parameters", printSetSubParametersSection(blocks));
-        st.add("append_components", printAppendComponentsSection(blocks));
-        st.add("attach_components", printAttachComponentsSection(config.getUILinksOfType(Joint.class)));
-        st.add("add_tabs", printAddTabsSection(blocks));
-        st.add("set_parameters", printSetParametersSection(blocks));
-        return st.render();
+        st.setAttribute("add_components", printAddComponentsSection(blocks));
+        st.setAttribute("set_sub_parameters", printSetSubParametersSection(blocks));
+        st.setAttribute("append_components", printAppendComponentsSection(blocks));
+        st.setAttribute("attach_components", printAttachComponentsSection(config.getUILinksOfType(Joint.class)));
+        st.setAttribute("add_tabs", printAddTabsSection(blocks));
+        st.setAttribute("set_parameters", printSetParametersSection(blocks));
+        return st.toString();
     }
 
     private String printAddComponentsSection(List<HWBlock> blocks) {
@@ -84,9 +84,9 @@ public class HardwareModelProcessor extends ModelProcessor {
             HWBlock src = (HWBlock) l.getSrc().getParentNode();
             HWBlock dest = (HWBlock) l.getDest().getParentNode();
             String srcPrefix = src.getName();  // Just using the component's own
-                                              // name also as the prefix (are
-                                              // prefixes actually important
-                                              // here?)
+            // name also as the prefix (are
+            // prefixes actually important
+            // here?)
             String destPrefix = dest.getName();
             if (src.getType().equals(HWBlockType.Brains)) {
                 srcPrefix = "core";

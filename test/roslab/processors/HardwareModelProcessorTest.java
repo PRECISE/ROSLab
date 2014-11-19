@@ -27,6 +27,7 @@ import roslab.model.mechanics.Joint;
 import roslab.model.ui.UIEndpoint;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
+import roslab.processors.mechanics.HardwareModelProcessor;
 
 /**
  * @author Peter Gebhard
@@ -100,7 +101,7 @@ public class HardwareModelProcessorTest {
         links.add(new UILink(new Link(j13, j21), new UIEndpoint(j13, n1, 0, 0, false), new UIEndpoint(j21, n2, 0, 0, false)));
         links.add(new UILink(new Link(j12, j31), new UIEndpoint(j12, n1, 0, 0, false), new UIEndpoint(j31, n3, 0, 0, false)));
 
-        c = new Configuration(nodes, links);
+        c = new Configuration(HardwareModelProcessorTest.class.getName(), nodes, links);
         str = new String(Files.readAllBytes(Paths.get("test/roslab/processors/HWBotTest.py")));
     }
 
