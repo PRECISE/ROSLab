@@ -16,10 +16,10 @@ int main(int argc, char **argv) {
 		ros::spinOnce();
         
         // TODO: Add your custom code here!
-        
+
         // Publish commands
         $publish_commands$
-		
+
 		r.sleep(); 
 	}
 
