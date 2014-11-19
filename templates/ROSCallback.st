@@ -1,3 +1,3 @@
-void $port_name$Callback(const $port_type_name$::ConstPtr& msg){
+void $port_name$_callback(const $port_type$::ConstPtr& msg) {
 	
 }

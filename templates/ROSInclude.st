@@ -1,1 +1,1 @@
-#include  <$incl_file$>
+#include <$include_file$.h>
