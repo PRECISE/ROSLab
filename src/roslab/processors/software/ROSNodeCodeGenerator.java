@@ -134,6 +134,8 @@ public class ROSNodeCodeGenerator {
         nodeTemplate.setAttribute("subscribers", subscribers);
         nodeTemplate.setAttribute("subscriber_callbacks", subscriberCallbacks);
 
+        nodeTemplate.setAttribute("rate", node.getRate());
+
         BufferedWriter writer = Files.newBufferedWriter(out.toPath(), Charset.defaultCharset());
         writer.write(nodeTemplate.toString());
         writer.close();
