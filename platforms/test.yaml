@@ -1,0 +1,11 @@
+name: TestPlatform
+devices:
+- name: IMU1
+  topic: /imu1
+  msg_type: {type: IMU}
+- name: IMU2
+  topic: /imu2
+  msg_type: {type: IMU}
+- name: GPS
+  topic: /gps
+  msg_type: {type: GPS}
