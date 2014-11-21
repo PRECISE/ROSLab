@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +25,9 @@ import roslab.model.software.ROSPortType;
  */
 public class ROSNodeCodeGenerator {
 
-    static protected StringTemplateGroup group = new StringTemplateGroup("templates", "templates");
+    static protected StringTemplateGroup group = new StringTemplateGroup("ros_templates", Paths.get("resources", "software_lib", "ros_templates")
+            .toString());  // Using Paths.get() to be able to handle OS-specific
+                          // filesystem differences.
 
     // public Map<String, String> generateNodeFiles(String appName) {
     // int topicSeed = 0;
