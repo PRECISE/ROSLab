@@ -9,3 +9,6 @@ devices:
 - name: GPS
   topic: /gps
   msg_type: {type: GPS}
+- name: Joystick
+  topic: /joy
+  msg_type: {type: Joystick}
