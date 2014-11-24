@@ -3,6 +3,7 @@
  */
 package roslab.processors.general;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -12,8 +13,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 
+import roslab.model.software.Platform;
+import roslab.model.software.Platform.Device;
 import roslab.model.software.ROSPortType;
-import roslab.processors.general.Platform.Device;
+import roslab.processors.software.PlatformParser;
 
 /**
  * @author Peter Gebhard
@@ -30,9 +33,9 @@ public class PlatformParserTest {
     public static void setUpBeforeClass() throws Exception {
         p.name = "TestPlatform";
         p.devices = new ArrayList<Device>();
-        p.devices.add(p.new Device("IMU1", "/imu1", new ROSPortType("IMU")));
-        p.devices.add(p.new Device("IMU2", "/imu2", new ROSPortType("IMU")));
-        p.devices.add(p.new Device("GPS", "/gps", new ROSPortType("GPS")));
+        p.devices.add(new Device("IMU1", "/imu1", new ROSPortType("IMU")));
+        p.devices.add(new Device("IMU2", "/imu2", new ROSPortType("IMU")));
+        p.devices.add(new Device("GPS", "/gps", new ROSPortType("GPS")));
     }
 
     /**
@@ -58,12 +61,16 @@ public class PlatformParserTest {
 
     /**
      * Test method for
-     * {@link roslab.processors.general.PlatformParser#PlatformParser(java.io.File)}
+     * {@link roslab.processors.software.PlatformParser#PlatformParser(java.io.File)}
      * .
      */
     @Test
     public void testPlatformParser() {
-        System.out.println(yaml.dump(p));
+        // System.out.println(yaml.dump(p));
+
+        PlatformParser pp = new PlatformParser(Paths.get("resources", "platforms", "test.yaml").toFile());
+        System.out.println(pp.platform);
+
     }
 
 }
