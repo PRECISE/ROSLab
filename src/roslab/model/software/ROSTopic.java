@@ -76,4 +76,14 @@ public class ROSTopic {
     public void setDirection(boolean direction) {
         this.direction = direction;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "ROSTopic [" + (topic != null ? "topic=" + topic + ", " : "") + (type != null ? "type=" + type + ", " : "") + "direction=" + direction
+                + "]";
+    }
 }
