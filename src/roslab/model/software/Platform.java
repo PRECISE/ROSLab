@@ -33,9 +33,9 @@ public class Platform {
     public static class Device {
         public String name;
         public String topic;
-        public ROSPortType msg_type;
+        public ROSMsgType msg_type;
 
-        public Device(String name, String topic, ROSPortType type) {
+        public Device(String name, String topic, ROSMsgType type) {
             this.name = name;
             this.topic = topic;
             this.msg_type = type;

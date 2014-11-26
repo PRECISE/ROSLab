@@ -15,16 +15,16 @@ import java.util.Map;
 /**
  * @author Peter Gebhard
  */
-public class ROSPortType {
-    public static final Map<ROSPortType, String> typeMap;
+public class ROSMsgType {
+    public static final Map<ROSMsgType, String> typeMap;
     static {
-        Map<ROSPortType, String> aMap = new HashMap<ROSPortType, String>();
+        Map<ROSMsgType, String> aMap = new HashMap<ROSMsgType, String>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("resources", "software_lib", "ros_msgs"))) {
             for (Path entry : stream) {
                 if (Files.isDirectory(entry) && Files.exists(entry.resolve("msg"))) {
                     for (Path msg : Files.newDirectoryStream(entry.resolve("msg"))) {
                         String type = msg.getFileName().toString().substring(0, msg.getFileName().toString().lastIndexOf('.'));
-                        aMap.put(new ROSPortType(type), entry.getFileName().toString());
+                        aMap.put(new ROSMsgType(type), entry.getFileName().toString());
                     }
                 }
             }
@@ -39,7 +39,7 @@ public class ROSPortType {
 
     public String type;
 
-    public ROSPortType(String type) {
+    public ROSMsgType(String type) {
         this.type = type;
     }
 

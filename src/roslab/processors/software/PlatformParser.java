@@ -15,7 +15,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import roslab.model.software.Platform;
 import roslab.model.software.Platform.Device;
-import roslab.model.software.ROSPortType;
+import roslab.model.software.ROSMsgType;
 
 /**
  * @author Peter Gebhard
@@ -40,7 +40,7 @@ public class PlatformParser {
         List<Platform.Device> devices = new ArrayList<Platform.Device>();
 
         for (Map<String, Object> d : (List<Map<String, Object>>) yam.get("devices")) {
-            devices.add(new Device((String) d.get("name"), (String) d.get("topic"), new ROSPortType(
+            devices.add(new Device((String) d.get("name"), (String) d.get("topic"), new ROSMsgType(
                     (String) ((Map<String, Object>) d.get("msg_type")).get("type"))));
         }
 

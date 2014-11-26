@@ -15,7 +15,7 @@ import org.antlr.stringtemplate.StringTemplateGroup;
 
 import roslab.model.software.ROSNode;
 import roslab.model.software.ROSPort;
-import roslab.model.software.ROSPortType;
+import roslab.model.software.ROSMsgType;
 
 /**
  * Takes a given configuration and generates the appropriate ROS node source
@@ -89,7 +89,7 @@ public class ROSNodeCodeGenerator {
         List<String> includesList = new ArrayList<String>();
         for (ROSPort port : node.getPorts().values()) {
             StringTemplate includeTemplate = group.getInstanceOf("ROSInclude");
-            includeTemplate.setAttribute("include_file", ROSPortType.typeMap.get(port.getType()) + "/" + port.getType().toString());
+            includeTemplate.setAttribute("include_file", ROSMsgType.typeMap.get(port.getType()) + "/" + port.getType().toString());
             if (!includes.contains(includeTemplate.toString())) {
                 includesList.add(includeTemplate.toString());
             }
@@ -109,7 +109,7 @@ public class ROSNodeCodeGenerator {
             StringTemplate publisherTemplate = group.getInstanceOf("ROSPublisher");
             StringTemplate publishCommandTemplate = group.getInstanceOf("ROSPublishCommand");
             publisherTemplate.setAttribute("port_name", port.getName());
-            publisherTemplate.setAttribute("port_type", ROSPortType.typeMap.get(port.getType()) + "::" + port.getType().toString());
+            publisherTemplate.setAttribute("port_type", ROSMsgType.typeMap.get(port.getType()) + "::" + port.getType().toString());
             publisherTemplate.setAttribute("port_topic", port.getTopic());
             publishers += publisherTemplate.toString() + "\n";
 
@@ -126,12 +126,12 @@ public class ROSNodeCodeGenerator {
             StringTemplate subscriberTemplate = group.getInstanceOf("ROSSubscriber");
             StringTemplate subscriberCallbackTemplate = group.getInstanceOf("ROSCallback");
             subscriberTemplate.setAttribute("port_name", port.getName());
-            subscriberTemplate.setAttribute("port_type", ROSPortType.typeMap.get(port.getType()) + "::" + port.getType().toString());
+            subscriberTemplate.setAttribute("port_type", ROSMsgType.typeMap.get(port.getType()) + "::" + port.getType().toString());
             subscriberTemplate.setAttribute("port_topic", port.getTopic());
             subscribers += subscriberTemplate.toString() + "\n";
 
             subscriberCallbackTemplate.setAttribute("port_name", port.getName());
-            subscriberCallbackTemplate.setAttribute("port_type", ROSPortType.typeMap.get(port.getType()) + "::" + port.getType().toString());
+            subscriberCallbackTemplate.setAttribute("port_type", ROSMsgType.typeMap.get(port.getType()) + "::" + port.getType().toString());
             subscriberCallbacks += subscriberCallbackTemplate.toString() + "\n";
         }
         nodeTemplate.setAttribute("subscribers", subscribers);

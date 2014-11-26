@@ -15,7 +15,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import roslab.model.software.Platform;
 import roslab.model.software.Platform.Device;
-import roslab.model.software.ROSPortType;
+import roslab.model.software.ROSMsgType;
 import roslab.processors.software.PlatformParser;
 
 /**
@@ -33,9 +33,9 @@ public class PlatformParserTest {
     public static void setUpBeforeClass() throws Exception {
         p.name = "TestPlatform";
         p.devices = new ArrayList<Device>();
-        p.devices.add(new Device("IMU1", "/imu1", new ROSPortType("IMU")));
-        p.devices.add(new Device("IMU2", "/imu2", new ROSPortType("IMU")));
-        p.devices.add(new Device("GPS", "/gps", new ROSPortType("GPS")));
+        p.devices.add(new Device("IMU1", "/imu1", new ROSMsgType("IMU")));
+        p.devices.add(new Device("IMU2", "/imu2", new ROSMsgType("IMU")));
+        p.devices.add(new Device("GPS", "/gps", new ROSMsgType("GPS")));
     }
 
     /**
