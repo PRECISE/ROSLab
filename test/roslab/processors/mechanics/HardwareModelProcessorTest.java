@@ -27,7 +27,6 @@ import roslab.model.mechanics.Joint;
 import roslab.model.ui.UIEndpoint;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
-import roslab.processors.mechanics.HardwareModelProcessor;
 
 /**
  * @author Peter Gebhard
@@ -137,7 +136,6 @@ public class HardwareModelProcessorTest {
             Files.write(Paths.get("HWBotTestOutput.py"), hmp.output().getBytes(), StandardOpenOption.CREATE);
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         org.junit.Assert.assertTrue(str.equals(hmp.output()));
