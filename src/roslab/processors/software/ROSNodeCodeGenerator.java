@@ -13,9 +13,9 @@ import java.util.List;
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
 
+import roslab.model.software.ROSMsgType;
 import roslab.model.software.ROSNode;
 import roslab.model.software.ROSPort;
-import roslab.model.software.ROSMsgType;
 
 /**
  * Takes a given configuration and generates the appropriate ROS node source
@@ -27,7 +27,7 @@ public class ROSNodeCodeGenerator {
 
     static protected StringTemplateGroup group = new StringTemplateGroup("ros_templates", Paths.get("resources", "software_lib", "ros_templates")
             .toString());  // Using Paths.get() to be able to handle OS-specific
-                          // filesystem differences.
+    // filesystem differences.
 
     // public Map<String, String> generateNodeFiles(String appName) {
     // int topicSeed = 0;
@@ -110,7 +110,7 @@ public class ROSNodeCodeGenerator {
             StringTemplate publishCommandTemplate = group.getInstanceOf("ROSPublishCommand");
             publisherTemplate.setAttribute("port_name", port.getName());
             publisherTemplate.setAttribute("port_type", ROSMsgType.typeMap.get(port.getType()) + "::" + port.getType().toString());
-            publisherTemplate.setAttribute("port_topic", port.getTopic());
+            publisherTemplate.setAttribute("port_topic", port.getTopicName());
             publishers += publisherTemplate.toString() + "\n";
 
             publishCommandTemplate.setAttribute("port_name", port.getName());
@@ -127,7 +127,7 @@ public class ROSNodeCodeGenerator {
             StringTemplate subscriberCallbackTemplate = group.getInstanceOf("ROSCallback");
             subscriberTemplate.setAttribute("port_name", port.getName());
             subscriberTemplate.setAttribute("port_type", ROSMsgType.typeMap.get(port.getType()) + "::" + port.getType().toString());
-            subscriberTemplate.setAttribute("port_topic", port.getTopic());
+            subscriberTemplate.setAttribute("port_topic", port.getTopicName());
             subscribers += subscriberTemplate.toString() + "\n";
 
             subscriberCallbackTemplate.setAttribute("port_name", port.getName());

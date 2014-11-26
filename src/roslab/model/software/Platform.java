@@ -43,7 +43,7 @@ public class Platform {
 
         static public ROSNode buildROSNodeFromDevice(Device dev) {
             ROSNode rn = new ROSNode(dev.name);
-            rn.addPort(new ROSPort(dev.topic, rn, dev.msg_type, dev.topic, false, false, false));
+            rn.addPort(new ROSPort(dev.topic, rn, new ROSTopic(dev.topic, dev.msg_type, false), false, false));
             return rn;
         }
 

@@ -18,8 +18,9 @@ import roslab.model.ui.UILink;
  */
 public class ROSPort extends Feature implements Endpoint {
 
-    ROSPortType type;
-    boolean direction; // true is in/subscribe, false is out/publish
+    ROSTopic topic;
+
+    // TODO: Make these fields part of the annotations list instead?
     boolean fanIn;
     boolean fanOut;
 
@@ -29,17 +30,133 @@ public class ROSPort extends Feature implements Endpoint {
      * @param name
      * @param parent
      * @param annotations
+     * @param topic
+     * @param fanIn
+     * @param fanOut
+     */
+    public ROSPort(String name, ROSNode parent, Map<String, String> annotations, ROSTopic topic, boolean fanIn, boolean fanOut) {
+        super(name, parent, annotations);
+        if (topic == null) {
+            throw new IllegalArgumentException("Bad topic.");
+        }
+        else {
+            this.annotations.put("Topic", topic.getTopic());
+        }
+        this.fanIn = fanIn && topic.isSubscriber();
+        this.fanOut = fanOut && !topic.isSubscriber();
+    }
+
+    /**
+     * @param name
+     * @param parent
      * @param type
+     * @param topic
      * @param direction
      * @param fanIn
      * @param fanOut
      */
-    public ROSPort(String name, ROSNode parent, Map<String, String> annotations, ROSPortType type, boolean direction, boolean fanIn, boolean fanOut) {
-        super(name, parent, annotations);
-        this.type = type;
-        this.direction = direction;
-        this.fanIn = fanIn && direction;
-        this.fanOut = fanOut && !direction;
+    public ROSPort(String name, ROSNode parent, ROSTopic topic, boolean fanIn, boolean fanOut) {
+        super(name, parent);
+        if (topic == null) {
+            throw new IllegalArgumentException("Bad topic.");
+        }
+        else {
+            this.annotations.put("Topic", topic.getTopic());
+        }
+        this.fanIn = fanIn && topic.isSubscriber();
+        this.fanOut = fanOut && !topic.isSubscriber();
+    }
+
+    /**
+     * @return the type
+     */
+    public ROSMsgType getType() {
+        return topic.getType();
+    }
+
+    /**
+     * @param type
+     *            the type to set
+     */
+    public void setType(ROSMsgType type) {
+        topic.setType(type);
+    }
+
+    /**
+     * @return the direction
+     */
+    public boolean isSubscriber() {
+        return topic.isSubscriber();
+    }
+
+    /**
+     * @param direction
+     *            the direction to set
+     */
+    public void setDirection(boolean direction) {
+        topic.setDirection(direction);
+    }
+
+    /**
+     * @return the topic
+     */
+    public String getTopicName() {
+        return this.annotations.get("Topic");
+    }
+
+    /**
+     * @param topic
+     *            the topic to set
+     */
+    public void setTopicName(String topic) {
+        annotations.put("Topic", topic);
+        this.topic.setTopic(topic);
+    }
+
+    /**
+     * @return the topic
+     */
+    public ROSTopic getTopic() {
+        return topic;
+    }
+
+    /**
+     * @param topic
+     *            the topic to set
+     */
+    public void setTopic(ROSTopic topic) {
+        this.topic = topic;
+    }
+
+    /**
+     * @param fanIn
+     *            the fanIn to set
+     */
+    public void setFanIn(boolean fanIn) {
+        this.fanIn = fanIn;
+    }
+
+    /**
+     * @param fanOut
+     *            the fanOut to set
+     */
+    public void setFanOut(boolean fanOut) {
+        this.fanOut = fanOut;
+    }
+
+    /**
+     * @return the links
+     */
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    /**
+     * @param links
+     *            the links to set
+     */
+    public void setLinks(List<Link> links) {
+        this.links = links;
     }
 
     /*
@@ -48,7 +165,7 @@ public class ROSPort extends Feature implements Endpoint {
      */
     @Override
     public boolean isFanIn() {
-        return fanIn && direction;
+        return fanIn && topic.isSubscriber();
     }
 
     /*
@@ -57,7 +174,7 @@ public class ROSPort extends Feature implements Endpoint {
      */
     @Override
     public boolean isFanOut() {
-        return fanOut && !direction;
+        return fanOut && !topic.isSubscriber();
     }
 
     /*
@@ -73,12 +190,12 @@ public class ROSPort extends Feature implements Endpoint {
 
             // fanIn/fanOut checks
             boolean passedFanCheck = true;
-            if ((!isFanIn() && !p.direction && links.size() > 0) || (!isFanOut() && p.direction && links.size() > 0)) {
+            if ((!isFanIn() && !p.isSubscriber() && links.size() > 0) || (!isFanOut() && p.isSubscriber() && links.size() > 0)) {
                 passedFanCheck = false;
             }
 
             // Valid connection if directions are opposite, but types match.
-            return (this.direction != p.direction) && (this.type == p.type) && passedFanCheck;
+            return (this.isSubscriber() != p.isSubscriber()) && (this.getType() == p.getType()) && passedFanCheck;
         }
         return false;
     }
@@ -89,7 +206,7 @@ public class ROSPort extends Feature implements Endpoint {
             ROSPort src;
             ROSPort dest;
 
-            if (((ROSPort) e).direction) {
+            if (((ROSPort) e).isSubscriber()) {
                 dest = (ROSPort) e;
                 src = this;
             }

@@ -74,7 +74,7 @@ public class ROSNode extends Node {
         @SuppressWarnings("unchecked")
         Collection<ROSPort> ports = (Collection<ROSPort>) features.values();
         for (ROSPort p : ports) {
-            if (!p.direction) {
+            if (!p.isSubscriber()) {
                 publishers.put(p.getName(), p);
             }
         }
@@ -86,7 +86,7 @@ public class ROSNode extends Node {
         @SuppressWarnings("unchecked")
         Collection<ROSPort> ports = (Collection<ROSPort>) features.values();
         for (ROSPort p : ports) {
-            if (p.direction) {
+            if (p.isSubscriber()) {
                 subscribers.put(p.getName(), p);
             }
         }
