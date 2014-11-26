@@ -9,7 +9,7 @@ import java.util.Map;
 import roslab.model.ui.UINode;
 
 /**
- * @author shaz
+ * @author Peter Gebhard
  */
 public class Node {
 
