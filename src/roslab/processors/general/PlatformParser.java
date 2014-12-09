@@ -1,7 +1,7 @@
 /**
  *
  */
-package roslab.processors.software;
+package roslab.processors.general;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,8 +13,9 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
-import roslab.model.software.Platform;
-import roslab.model.software.Platform.Device;
+import roslab.model.general.Device;
+import roslab.model.general.Platform;
+import roslab.model.software.ROSDevice;
 import roslab.model.software.ROSMsgType;
 
 /**
@@ -37,11 +38,21 @@ public class PlatformParser {
             e.printStackTrace();
         }
 
-        List<Platform.Device> devices = new ArrayList<Platform.Device>();
+        List<Device> devices = new ArrayList<Device>();
 
         for (Map<String, Object> d : (List<Map<String, Object>>) yam.get("devices")) {
-            devices.add(new Device((String) d.get("name"), (String) d.get("topic"), new ROSMsgType(
-                    (String) ((Map<String, Object>) d.get("msg_type")).get("type"))));
+            switch ((String) d.get("dev_type")) {
+                case "ROS":
+                    devices.add(new ROSDevice((String) d.get("name"), (String) d.get("topic"), (String) d.get("direction"), new ROSMsgType(
+                            (String) ((Map<String, Object>) d.get("msg_type")).get("type"))));
+                    break;
+                case "HW":
+                    // TODO
+                    break;
+                case "Elec":
+                    // TODO
+                    break;
+            }
         }
 
         platform = new Platform((String) yam.get("name"), devices);

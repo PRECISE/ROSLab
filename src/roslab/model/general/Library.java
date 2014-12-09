@@ -3,8 +3,12 @@
  */
 package roslab.model.general;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import roslab.model.software.ROSDevice;
+import roslab.processors.general.PlatformParser;
 
 /**
  * @author Peter Gebhard
@@ -56,4 +60,12 @@ public class Library {
         this.nodes.add(node);
     }
 
+    public void loadPlatform(String platformName) {
+        PlatformParser pp = new PlatformParser(Paths.get("resources", "platforms", platformName + ".yaml").toFile());
+        for (Device dev : pp.platform.devices) {
+            if (dev instanceof ROSDevice) {
+                addNode(ROSDevice.buildNodeFromDevice((ROSDevice) dev));
+            }
+        }
+    }
 }

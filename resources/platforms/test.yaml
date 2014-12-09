@@ -1,14 +1,22 @@
-name: TestPlatform
+name: Test
 devices:
 - name: IMU1
+  dev_type: ROS
   topic: /imu1
+  direction: pub
   msg_type: {type: IMU}
 - name: IMU2
+  dev_type: ROS
   topic: /imu2
+  direction: sub
   msg_type: {type: IMU}
 - name: GPS
+  dev_type: ROS
   topic: /gps
+  direction: pub
   msg_type: {type: GPS}
 - name: Joystick
+  dev_type: ROS
   topic: /joy
+  direction: sub
   msg_type: {type: Joystick}
