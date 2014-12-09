@@ -50,7 +50,7 @@
     </MenuBar>
     <SplitPane dividerPositions="0.3062360801781737, 0.7160356347438753" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <TreeView fx:id="tree" prefHeight="254.0" prefWidth="150.0" />
+        <TreeView fx:id="treeView" prefHeight="254.0" prefWidth="150.0" />
         <TabPane prefHeight="200.0" prefWidth="200.0" side="TOP" tabClosingPolicy="UNAVAILABLE">
           <tabs>
             <Tab fx:id="swTab" closable="false" onSelectionChanged="#tabChanged" text="Software">
