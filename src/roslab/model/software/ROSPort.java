@@ -10,8 +10,6 @@ import java.util.Map;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Feature;
 import roslab.model.general.Link;
-import roslab.model.ui.UIEndpoint;
-import roslab.model.ui.UILink;
 
 /**
  * @author Peter Gebhard
@@ -41,6 +39,7 @@ public class ROSPort extends Feature implements Endpoint {
         }
         else {
             this.annotations.put("Topic", topic.getTopic());
+            this.topic = topic;
         }
         this.fanIn = fanIn && topic.isSubscriber();
         this.fanOut = fanOut && !topic.isSubscriber();
@@ -62,6 +61,7 @@ public class ROSPort extends Feature implements Endpoint {
         }
         else {
             this.annotations.put("Topic", topic.getTopic());
+            this.topic = topic;
         }
         this.fanIn = fanIn && topic.isSubscriber();
         this.fanOut = fanOut && !topic.isSubscriber();
@@ -219,13 +219,18 @@ public class ROSPort extends Feature implements Endpoint {
             src.links.add(l);
             dest.links.add(l);
 
-            UIEndpoint srcEP = src.getParent().getUINode().getUIEndpoint(src);
-            UIEndpoint destEP = dest.getParent().getUINode().getUIEndpoint(dest);
-            srcEP.addUILink(new UILink(l, srcEP, destEP));
-            destEP.addUILink(new UILink(l, srcEP, destEP));
-
             return l;
         }
         return null;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return name + " (" + parent + ")";
+    }
+
 }

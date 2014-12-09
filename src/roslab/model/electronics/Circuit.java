@@ -124,4 +124,9 @@ public class Circuit extends Node implements Endpoint {
         return null;
     }
 
+    @Override
+    public Node getParent() {
+        return spec;
+    }
+
 }

@@ -118,4 +118,14 @@ public class Feature {
         this.annotations.put(key, value);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Feature [" + (name != null ? "name=" + name + ", " : "") + (parent != null ? "parent=" + parent + ", " : "")
+                + (annotations != null ? "annotations=" + annotations : "") + "]";
+    }
+
 }
