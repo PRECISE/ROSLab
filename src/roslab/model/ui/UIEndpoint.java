@@ -140,6 +140,7 @@ public class UIEndpoint extends Group {
      */
     public void addUILink(UILink uilink) {
         this.uilinks.add(uilink);
+        this.getChildren().add(uilink);  // TODO Does this really work?
     }
 
     /**

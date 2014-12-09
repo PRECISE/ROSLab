@@ -3,13 +3,14 @@
  */
 package roslab.model.general;
 
-
 /**
  * @author Peter Gebhard
  */
 public interface Endpoint {
 
     public String getName();
+
+    public Node getParent();
 
     public boolean isFanIn();
 

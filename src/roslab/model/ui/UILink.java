@@ -26,11 +26,16 @@ public class UILink extends Line {
      * @param dest
      * @param link
      */
-    public UILink(Link link, UIEndpoint src, UIEndpoint dest) {
-        super(src.getCenterX(), src.getCenterY(), dest.getCenterX(), dest.getCenterY());
+    public UILink(Link link) {
+        super(link.getSrc().getParent().getUINode().getUIEndpoint(link.getSrc()).getCenterX(), link.getSrc().getParent().getUINode()
+                .getUIEndpoint(link.getSrc()).getCenterY(), link.getDest().getParent().getUINode().getUIEndpoint(link.getDest()).getCenterX(), link
+                .getDest().getParent().getUINode().getUIEndpoint(link.getDest()).getCenterY());
         this.link = link;
-        this.src = src;
-        this.dest = dest;
+        this.src = link.getSrc().getParent().getUINode().getUIEndpoint(link.getSrc());
+        this.dest = link.getDest().getParent().getUINode().getUIEndpoint(link.getDest());
+        this.link.setUILink(this);
+        this.src.addUILink(this);
+        this.dest.addUILink(this);
     }
 
     /**
