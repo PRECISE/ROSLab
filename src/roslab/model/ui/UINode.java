@@ -62,7 +62,7 @@ public class UINode extends Group {
             // If the node itself is the endpoint, add it on the left side,
             // halfway down
             this.endpoints
-            .add(new UIEndpoint((Endpoint) node, this, this.nodeRect.getX(), this.nodeRect.getY() + this.nodeRect.getHeight() / 2, true));
+                    .add(new UIEndpoint((Endpoint) node, this, this.nodeRect.getX(), this.nodeRect.getY() + this.nodeRect.getHeight() / 2, true));
         }
         else {
             int endpointIndex = 0;
@@ -115,99 +115,65 @@ public class UINode extends Group {
 
         this.getChildren().addAll(this.nodeRect, this.nodeText);
         this.getChildren().addAll(this.endpoints);
+        this.node.setUINode(this);
 
-        // THIS IS AN OPTIONAL WAY TO ENABLE DRAGGING WITHOUT USING THE
-        // BUILDNODE METHOD
-        //
-        // // EventListener for MousePressed
-        // onMousePressedProperty().set(new EventHandler<MouseEvent>() {
-        // @Override
-        // public void handle(MouseEvent event) {
-        // // record the current mouse X and Y position on Node
-        // mousex = event.getSceneX();
-        // mousey = event.getSceneY();
-        // // get the x and y position measure from Left-Top
-        // x = getLayoutX();
-        // y = getLayoutY();
-        // }
-        // });
-        //
-        // // Event Listener for MouseDragged
-        // onMouseDraggedProperty().set(new EventHandler<MouseEvent>() {
-        // @Override
-        // public void handle(MouseEvent event) {
-        // // Get the exact moved X and Y
-        // x += event.getSceneX() - mousex;
-        // y += event.getSceneY() - mousey;
-        //
-        // // set the position of Node after calculation
-        // setLayoutX(x);
-        // setLayoutY(y);
-        //
-        // // again set current Mouse x AND y position
-        // mousex = event.getSceneX();
-        // mousey = event.getSceneY();
-        // }
-        // });
+        this.nodeRect.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                // record a delta distance for the drag and drop operation.
+                mousex = nodeRect.getX() - mouseEvent.getX();
+                mousey = nodeRect.getY() - mouseEvent.getY();
+                mousexText = nodeText.getX() - mouseEvent.getX();
+                mouseyText = nodeText.getY() - mouseEvent.getY();
+                for (UIEndpoint e : endpoints) {
+                    e.setMouse(mouseEvent);
+                }
+                setCursor(Cursor.CLOSED_HAND);
+            }
+        });
+
+        this.nodeRect.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                setCursor(Cursor.OPEN_HAND);
+            }
+        });
+
+        this.nodeRect.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                nodeRect.setX(mouseEvent.getX() + mousex);
+                nodeRect.setY(mouseEvent.getY() + mousey);
+                nodeText.setX(mouseEvent.getX() + mousexText);
+                nodeText.setY(mouseEvent.getY() + mouseyText);
+                for (UIEndpoint e : endpoints) {
+                    e.updateXY(mouseEvent);
+                }
+            }
+        });
+
+        this.nodeRect.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    setCursor(Cursor.OPEN_HAND);
+                }
+            }
+        });
+
+        this.nodeRect.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    setCursor(Cursor.DEFAULT);
+                }
+            }
+        });
     }
 
     private void setWidth(int i) {
         this.nodeRect.setWidth(i);
         this.nodeText.setX(this.nodeRect.getX() + (this.nodeRect.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
-
-    }
-
-    public static UINode buildUINode(Node node, double x, double y) {
-        final UINode n = new UINode(node, x, y);
-        n.nodeRect.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                // record a delta distance for the drag and drop operation.
-                n.mousex = n.nodeRect.getX() - mouseEvent.getX();
-                n.mousey = n.nodeRect.getY() - mouseEvent.getY();
-                n.mousexText = n.nodeText.getX() - mouseEvent.getX();
-                n.mouseyText = n.nodeText.getY() - mouseEvent.getY();
-                for (UIEndpoint e : n.endpoints) {
-                    e.setMouse(mouseEvent);
-                }
-                n.setCursor(Cursor.CLOSED_HAND);
-            }
-        });
-        n.nodeRect.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                n.setCursor(Cursor.OPEN_HAND);
-            }
-        });
-        n.nodeRect.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                n.nodeRect.setX(mouseEvent.getX() + n.mousex);
-                n.nodeRect.setY(mouseEvent.getY() + n.mousey);
-                n.nodeText.setX(mouseEvent.getX() + n.mousexText);
-                n.nodeText.setY(mouseEvent.getY() + n.mouseyText);
-                for (UIEndpoint e : n.endpoints) {
-                    e.updateXY(mouseEvent);
-                }
-            }
-        });
-        n.nodeRect.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (!mouseEvent.isPrimaryButtonDown()) {
-                    n.setCursor(Cursor.OPEN_HAND);
-                }
-            }
-        });
-        n.nodeRect.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (!mouseEvent.isPrimaryButtonDown()) {
-                    n.setCursor(Cursor.DEFAULT);
-                }
-            }
-        });
-        return n;
     }
 
     /**
