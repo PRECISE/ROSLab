@@ -1,14 +1,11 @@
 /**
- * 
+ *
  */
 package roslab.model.mechanics;
 
 /**
- * @author shaz
- *
+ * @author Peter Gebhard
  */
 public enum HWBlockType {
-	Brains,
-	HalfAnt,
-	HalfSeg
+    Brains, HalfAnt, HalfSeg, DEFAULT
 }

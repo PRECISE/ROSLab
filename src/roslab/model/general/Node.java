@@ -4,14 +4,16 @@
 package roslab.model.general;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import roslab.model.ui.UINode;
 
 /**
  * @author Peter Gebhard
  */
-public class Node {
+public abstract class Node {
 
     protected String name;
     protected Map<String, ? extends Feature> features;
@@ -102,6 +104,17 @@ public class Node {
     }
 
     /**
+     * @return the annotations
+     */
+    public Map<String, String> getAnnotationsCopy() {
+        Map<String, String> copy = new HashMap<String, String>();
+        for (Entry<String, String> e : annotations.entrySet()) {
+            copy.put(e.getKey(), e.getValue());
+        }
+        return copy;
+    }
+
+    /**
      * @param annotations
      *            the annotations to set
      */
@@ -150,6 +163,12 @@ public class Node {
     public void setUINode(UINode uiNode) {
         this.uiNode = uiNode;
     }
+
+    public abstract List<Endpoint> getEndpoints();
+
+    public abstract Node getSpec();
+
+    public abstract Node clone(String name);
 
     /*
      * (non-Javadoc)

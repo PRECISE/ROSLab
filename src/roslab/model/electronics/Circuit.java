@@ -3,7 +3,9 @@
  */
 package roslab.model.electronics;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,13 +26,12 @@ public class Circuit extends Node implements Endpoint {
 
     /**
      * @param name
-     * @param pins
-     * @param annotations
      * @param spec
      */
-    public Circuit(String name, Map<String, Pin> pins, Map<String, String> annotations, Circuit spec) {
-        super(name, pins, annotations);
+    public Circuit(String name, Circuit spec) {
+        super(name, new HashMap<String, Pin>(), spec.getAnnotationsCopy());
         this.spec = spec;
+        this.features = spec.getPinsCopy(this);
     }
 
     /**
@@ -39,10 +40,18 @@ public class Circuit extends Node implements Endpoint {
      * @param annotations
      * @param spec
      */
+    public Circuit(String name, Map<String, Pin> pins) {
+        super(name, pins, new HashMap<String, String>());
+    }
+
+    /**
+     * @param name
+     */
     public Circuit(String name) {
         super(name, new HashMap<String, Pin>(), new HashMap<String, String>());
     }
 
+    @Override
     public Circuit getSpec() {
         return spec;
     }
@@ -59,6 +68,14 @@ public class Circuit extends Node implements Endpoint {
     @SuppressWarnings("unchecked")
     public Map<String, Pin> getPins() {
         return (Map<String, Pin>) features;
+    }
+
+    public Map<String, Pin> getPinsCopy(Circuit c) {
+        Map<String, Pin> copy = new HashMap<String, Pin>();
+        for (Entry<String, ? extends Feature> e : features.entrySet()) {
+            copy.put(e.getKey(), ((Pin) e.getValue()).getClone(e.getKey(), c));
+        }
+        return copy;
     }
 
     public Pin getUnusedServiceByName(String serviceName) {
@@ -127,6 +144,18 @@ public class Circuit extends Node implements Endpoint {
     @Override
     public Node getParent() {
         return spec;
+    }
+
+    @Override
+    public List<Endpoint> getEndpoints() {
+        ArrayList<Endpoint> list = new ArrayList<Endpoint>();
+        list.add(this);
+        return list;
+    }
+
+    @Override
+    public Circuit clone(String name) {
+        return new Circuit(name, this);
     }
 
 }

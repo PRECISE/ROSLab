@@ -6,6 +6,7 @@ package roslab.model.electronics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import roslab.model.general.Feature;
 
@@ -15,9 +16,9 @@ import roslab.model.general.Feature;
 public class Pin extends Feature {
 
     List<PinService> services = new ArrayList<PinService>();
-    PinService assignedService;
-    String portName;
-    int pinIn;
+    PinService assignedService = null;
+    String portName = "";
+    int pinIn = 0;
 
     /**
      * @param name
@@ -126,6 +127,85 @@ public class Pin extends Feature {
      */
     public void setPinIn(int pinIn) {
         this.pinIn = pinIn;
+    }
+
+    public static Pin getPinFromString(String pin, Circuit c) {
+        // Example:
+        // GPIO,#,+,IO/PWM,1,+,IO,TIMER,15,1/MISO,#,+,IO,SPI,2,5/PWM_N,2,+,O,TIMER,1,6.B,14
+        String[] pinArray = pin.split(".");
+
+        if (pinArray.length > 2) {
+            throw new IllegalArgumentException("Bad input pin string - too many periods");
+        }
+
+        Pin result = null;
+
+        if (pinArray.length == 2) {
+            String[] portArray = pinArray[1].split(",");
+            result = new Pin(portArray[0] + portArray[1], c);
+        }
+        else {
+            result = new Pin(pinArray[0], c);
+        }
+
+        for (String serviceStr : pinArray[0].split("/")) {
+            StringTokenizer st = new StringTokenizer(serviceStr, ",");
+
+            String service = null;
+            int serviceNum = -1;
+            char oneToMany = '#';
+            String io = null;
+            String superService = null;
+            int superServiceNum = -1;
+            int af = -1;
+
+            if (st.hasMoreTokens()) {
+                service = st.nextToken();
+            }
+            if (st.hasMoreTokens()) {
+                String temp = st.nextToken();
+                if (!temp.equals("#")) {
+                    serviceNum = Integer.valueOf(temp);
+                }
+            }
+            if (st.hasMoreTokens()) {
+                oneToMany = st.nextToken().charAt(0);
+            }
+            if (st.hasMoreTokens()) {
+                io = st.nextToken();
+            }
+            if (st.hasMoreTokens()) {
+                superService = st.nextToken();
+            }
+            if (st.hasMoreTokens()) {
+                String temp = st.nextToken();
+                if (!temp.equals("#")) {
+                    superServiceNum = Integer.valueOf(temp);
+                }
+            }
+            if (st.hasMoreTokens()) {
+                String temp = st.nextToken();
+                if (!temp.equals("#")) {
+                    af = Integer.valueOf(temp);
+                }
+            }
+
+            result.getServices().add(new PinService(service, serviceNum, oneToMany, io, superService, superServiceNum, af));
+        }
+
+        return result;
+    }
+
+    public Pin getClone(String name, Circuit parent) {
+        return new Pin(name, parent, this.getAnnotationsCopy(), this.getServicesCopy(), portName, pinIn);
+    }
+
+    private List<PinService> getServicesCopy() {
+        List<PinService> copy = new ArrayList<PinService>();
+        for (PinService ps : services) {
+            copy.add(ps.clone());
+        }
+        return copy;
     }
 
 }

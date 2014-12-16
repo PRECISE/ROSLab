@@ -3,9 +3,14 @@
  */
 package roslab.model.mechanics;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import roslab.model.general.Endpoint;
+import roslab.model.general.Feature;
 import roslab.model.general.Node;
 
 /**
@@ -23,13 +28,11 @@ public class HWBlock extends Node {
      * @param spec
      * @param type
      */
-    public HWBlock(String name, Map<String, Joint> joints, Map<String, String> annotations, HWBlock spec, HWBlockType type) {
-        super(name, joints, annotations);
-        if (joints == null) {
-            this.features = new HashMap<String, Joint>();
-        }
+    public HWBlock(String name, HWBlock spec) {
+        super(name, new HashMap<String, Joint>(), spec.getAnnotationsCopy());
         this.spec = spec;
-        this.type = type;
+        this.type = spec.type;
+        this.features = spec.getJointsCopy(this);
     }
 
     /**
@@ -44,6 +47,7 @@ public class HWBlock extends Node {
     /**
      * @return the spec
      */
+    @Override
     public HWBlock getSpec() {
         return spec;
     }
@@ -72,8 +76,32 @@ public class HWBlock extends Node {
     }
 
     @SuppressWarnings("unchecked")
+    public Map<String, Joint> getJoints() {
+        return (Map<String, Joint>) features;
+    }
+
+    private Map<String, Joint> getJointsCopy(HWBlock hwBlock) {
+        Map<String, Joint> copy = new HashMap<String, Joint>();
+        for (Entry<String, ? extends Feature> e : features.entrySet()) {
+            copy.put(e.getKey(), ((Joint) e.getValue()).getClone(e.getKey(), hwBlock));
+        }
+        return copy;
+    }
+
+    @SuppressWarnings("unchecked")
     public void addJoint(Joint j) {
         ((Map<String, Joint>) this.features).put(j.getName(), j);
     }
 
+    @Override
+    public List<Endpoint> getEndpoints() {
+        ArrayList<Endpoint> list = new ArrayList<Endpoint>();
+        list.addAll(getJoints().values());
+        return list;
+    }
+
+    @Override
+    public HWBlock clone(String name) {
+        return new HWBlock(name, this);
+    }
 }

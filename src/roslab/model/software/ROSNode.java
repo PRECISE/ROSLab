@@ -3,10 +3,15 @@
  */
 package roslab.model.software;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import roslab.model.general.Endpoint;
+import roslab.model.general.Feature;
 import roslab.model.general.Node;
 
 /**
@@ -17,18 +22,8 @@ public class ROSNode extends Node {
     ROSNode spec;
 
     /**
-     * @param name
-     * @param spec
-     */
-    public ROSNode(String name, ROSNode spec) {
-        super(name, spec.getPorts(), spec.getAnnotations());
-        if (!this.annotations.containsKey("Rate")) {
-            this.annotations.put("Rate", "50"); // Set default ROS rate to 50Hz
-        }
-        this.spec = spec;
-    }
-
-    /**
+     * Construct a new ROSNode
+     *
      * @param name
      */
     public ROSNode(String name) {
@@ -36,6 +31,22 @@ public class ROSNode extends Node {
         this.annotations.put("Rate", "50"); // Set default ROS rate to 50Hz
     }
 
+    /**
+     * Construct a new ROSNode based on input spec ROSNode
+     *
+     * @param name
+     * @param spec
+     */
+    public ROSNode(String name, ROSNode spec) {
+        super(name, new HashMap<String, ROSPort>(), spec.getAnnotationsCopy());
+        if (!this.annotations.containsKey("Rate")) {
+            this.annotations.put("Rate", "50"); // Set default ROS rate to 50Hz
+        }
+        this.spec = spec;
+        this.features = this.spec.getPortsCopy(this);
+    }
+
+    @Override
     public ROSNode getSpec() {
         return spec;
     }
@@ -69,6 +80,14 @@ public class ROSNode extends Node {
         return (Map<String, ROSPort>) features;
     }
 
+    public Map<String, ROSPort> getPortsCopy(ROSNode rosNode) {
+        Map<String, ROSPort> copy = new HashMap<String, ROSPort>();
+        for (Entry<String, ? extends Feature> e : features.entrySet()) {
+            copy.put(e.getKey(), ((ROSPort) e.getValue()).getClone(e.getKey(), rosNode));
+        }
+        return copy;
+    }
+
     public Map<String, ROSPort> getPublisherPorts() {
         Map<String, ROSPort> publishers = new HashMap<String, ROSPort>();
         @SuppressWarnings("unchecked")
@@ -91,6 +110,18 @@ public class ROSNode extends Node {
             }
         }
         return subscribers;
+    }
+
+    @Override
+    public List<Endpoint> getEndpoints() {
+        ArrayList<Endpoint> list = new ArrayList<Endpoint>();
+        list.addAll(getPorts().values());
+        return list;
+    }
+
+    @Override
+    public Node clone(String name) {
+        return new ROSNode(name, this);
     }
 
 }

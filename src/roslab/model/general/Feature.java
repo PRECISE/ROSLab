@@ -5,11 +5,12 @@ package roslab.model.general;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author Peter Gebhard
  */
-public class Feature {
+public abstract class Feature {
 
     protected String name;
     protected Node parent;
@@ -93,6 +94,17 @@ public class Feature {
      */
     public Map<String, String> getAnnotations() {
         return annotations;
+    }
+
+    /**
+     * @return the annotations
+     */
+    public Map<String, String> getAnnotationsCopy() {
+        Map<String, String> copy = new HashMap<String, String>();
+        for (Entry<String, String> e : annotations.entrySet()) {
+            copy.put(e.getKey(), e.getValue());
+        }
+        return copy;
     }
 
     /**

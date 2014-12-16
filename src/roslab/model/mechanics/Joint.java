@@ -76,4 +76,8 @@ public class Joint extends Feature implements Endpoint {
         return null;
     }
 
+    public Joint getClone(String name, HWBlock parent) {
+        return new Joint(name, parent, this.getAnnotationsCopy(), fanIn, fanIn);
+    }
+
 }

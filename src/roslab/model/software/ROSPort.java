@@ -233,4 +233,8 @@ public class ROSPort extends Feature implements Endpoint {
         return name + " (" + parent + ")";
     }
 
+    public ROSPort getClone(String name, ROSNode parent) {
+        return new ROSPort(name, parent, this.getAnnotationsCopy(), topic.clone(), fanIn, fanIn);
+    }
+
 }

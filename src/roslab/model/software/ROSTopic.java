@@ -77,6 +77,11 @@ public class ROSTopic {
         this.direction = direction;
     }
 
+    @Override
+    public ROSTopic clone() {
+        return this.clone();
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
