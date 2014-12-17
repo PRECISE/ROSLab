@@ -15,13 +15,52 @@ import roslab.processors.general.PlatformParser;
  */
 public class Library {
 
+    String name;
     List<Node> nodes;
+
+    /**
+     *
+     */
+    public Library() {
+        this("Default", new ArrayList<Node>());
+    }
 
     /**
      * @param nodes
      */
     public Library(List<Node> nodes) {
+        this("Default", nodes);
+    }
+
+    /**
+     * @param name
+     */
+    public Library(String name) {
+        this(name, new ArrayList<Node>());
+    }
+
+    /**
+     * @param name
+     * @param nodes
+     */
+    public Library(String name, List<Node> nodes) {
+        this.name = name;
         this.nodes = nodes;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -62,6 +101,7 @@ public class Library {
 
     public void loadPlatform(String platformName) {
         PlatformParser pp = new PlatformParser(Paths.get("resources", "platforms", platformName + ".yaml").toFile());
+        this.name = pp.platform.name;
         for (Device dev : pp.platform.devices) {
             if (dev instanceof ROSDevice) {
                 addNode(ROSDevice.buildNodeFromDevice((ROSDevice) dev));
