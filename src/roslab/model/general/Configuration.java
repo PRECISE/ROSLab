@@ -160,4 +160,25 @@ public class Configuration {
         return links;
     }
 
+    /**
+     * @return the links that include Node n
+     */
+    public List<Endpoint> getEndpoints() {
+        List<Endpoint> eps = new ArrayList<Endpoint>();
+
+        for (Node n : this.getNodes()) {
+            eps.addAll(n.getEndpoints());
+        }
+
+        return eps;
+    }
+
+    public boolean contains(UINode n) {
+        return this.nodes.contains(n);
+    }
+
+    public boolean contains(UILink l) {
+        return this.links.contains(l);
+    }
+
 }
