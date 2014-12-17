@@ -8,21 +8,25 @@ package roslab.ui;
  *
  * @author Peter Gebhard
  */
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 
+import roslab.ROSLabController;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Link;
 
-public class NewLinkDialog {
+public class NewLinkDialog implements Initializable {
 
     @FXML
     private ComboBox<Endpoint> srcBox;
@@ -30,18 +34,9 @@ public class NewLinkDialog {
     private ComboBox<Endpoint> destBox;
 
     private Stage dialogStage;
-    private Link link;
     private boolean okClicked = false;
     private ObservableList<Endpoint> endpoints;
-
-    /**
-     * Initializes the controller class. This method is automatically called
-     * after the fxml file has been loaded.
-     */
-    @FXML
-    private void initialize() {
-
-    }
+    private ROSLabController controller;
 
     /**
      * Sets the stage of this dialog.
@@ -73,6 +68,7 @@ public class NewLinkDialog {
                     destEndpoints.add(e);
                 }
             }
+            destBox.setItems(destEndpoints);
         }
     }
 
@@ -90,8 +86,7 @@ public class NewLinkDialog {
     @FXML
     private void handleOk() {
         if (isInputValid()) {
-            link.setSrc(srcBox.getValue());
-            link.setDest(destBox.getValue());
+            controller.addConfigLink(new Link(srcBox.getValue(), destBox.getValue()));
 
             okClicked = true;
             dialogStage.close();
@@ -138,5 +133,15 @@ public class NewLinkDialog {
     public void setEndpoints(List<Endpoint> endpoints) {
         this.endpoints = FXCollections.observableArrayList(endpoints);
         this.srcBox.setItems(this.endpoints);
+    }
+
+    public void setRLController(ROSLabController rosLabController) {
+        this.controller = rosLabController;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // TODO Auto-generated method stub
+
     }
 }
