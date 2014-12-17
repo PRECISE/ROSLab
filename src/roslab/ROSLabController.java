@@ -1,5 +1,6 @@
 package roslab;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
@@ -7,22 +8,31 @@ import java.util.ResourceBundle;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 import roslab.model.general.Configuration;
 import roslab.model.general.Library;
+import roslab.model.general.Link;
 import roslab.model.general.Node;
-import roslab.model.software.ROSNode;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
+import roslab.ui.NewLinkDialog;
+import roslab.ui.NewNodeDialog;
 import roslab.ui.ROSLabTree;
 
 public class ROSLabController implements Initializable {
@@ -57,7 +67,7 @@ public class ROSLabController implements Initializable {
     double selectionX;
     double selectionY;
 
-    private Main mainApp;
+    private Stage primaryStage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,7 +78,7 @@ public class ROSLabController implements Initializable {
         // enableSelectionRectangle(swPane);
         // enableSelectionRectangle(hwPane);
         // enableSelectionRectangle(eePane);
-        config = new Configuration("TEST", new ArrayList<UINode>(), new ArrayList<UILink>());
+        config = new Configuration("Test", new ArrayList<Node>(), new ArrayList<Link>());
 
         // for (int i = 0; i < 5; i++) {
         // ROSNode rn = new ROSNode("test" + i);
@@ -127,12 +137,18 @@ public class ROSLabController implements Initializable {
         // }
 
         library.loadPlatform("test");
-        tree = new ROSLabTree(library, config);
+        tree = new ROSLabTree(library, config, this);
 
         treeView.setRoot(tree);
         treeView.setShowRoot(false);
+        treeView.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>() {
+            @Override
+            public TreeCell<String> call(TreeView<String> p) {
+                return tree.new TreeCellImpl();
+            }
+        });
 
-        addDragDrop(swPane);
+        // addDragDrop(swPane);
 
         for (Node n : library.getNodes()) {
             addConfigNode(n);
@@ -232,19 +248,64 @@ public class ROSLabController implements Initializable {
         });
     }
 
-    private void addConfigNode(Node n) {
+    public void addConfigNode(Node n) {
         UINode uin = new UINode(n, r.nextInt(400), r.nextInt(400));
-        if (uin.getNode() instanceof ROSNode) {
-            swPane.getChildren().add(uin);
+        String nodeClassName = uin.getNode().getClass().getName();
+        switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
+            case "ROSNode":
+                swPane.getChildren().add(uin);
+                break;
+            case "HWBlock":
+                hwPane.getChildren().add(uin);
+                break;
+            case "Circuit":
+                eePane.getChildren().add(uin);
+                break;
         }
-        config.addUINode(uin);
-        tree.addConfigNode(uin);
+        config.addNode(n);
+        tree.addConfigNode(n);
     }
 
-    private void addConfigLink(UILink l) {
-        // TODO: Change this to take Link as input
-        config.addUILink(l);
+    public void addConfigLink(Link l) {
+        l.setUILink(new UILink(l));
+        config.addLink(l);
         tree.addConfigLink(l);
+    }
+
+    public void removeConfigNode(Node n) {
+        String nodeClassName = n.getClass().getName();
+        switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
+            case "ROSNode":
+                swPane.getChildren().remove(n.getUINode());
+                break;
+            case "HWBlock":
+                hwPane.getChildren().remove(n.getUINode());
+                break;
+            case "Circuit":
+                eePane.getChildren().remove(n.getUINode());
+                break;
+        }
+        config.removeNode(n);
+        tree.removeConfigNode(n);
+    }
+
+    public void removeConfigLink(Link l) {
+        config.addUILink(l.getUILink());
+        tree.addConfigLink(l.getUILink());
+    }
+
+    /**
+     * @return the library
+     */
+    public Library getLibrary() {
+        return library;
+    }
+
+    /**
+     * @return the config
+     */
+    public Configuration getConfig() {
+        return config;
     }
 
     private void openLibrary() {
@@ -268,7 +329,90 @@ public class ROSLabController implements Initializable {
 
     }
 
-    public void setMainApp(Main main) {
-        this.mainApp = main;
+    /**
+     * Opens a dialog to edit details for the specified person. If the user
+     * clicks OK, the changes are saved into the provided person object and true
+     * is returned.
+     *
+     * @param person
+     *            the person object to be edited
+     * @return true if the user clicked OK, false otherwise.
+     */
+    public boolean showNewLinkDialog() {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("ui/fxml/software/NewLinkDialog.fxml"));
+            GridPane page = (GridPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("New Link");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            NewLinkDialog controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setEndpoints(config.getEndpoints());
+            controller.setRLController(this);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.isOkClicked();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Opens a dialog to edit details for the specified person. If the user
+     * clicks OK, the changes are saved into the provided person object and
+     * true
+     * is returned.
+     *
+     * @param person
+     *            the person object to be edited
+     * @return true if the user clicked OK, false otherwise.
+     */
+    public boolean showNewNodeDialog() {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("ui/fxml/software/NewNodeDialog.fxml"));
+            GridPane page = (GridPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("New Node");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            NewNodeDialog controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setNodes(library.getNodes());
+            controller.setRLController(this);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.isAddClicked();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void setStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 }
