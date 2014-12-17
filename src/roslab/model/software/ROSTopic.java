@@ -6,7 +6,7 @@ package roslab.model.software;
 /**
  * @author Peter Gebhard
  */
-public class ROSTopic {
+public class ROSTopic implements Cloneable {
     private String topic;
     private ROSMsgType type;
     private boolean direction; // true is in/subscribe, false is out/publish
@@ -79,7 +79,7 @@ public class ROSTopic {
 
     @Override
     public ROSTopic clone() {
-        return this.clone();
+        return new ROSTopic(topic, type, direction);
     }
 
     /*
