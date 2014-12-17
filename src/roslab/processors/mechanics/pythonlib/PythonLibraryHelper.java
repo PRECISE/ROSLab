@@ -23,6 +23,7 @@ import org.python.util.PythonInterpreter;
 import org.yaml.snakeyaml.Yaml;
 
 import roslab.model.mechanics.HWBlock;
+import roslab.model.mechanics.HWBlockType;
 import roslab.model.mechanics.Joint;
 
 /**
@@ -123,7 +124,7 @@ public class PythonLibraryHelper {
     }
 
     public HWBlock getDefaultHWBlock(String blockName) {
-        HWBlock block = new HWBlock(blockName, null, null, null, null);
+        HWBlock block = new HWBlock(blockName, HWBlockType.DEFAULT);
         block.addJoint(new Joint("topright", block, null, false, false));
         block.addJoint(new Joint("bottomright", block, null, false, false));
         block.addJoint(new Joint("topleft", block, null, false, false));

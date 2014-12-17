@@ -51,9 +51,12 @@ public class HardwareModelProcessorTest {
         Map<String, String> halfAnn = new HashMap<String, String>();
         halfAnn.put("width", "self.getParameter('brain').getParameter('width')");
 
-        HWBlock brain = new HWBlock("brain", null, brainAnn, null, HWBlockType.Brains);
-        HWBlock half1 = new HWBlock("half1", null, halfAnn, null, HWBlockType.HalfAnt);
-        HWBlock half2 = new HWBlock("half2", null, halfAnn, null, HWBlockType.HalfAnt);
+        HWBlock brain = new HWBlock("brain", HWBlockType.Brains);
+        brain.setAnnotations(brainAnn);
+        HWBlock half1 = new HWBlock("half1", HWBlockType.HalfAnt);
+        half1.setAnnotations(halfAnn);
+        HWBlock half2 = new HWBlock("half2", HWBlockType.HalfAnt);
+        half2.setAnnotations(halfAnn);
 
         Map<String, Joint> jmap1 = new HashMap<String, Joint>();
         brain.setFeatures(jmap1);
