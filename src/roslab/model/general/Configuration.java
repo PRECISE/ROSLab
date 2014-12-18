@@ -119,6 +119,21 @@ public class Configuration {
     /**
      * @return the links that include Node n
      */
+    public List<Link> getLinksOfType(Class<? extends Endpoint> clazz) {
+        List<Link> links = new ArrayList<Link>();
+
+        for (Link l : this.links) {
+            if (l.getSrc().getClass().equals(clazz) || l.getDest().getClass().equals(clazz)) {
+                links.add(l);
+            }
+        }
+
+        return links;
+    }
+
+    /**
+     * @return the links that include Node n
+     */
     public List<Endpoint> getEndpoints() {
         List<Endpoint> eps = new ArrayList<Endpoint>();
 
