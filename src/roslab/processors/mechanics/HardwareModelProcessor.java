@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import roslab.model.general.Configuration;
+import roslab.model.general.Link;
 import roslab.model.general.Node;
 import roslab.model.mechanics.HWBlock;
 import roslab.model.mechanics.HWBlockType;
 import roslab.model.mechanics.Joint;
-import roslab.model.ui.UILink;
 import roslab.processors.ModelProcessor;
 
 /**
@@ -26,7 +26,7 @@ public class HardwareModelProcessor extends ModelProcessor {
      */
     public HardwareModelProcessor(Configuration config) {
         super(config);
-        st = stg.getInstanceOf("HWBot");
+        st = group.getInstanceOf("HWBot");
     }
 
     /*
@@ -44,7 +44,7 @@ public class HardwareModelProcessor extends ModelProcessor {
         st.setAttribute("add_components", printAddComponentsSection(blocks));
         st.setAttribute("set_sub_parameters", printSetSubParametersSection(blocks));
         st.setAttribute("append_components", printAppendComponentsSection(blocks));
-        st.setAttribute("attach_components", printAttachComponentsSection(config.getUILinksOfType(Joint.class)));
+        st.setAttribute("attach_components", printAttachComponentsSection(config.getLinksOfType(Joint.class)));
         st.setAttribute("add_tabs", printAddTabsSection(blocks));
         st.setAttribute("set_parameters", printSetParametersSection(blocks));
         return st.toString();
@@ -78,11 +78,11 @@ public class HardwareModelProcessor extends ModelProcessor {
         return str;
     }
 
-    private String printAttachComponentsSection(List<UILink> links) {
+    private String printAttachComponentsSection(List<Link> links) {
         String str = "";
-        for (UILink l : links) {
-            HWBlock src = (HWBlock) l.getSrc().getParentNode();
-            HWBlock dest = (HWBlock) l.getDest().getParentNode();
+        for (Link l : links) {
+            HWBlock src = (HWBlock) l.getSrc().getParent();
+            HWBlock dest = (HWBlock) l.getDest().getParent();
             String srcPrefix = src.getName();  // Just using the component's own
             // name also as the prefix (are
             // prefixes actually important
