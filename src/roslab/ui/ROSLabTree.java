@@ -201,17 +201,25 @@ public class ROSLabTree extends TreeItem<String> {
             if (controller.getConfig().contains(n)) {
                 controller.getConfig().removeNode(n);
             }
+            int removeIndex2 = -1;
             for (TreeItem<String> s : configNodesTree.getChildren()) {
                 if (n.getClass().getSimpleName().equals(s.getValue())) {
+                    int removeIndex = -1;
                     for (TreeItem<String> i : s.getChildren()) {
                         if (((NodeTreeItem) i).node == n) {
-                            s.getChildren().remove(i);
+                            removeIndex = s.getChildren().indexOf(i);
                         }
                     }
+                    if (removeIndex != -1) {
+                        s.getChildren().remove(removeIndex);
+                    }
                     if (s.getChildren().isEmpty()) {
-                        configNodesTree.getChildren().remove(s);
+                        removeIndex2 = configNodesTree.getChildren().indexOf(s);
                     }
                 }
+            }
+            if (removeIndex2 != -1) {
+                configNodesTree.getChildren().remove(removeIndex2);
             }
         }
 
@@ -219,17 +227,25 @@ public class ROSLabTree extends TreeItem<String> {
             if (controller.getConfig().contains(l)) {
                 controller.getConfig().removeLink(l);
             }
+            int removeIndex2 = -1;
             for (TreeItem<String> s : configLinksTree.getChildren()) {
                 if (l.getClass().getSimpleName().equals(s.getValue())) {
+                    int removeIndex = -1;
                     for (TreeItem<String> i : s.getChildren()) {
                         if (((LinkTreeItem) i).link == l) {
-                            s.getChildren().remove(i);
+                            removeIndex = s.getChildren().indexOf(i);
                         }
                     }
+                    if (removeIndex != -1) {
+                        s.getChildren().remove(removeIndex);
+                    }
                     if (s.getChildren().isEmpty()) {
-                        configLinksTree.getChildren().remove(s);
+                        removeIndex2 = configLinksTree.getChildren().indexOf(s);
                     }
                 }
+            }
+            if (removeIndex2 != -1) {
+                configLinksTree.getChildren().remove(removeIndex2);
             }
         }
 

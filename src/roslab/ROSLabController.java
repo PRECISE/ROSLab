@@ -290,8 +290,9 @@ public class ROSLabController implements Initializable {
     }
 
     public void removeConfigLink(Link l) {
-        config.addUILink(l.getUILink());
-        tree.addConfigLink(l.getUILink());
+        l.getUILink().destroy();
+        config.removeLink(l);
+        tree.removeConfigLink(l);
     }
 
     /**
