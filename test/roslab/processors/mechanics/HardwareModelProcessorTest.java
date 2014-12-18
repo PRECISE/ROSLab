@@ -21,11 +21,10 @@ import org.junit.Test;
 import roslab.model.general.Configuration;
 import roslab.model.general.Feature;
 import roslab.model.general.Link;
+import roslab.model.general.Node;
 import roslab.model.mechanics.HWBlock;
 import roslab.model.mechanics.HWBlockType;
 import roslab.model.mechanics.Joint;
-import roslab.model.ui.UILink;
-import roslab.model.ui.UINode;
 
 /**
  * @author Peter Gebhard
@@ -40,8 +39,8 @@ public class HardwareModelProcessorTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        List<UINode> nodes = new ArrayList<UINode>();
-        List<UILink> links = new ArrayList<UILink>();
+        List<Node> nodes = new ArrayList<Node>();
+        List<Link> links = new ArrayList<Link>();
 
         Map<String, String> brainAnn = new HashMap<String, String>();
         brainAnn.put("length", "48");
@@ -91,16 +90,12 @@ public class HardwareModelProcessorTest {
         half2.addJoint(j33);
         half2.addJoint(j34);
 
-        UINode n1 = new UINode(brain, 0, 0);
-        UINode n2 = new UINode(half1, 0, 0);
-        UINode n3 = new UINode(half2, 0, 0);
+        nodes.add(brain);
+        nodes.add(half1);
+        nodes.add(half2);
 
-        nodes.add(n1);
-        nodes.add(n2);
-        nodes.add(n3);
-
-        links.add(new UILink(new Link(j13, j21)));
-        links.add(new UILink(new Link(j12, j31)));
+        links.add(new Link(j13, j21));
+        links.add(new Link(j12, j31));
 
         c = new Configuration(HardwareModelProcessorTest.class.getName(), nodes, links);
         str = new String(Files.readAllBytes(Paths.get("test/roslab/processors/HWBotTest.py")));
