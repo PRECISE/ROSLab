@@ -1,7 +1,7 @@
 /**
  *
  */
-package roslab.ui;
+package roslab.ui.general;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
