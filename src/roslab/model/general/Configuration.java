@@ -64,9 +64,26 @@ public class Configuration {
     }
 
     /**
-     * @return the UI nodes
+     * @return the nodes
      */
     public List<Node> getNodes() {
+        return nodes;
+    }
+
+    /**
+     * @param clazz
+     *            The class type of the nodes to be returned
+     * @return the nodes of input type
+     */
+    public List<? extends Node> getNodesOfType(Class<? extends Node> clazz) {
+        List<Node> nodes = new ArrayList<Node>();
+
+        for (Node n : this.nodes) {
+            if (n.getClass().equals(clazz)) {
+                nodes.add(n);
+            }
+        }
+
         return nodes;
     }
 
@@ -87,7 +104,7 @@ public class Configuration {
     }
 
     /**
-     * @return the UI links
+     * @return the links
      */
     public List<Link> getLinks() {
         return links;
@@ -95,9 +112,9 @@ public class Configuration {
 
     /**
      * @param links
-     *            the UI links to set
+     *            the links to set
      */
-    public void setUILinks(List<Link> links) {
+    public void setLinks(List<Link> links) {
         this.links = links;
     }
 
@@ -117,7 +134,7 @@ public class Configuration {
     }
 
     /**
-     * @return the links that include Node n
+     * @return the links with class type matching the input type
      */
     public List<Link> getLinksOfType(Class<? extends Endpoint> clazz) {
         List<Link> links = new ArrayList<Link>();
@@ -132,7 +149,7 @@ public class Configuration {
     }
 
     /**
-     * @return the links that include Node n
+     * @return the list of endpoints
      */
     public List<Endpoint> getEndpoints() {
         List<Endpoint> eps = new ArrayList<Endpoint>();
