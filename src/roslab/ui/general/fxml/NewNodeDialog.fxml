@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane fx:id="newNodeDialog" hgap="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="164.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ui.NewNodeDialog">
+<GridPane fx:id="newNodeDialog" hgap="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="164.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ui.general.NewNodeDialog">
   <children>
     <VBox maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <children>

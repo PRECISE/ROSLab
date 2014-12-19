@@ -1,4 +1,7 @@
-package roslab.ui;
+package roslab.ui.general;
+
+import java.io.File;
+import java.io.IOException;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,6 +15,7 @@ import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
 import roslab.model.software.ROSNode;
+import roslab.processors.software.ROSNodeCodeGenerator;
 
 public class ROSLabTree extends TreeItem<String> {
     public class ContextMenuTreeItem extends TreeItem<String> {
@@ -255,7 +259,15 @@ public class ROSLabTree extends TreeItem<String> {
             mItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    // TODO Auto-generated method stub
+                    for (Node n : controller.getConfig().getNodesOfType(ROSNode.class)) {
+                        try {
+                            ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
+                        }
+                        catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
                 }
             });
             MenuItem m2Item = new MenuItem("Generate multi-system container and code...");
@@ -281,6 +293,11 @@ public class ROSLabTree extends TreeItem<String> {
 
         @Override
         public ContextMenu getMenu() {
+            // Return empty menu if node is under Library tree
+            if (this.getParent().getParent() instanceof LibraryTreeItem) {
+                return new ContextMenu();
+            }
+
             MenuItem mItem = null;
 
             if (this.node instanceof ROSNode) {

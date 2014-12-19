@@ -1,7 +1,7 @@
 /**
  *
  */
-package roslab.ui;
+package roslab.ui.general;
 
 /**
  * Dialog to edit details of a person.

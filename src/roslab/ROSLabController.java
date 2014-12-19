@@ -29,11 +29,13 @@ import roslab.model.general.Configuration;
 import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
+import roslab.model.software.ROSMsgType;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
-import roslab.ui.NewLinkDialog;
-import roslab.ui.NewNodeDialog;
-import roslab.ui.ROSLabTree;
+import roslab.ui.general.NewLinkDialog;
+import roslab.ui.general.NewNodeDialog;
+import roslab.ui.general.ROSLabTree;
+import roslab.ui.software.NewPortDialog;
 
 public class ROSLabController implements Initializable {
 
@@ -343,7 +345,7 @@ public class ROSLabController implements Initializable {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("ui/fxml/software/NewLinkDialog.fxml"));
+            loader.setLocation(getClass().getResource("ui/general/fxml/NewLinkDialog.fxml"));
             GridPane page = (GridPane) loader.load();
 
             // Create the dialog Stage.
@@ -385,7 +387,7 @@ public class ROSLabController implements Initializable {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("ui/fxml/software/NewNodeDialog.fxml"));
+            loader.setLocation(getClass().getResource("ui/general/fxml/NewNodeDialog.fxml"));
             GridPane page = (GridPane) loader.load();
 
             // Create the dialog Stage.
@@ -400,6 +402,48 @@ public class ROSLabController implements Initializable {
             NewNodeDialog controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setNodes(library.getNodes());
+            controller.setRLController(this);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.isAddClicked();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Opens a dialog to edit details for the specified person. If the user
+     * clicks OK, the changes are saved into the provided person object and
+     * true
+     * is returned.
+     *
+     * @param person
+     *            the person object to be edited
+     * @return true if the user clicked OK, false otherwise.
+     */
+    public boolean showNewPortDialog() {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("ui/software/fxml/NewPortDialog.fxml"));
+            GridPane page = (GridPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("New Port");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            NewPortDialog controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setTypes(ROSMsgType.typeMap.keySet());
             controller.setRLController(this);
 
             // Show the dialog and wait until the user closes it
