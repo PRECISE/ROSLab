@@ -27,58 +27,8 @@ public class ROSNodeCodeGenerator {
 
     static protected StringTemplateGroup group = new StringTemplateGroup("ros_templates", Paths.get("resources", "software_lib", "ros_templates")
             .toString());  // Using Paths.get() to be able to handle OS-specific
-    // filesystem differences.
 
-    // public Map<String, String> generateNodeFiles(String appName) {
-    // int topicSeed = 0;
-    // Map<String, String> appBundle = new HashMap<String, String>();
-    // if
-    // (WorkspaceContext.currentWorkspace.configurations.containsKey(appName)) {
-    // ConfigurationSpec appSpec =
-    // WorkspaceContext.currentWorkspace.configurations.get(appName);
-    // HashMap<Pair<String, String>, String> portTopicMap = new
-    // HashMap<Pair<String, String>, String>();
-    // // now we need to walk all the connections, check their role, and
-    // // see if we need a new topic or not
-    // for (Channel chan : appSpec.channels.values()) {
-    // ModuleSpec pubCompSpec = chan.getPubComp().snd;
-    // ModuleSpec subCompSpec = chan.getSubComp().snd;
-    // if (pubCompSpec.role.equals(CompRoles.ROS_SERVICE)) {
-    // // the publisher is a service, thus no topic needs to be
-    // // made
-    // portTopicMap.put(new Pair<String, String>(chan.getSubComp().fst,
-    // chan.getSubName()), chan.getPubName());
-    // }
-    // else if (subCompSpec.role.equals(CompRoles.ROS_SERVICE)) {
-    // // the subscriber is a service, thus no topic needs to be
-    // // generated
-    // portTopicMap.put(new Pair<String, String>(chan.getPubComp().fst,
-    // chan.getPubName()), chan.getSubName());
-    // }
-    // else {
-    // String freshTopic = appName + topicSeed++;
-    // portTopicMap.put(new Pair<String, String>(chan.getPubComp().fst,
-    // chan.getPubName()), freshTopic);
-    // portTopicMap.put(new Pair<String, String>(chan.getSubComp().fst,
-    // chan.getSubName()), freshTopic);
-    // }
-    // }
-    // for (String instName : appSpec.configurationComponents.keySet()) {
-    // ModuleSpec mspec = appSpec.configurationComponents.get(instName).fst;
-    //
-    // if (mspec.type.equals("GUI")) {
-    // String genCode = buildGui(instName, portTopicMap, mspec,
-    // appSpec.configurationComponents, group);
-    // appBundle.put(instName, genCode);
-    // }
-    // else if (mspec.role.equals(CompRoles.ROS_NODE)) {
-    // String genCode = buildNode(instName, portTopicMap, mspec, group);
-    // appBundle.put(instName, genCode);
-    // }
-    // }
-    // }
-    // return appBundle;
-    // }
+    // filesystem differences.
 
     static public void buildNode(ROSNode node, File out) throws IOException {
         // Define templates
