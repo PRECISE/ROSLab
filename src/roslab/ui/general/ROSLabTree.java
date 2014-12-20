@@ -39,32 +39,11 @@ public class ROSLabTree extends TreeItem<String> {
 
         public LibraryTreeItem(ROSLabController cont) {
             super("Library (" + cont.getLibrary().getName() + ")");
-            this.controller = cont;
-            boolean nodeAdded = false;
+            controller = cont;
 
             // Add library nodes
-            for (Node n : this.controller.getLibrary().getNodes()) {
-                nodeAdded = false;
-                for (TreeItem<String> s : this.getChildren()) {
-                    if (n.getClass().getSimpleName().equals(s.getValue())) {
-                        NodeTreeItem newNode = new NodeTreeItem(n, this.controller);
-                        for (String f : n.getFeatures().keySet()) {
-                            newNode.getChildren().add(new ContextMenuTreeItem(f));
-                        }
-                        s.getChildren().add(newNode);
-                        nodeAdded = true;
-                    }
-                }
-                if (!nodeAdded) {
-                    ContextMenuTreeItem newItem = new ContextMenuTreeItem(n.getClass().getSimpleName());
-                    NodeTreeItem newNode = new NodeTreeItem(n, this.controller);
-                    for (String f : n.getFeatures().keySet()) {
-                        newNode.getChildren().add(new ContextMenuTreeItem(f));
-                    }
-                    newItem.getChildren().add(newNode);
-                    this.getChildren().add(newItem);
-                    nodeAdded = true;
-                }
+            for (Node n : controller.getLibrary().getNodes()) {
+                addNode(n);
             }
         }
 
@@ -73,15 +52,47 @@ public class ROSLabTree extends TreeItem<String> {
             boolean nodeAdded = false;
             for (TreeItem<String> s : this.getChildren()) {
                 if (n.getClass().getSimpleName().equals(s.getValue())) {
-                    s.getChildren().add(new NodeTreeItem(n, controller));
+                    NodeTreeItem newNode = new NodeTreeItem(n, this.controller);
+                    for (String f : n.getFeatures().keySet()) {
+                        newNode.getChildren().add(new ContextMenuTreeItem(f));
+                    }
+                    s.getChildren().add(newNode);
                     nodeAdded = true;
                 }
             }
             if (!nodeAdded) {
                 ContextMenuTreeItem newItem = new ContextMenuTreeItem(n.getClass().getSimpleName());
-                newItem.getChildren().add(new NodeTreeItem(n, controller));
+                NodeTreeItem newNode = new NodeTreeItem(n, this.controller);
+                for (String f : n.getFeatures().keySet()) {
+                    newNode.getChildren().add(new ContextMenuTreeItem(f));
+                }
+                newItem.getChildren().add(newNode);
                 this.getChildren().add(newItem);
                 nodeAdded = true;
+            }
+        }
+
+        public void removeNode(Node n) {
+            controller.getLibrary().removeNode(n);
+            int removeIndex2 = -1;
+            for (TreeItem<String> s : this.getChildren()) {
+                if (n.getClass().getSimpleName().equals(s.getValue())) {
+                    int removeIndex = -1;
+                    for (TreeItem<String> i : s.getChildren()) {
+                        if (((NodeTreeItem) i).node == n) {
+                            removeIndex = s.getChildren().indexOf(i);
+                        }
+                    }
+                    if (removeIndex != -1) {
+                        s.getChildren().remove(removeIndex);
+                    }
+                    if (s.getChildren().isEmpty()) {
+                        removeIndex2 = this.getChildren().indexOf(s);
+                    }
+                }
+            }
+            if (removeIndex2 != -1) {
+                this.getChildren().remove(removeIndex2);
             }
         }
 
@@ -91,7 +102,7 @@ public class ROSLabTree extends TreeItem<String> {
             mItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    // TODO Auto-generated method stub
+                    controller.showNewUserDefinedDialog();
                 }
             });
             return new ContextMenu(mItem);
@@ -105,42 +116,17 @@ public class ROSLabTree extends TreeItem<String> {
 
         public ConfigTreeItem(ROSLabController cont) {
             super("Configuration (" + cont.getConfig().getName() + ")");
-            this.controller = cont;
-            boolean nodeAdded = false;
+            controller = cont;
 
             // Add Configuration nodes
-            for (Node n : this.controller.getConfig().getNodes()) {
-                nodeAdded = false;
-                for (TreeItem<String> s : configNodesTree.getChildren()) {
-                    if (n.getClass().getSimpleName().equals(s.getValue())) {
-                        s.getChildren().add(new NodeTreeItem(n, this.controller));
-                        nodeAdded = true;
-                    }
-                }
-                if (!nodeAdded) {
-                    ContextMenuTreeItem newItem = new ContextMenuTreeItem(n.getClass().getSimpleName());
-                    newItem.getChildren().add(new NodeTreeItem(n, this.controller));
-                    configNodesTree.getChildren().add(newItem);
-                    nodeAdded = true;
-                }
+            for (Node n : controller.getConfig().getNodes()) {
+                addNode(n);
             }
             this.getChildren().add(configNodesTree);
 
             // Add Configuration links
-            for (Link l : this.controller.getConfig().getLinks()) {
-                nodeAdded = false;
-                for (TreeItem<String> s : configLinksTree.getChildren()) {
-                    if (l.getClass().getSimpleName().equals(s.getValue())) {
-                        s.getChildren().add(new LinkTreeItem(l, this.controller));
-                        nodeAdded = true;
-                    }
-                }
-                if (!nodeAdded) {
-                    ContextMenuTreeItem newItem = new ContextMenuTreeItem(l.getClass().getSimpleName());
-                    newItem.getChildren().add(new LinkTreeItem(l, this.controller));
-                    configLinksTree.getChildren().add(newItem);
-                    nodeAdded = true;
-                }
+            for (Link l : controller.getConfig().getLinks()) {
+                addLink(l);
             }
             this.getChildren().add(configLinksTree);
 
@@ -164,9 +150,7 @@ public class ROSLabTree extends TreeItem<String> {
         }
 
         public void addNode(Node n) {
-            if (!controller.getConfig().contains(n)) {
-                controller.getConfig().addNode(n);
-            }
+            controller.getConfig().addNode(n);
             boolean nodeAdded = false;
             for (TreeItem<String> s : configNodesTree.getChildren()) {
                 if (n.getClass().getSimpleName().equals(s.getValue())) {
@@ -183,9 +167,7 @@ public class ROSLabTree extends TreeItem<String> {
         }
 
         public void addLink(Link l) {
-            if (!controller.getConfig().contains(l)) {
-                controller.getConfig().addLink(l);
-            }
+            controller.getConfig().addLink(l);
             boolean nodeAdded = false;
             for (TreeItem<String> s : configLinksTree.getChildren()) {
                 if (l.getClass().getSimpleName().equals(s.getValue())) {
@@ -202,9 +184,7 @@ public class ROSLabTree extends TreeItem<String> {
         }
 
         public void removeNode(Node n) {
-            if (controller.getConfig().contains(n)) {
-                controller.getConfig().removeNode(n);
-            }
+            controller.getConfig().removeNode(n);
             int removeIndex2 = -1;
             for (TreeItem<String> s : configNodesTree.getChildren()) {
                 if (n.getClass().getSimpleName().equals(s.getValue())) {
@@ -228,9 +208,7 @@ public class ROSLabTree extends TreeItem<String> {
         }
 
         public void removeLink(Link l) {
-            if (controller.getConfig().contains(l)) {
-                controller.getConfig().removeLink(l);
-            }
+            controller.getConfig().removeLink(l);
             int removeIndex2 = -1;
             for (TreeItem<String> s : configLinksTree.getChildren()) {
                 if (l.getClass().getSimpleName().equals(s.getValue())) {
@@ -261,10 +239,11 @@ public class ROSLabTree extends TreeItem<String> {
                 public void handle(ActionEvent event) {
                     for (Node n : controller.getConfig().getNodesOfType(ROSNode.class)) {
                         try {
-                            ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
+                            if (n.getAnnotation("user-defined") != null && n.getAnnotation("user-defined").equals("true")) {
+                                ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
+                            }
                         }
                         catch (IOException e) {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                     }
@@ -277,7 +256,7 @@ public class ROSLabTree extends TreeItem<String> {
                     // TODO Pop up external interface dialog
                 }
             });
-            return new ContextMenu(mItem, m2Item);
+            return new ContextMenu(mItem);
         }
     }
 
@@ -293,21 +272,25 @@ public class ROSLabTree extends TreeItem<String> {
 
         @Override
         public ContextMenu getMenu() {
-            // Return empty menu if node is under Library tree
+            // Return empty menu if node is under Library tree and not a
+            // user-defined node
             if (this.getParent().getParent() instanceof LibraryTreeItem) {
-                return new ContextMenu();
-            }
+                if (node.getAnnotation("user-defined") == "true") {
+                    MenuItem mItem = null;
 
-            MenuItem mItem = null;
-
-            if (this.node instanceof ROSNode) {
-                mItem = new MenuItem("Add New Port...");
-                mItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        // TODO Auto-generated method stub
+                    if (this.node instanceof ROSNode) {
+                        mItem = new MenuItem("Add New Port...");
+                        mItem.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                controller.showNewPortDialog(node);
+                            }
+                        });
                     }
-                });
+                    return new ContextMenu(mItem);
+                }
+
+                return new ContextMenu();
             }
 
             MenuItem m2Item = new MenuItem("Delete");
@@ -318,7 +301,7 @@ public class ROSLabTree extends TreeItem<String> {
                 }
             });
 
-            return new ContextMenu(mItem, m2Item);
+            return new ContextMenu(m2Item);
         }
     }
 
@@ -365,6 +348,10 @@ public class ROSLabTree extends TreeItem<String> {
 
     public void addLibraryNode(Node n) {
         libraryTree.addNode(n);
+    }
+
+    public void removeLibraryNode(Node n) {
+        libraryTree.removeNode(n);
     }
 
     public void addConfigNode(Node n) {
