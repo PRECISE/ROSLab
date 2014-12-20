@@ -29,13 +29,13 @@ import roslab.model.general.Configuration;
 import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
-import roslab.model.software.ROSMsgType;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
 import roslab.ui.general.NewLinkDialog;
 import roslab.ui.general.NewNodeDialog;
 import roslab.ui.general.ROSLabTree;
 import roslab.ui.software.NewPortDialog;
+import roslab.ui.software.NewUserDefinedDialog;
 
 public class ROSLabController implements Initializable {
 
@@ -74,73 +74,18 @@ public class ROSLabController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         assert treeView != null : "fx:id\"treeView\" was not injected";
-        // System.out.println(this.getClass().getSimpleName() + ".initialize");
+
         // TODO: get highlighting and selection of Nodes based on selection
         // rectangle
         // enableSelectionRectangle(swPane);
         // enableSelectionRectangle(hwPane);
         // enableSelectionRectangle(eePane);
-        config = new Configuration("Test", new ArrayList<Node>(), new ArrayList<Link>());
-
-        // for (int i = 0; i < 5; i++) {
-        // ROSNode rn = new ROSNode("test" + i);
-        // for (int j = 0; j < 10; j++) {
-        // rn.addPort(new ROSPort("p" + String.valueOf(r.nextInt(10000)), rn,
-        // new ROSTopic("/t" + String.valueOf(r.nextInt(10000)),
-        // (ROSMsgType) ROSMsgType.typeMap.keySet().toArray()[0],
-        // r.nextBoolean()), true, true));
-        // }
-        // library.addNode(rn);
-        //
-        // Circuit cn = new Circuit("test" + i);
-        // for (int j = 0; j < 10; j++) {
-        // cn.addPin(new Pin(String.valueOf(r.nextInt(10000)), cn));
-        // }
-        // library.addNode(cn);
-        //
-        // HWBlock hw = new HWBlock("test" + i,
-        // HWBlockType.values()[r.nextInt(HWBlockType.values().length)]);
-        // for (int j = 0; j < 10; j++) {
-        // hw.addJoint(new Joint(String.valueOf(r.nextInt(10000)), hw,
-        // r.nextBoolean(), r.nextBoolean()));
-        // }
-        // library.addNode(hw);
-        //
-        // swPane.getChildren().add(new UINode(rn, r.nextInt(1000),
-        // r.nextInt(1000)));
-        // eePane.getChildren().add(new UINode(cn, r.nextInt(1000),
-        // r.nextInt(1000)));
-        // hwPane.getChildren().add(new UINode(hw, r.nextInt(1000),
-        // r.nextInt(1000)));
-        // }
-        //
-        // for (int i = 0; i < 20; i++) {
-        // UINode n1 = (UINode)
-        // swPane.getChildren().get(r.nextInt(swPane.getChildren().size()));
-        // UINode n2 = (UINode)
-        // swPane.getChildren().get(r.nextInt(swPane.getChildren().size()));
-        // for (ROSPort p : ((ROSNode) n1.getNode()).getPorts().values()) {
-        // if (p.canConnect((Endpoint) ((ROSNode)
-        // n2.getNode()).getPorts().values().toArray()[0])) {
-        // new UILink(p.connect((Endpoint) ((ROSNode)
-        // n2.getNode()).getPorts().values().toArray()[0]));
-        // }
-        // }
-        // }
-
-        // TEST
-        // ROSNode testNode = (ROSNode) rosNodesList.get(0);
-        // try {
-        // ROSNodeCodeGenerator.buildNode(testNode, new File(testNode.getName()
-        // + ".cpp"));
-        // }
-        // catch (IOException e) {
-        // e.printStackTrace();
-        // }
 
         library.loadPlatform("test");
+        config = new Configuration("Test", new ArrayList<Node>(), new ArrayList<Link>());
         tree = new ROSLabTree(library, config, this);
 
+        // Setup TreeView
         treeView.setRoot(tree);
         treeView.setShowRoot(false);
         treeView.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>() {
@@ -151,10 +96,6 @@ public class ROSLabController implements Initializable {
         });
 
         // addDragDrop(swPane);
-
-        for (Node n : library.getNodes()) {
-            addConfigNode(n);
-        }
     }
 
     private void addDragDrop(final Pane p) {
@@ -250,6 +191,21 @@ public class ROSLabController implements Initializable {
         });
     }
 
+    public void addLibraryNode(Node n) {
+        library.addNode(n);
+        tree.addLibraryNode(n);
+    }
+
+    public void removeLibraryNode(Node n) {
+        library.removeNode(n);
+        tree.removeLibraryNode(n);
+    }
+
+    public void updateLibraryNode(Node n) {
+        removeLibraryNode(n);
+        addLibraryNode(n);
+    }
+
     public void addConfigNode(Node n) {
         UINode uin = new UINode(n, r.nextInt(400), r.nextInt(400));
         String nodeClassName = uin.getNode().getClass().getName();
@@ -329,7 +285,7 @@ public class ROSLabController implements Initializable {
 
     @FXML
     private void tabChanged() {
-
+        // TODO Update Library Tree and Config Tree when switching tabs?
     }
 
     /**
@@ -425,7 +381,49 @@ public class ROSLabController implements Initializable {
      *            the person object to be edited
      * @return true if the user clicked OK, false otherwise.
      */
-    public boolean showNewPortDialog() {
+    public boolean showNewUserDefinedDialog() {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("ui/software/fxml/NewUserDefinedDialog.fxml"));
+            GridPane page = (GridPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("New User-Defined Node");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the person into the controller.
+            NewUserDefinedDialog controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setRLController(this);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.isAddClicked();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Opens a dialog to edit details for the specified person. If the user
+     * clicks OK, the changes are saved into the provided person object and
+     * true
+     * is returned.
+     *
+     * @param node
+     * @param person
+     *            the person object to be edited
+     * @return true if the user clicked OK, false otherwise.
+     */
+    public boolean showNewPortDialog(Node node) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
@@ -443,7 +441,7 @@ public class ROSLabController implements Initializable {
             // Set the person into the controller.
             NewPortDialog controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            controller.setTypes(ROSMsgType.typeMap.keySet());
+            controller.setNode(node);
             controller.setRLController(this);
 
             // Show the dialog and wait until the user closes it
