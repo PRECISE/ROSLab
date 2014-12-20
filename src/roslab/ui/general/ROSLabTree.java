@@ -318,6 +318,22 @@ public class ROSLabTree extends TreeItem<String> {
 
     public final class TreeCellImpl extends TreeCell<String> {
 
+        // setOnDragDetected(new EventHandler<MouseEvent>() {
+        // @Override
+        // public void handle(MouseEvent event) {
+        // /* drag was detected, start a drag-and-drop gesture */
+        // /* allow any transfer mode */
+        // Dragboard db = startDragAndDrop(TransferMode.ANY);
+        //
+        // /* Put a string on a dragboard */
+        // ClipboardContent content = new ClipboardContent();
+        // content.putString("node:" + item.node.getName());
+        // db.setContent(content);
+        //
+        // event.consume();
+        // }
+        // });
+
         @Override
         public void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
