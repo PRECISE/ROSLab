@@ -55,12 +55,15 @@ public class Configuration {
         this.name = name;
     }
 
-    public boolean addNode(Node node) {
-        return nodes.add(node);
+    public boolean addNode(Node n) {
+        if (!nodes.contains(n)) {
+            return nodes.add(n);
+        }
+        return false;
     }
 
-    public boolean removeNode(Node node) {
-        return nodes.remove(node);
+    public boolean removeNode(Node n) {
+        return nodes.remove(n);
     }
 
     /**
@@ -95,8 +98,11 @@ public class Configuration {
         this.nodes = nodes;
     }
 
-    public boolean addLink(Link link) {
-        return links.add(link);
+    public boolean addLink(Link l) {
+        if (!links.contains(l)) {
+            return links.add(l);
+        }
+        return false;
     }
 
     public boolean removeLink(Link link) {

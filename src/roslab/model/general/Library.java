@@ -92,11 +92,24 @@ public class Library {
     }
 
     /**
-     * @param node
+     * @param n
      *            the node to add
+     * @return
      */
-    public void addNode(Node node) {
-        this.nodes.add(node);
+    public boolean addNode(Node n) {
+        if (!nodes.contains(n)) {
+            return nodes.add(n);
+        }
+        return false;
+    }
+
+    /**
+     * @param n
+     *            the node to remove
+     * @return
+     */
+    public boolean removeNode(Node n) {
+        return nodes.remove(n);
     }
 
     public void loadPlatform(String platformName) {
