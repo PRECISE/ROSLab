@@ -70,6 +70,7 @@ public class PythonLibraryHelper {
         return out;
     }
 
+    @SuppressWarnings("unchecked")
     public Component loadComponentFromYaml(String componentName) throws FileNotFoundException {
         InputStream input = new FileInputStream(FileSystems.getDefault().getPath(library.toString(), componentName + ".yaml").toFile());
 
