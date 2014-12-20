@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author Peter Gebhard
  */
-public class ROSMsgType {
+public class ROSMsgType implements Comparable<ROSMsgType> {
     public static final Map<ROSMsgType, String> typeMap;
     static {
         Map<ROSMsgType, String> aMap = new HashMap<ROSMsgType, String>();
@@ -50,6 +50,11 @@ public class ROSMsgType {
     @Override
     public String toString() {
         return type;
+    }
+
+    @Override
+    public int compareTo(ROSMsgType other) {
+        return type.compareTo(other.type);
     }
 
 }
