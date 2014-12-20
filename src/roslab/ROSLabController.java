@@ -301,7 +301,7 @@ public class ROSLabController implements Initializable {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("ui/general/fxml/NewLinkDialog.fxml"));
+            loader.setLocation(getClass().getResource("ui/general/NewLinkDialog.fxml"));
             GridPane page = (GridPane) loader.load();
 
             // Create the dialog Stage.
@@ -343,7 +343,7 @@ public class ROSLabController implements Initializable {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("ui/general/fxml/NewNodeDialog.fxml"));
+            loader.setLocation(getClass().getResource("ui/general/NewNodeDialog.fxml"));
             GridPane page = (GridPane) loader.load();
 
             // Create the dialog Stage.
@@ -385,7 +385,7 @@ public class ROSLabController implements Initializable {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("ui/software/fxml/NewUserDefinedDialog.fxml"));
+            loader.setLocation(getClass().getResource("ui/software/NewUserDefinedDialog.fxml"));
             GridPane page = (GridPane) loader.load();
 
             // Create the dialog Stage.
@@ -427,7 +427,7 @@ public class ROSLabController implements Initializable {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("ui/software/fxml/NewPortDialog.fxml"));
+            loader.setLocation(getClass().getResource("ui/software/NewPortDialog.fxml"));
             GridPane page = (GridPane) loader.load();
 
             // Create the dialog Stage.

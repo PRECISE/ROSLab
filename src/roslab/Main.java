@@ -15,7 +15,7 @@ public class Main extends Application {
         try {
             // Load person overview.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("ui/general/fxml/ROSLab.fxml"));
+            loader.setLocation(getClass().getResource("ui/general/ROSLab.fxml"));
             VBox root = (VBox) loader.load();
 
             // Give the controller access to the main app.
@@ -23,7 +23,7 @@ public class Main extends Application {
             controller.setStage(this.primaryStage);
 
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("ui/general/fxml/main.css").toString());
+            scene.getStylesheets().add(getClass().getResource("ui/general/main.css").toString());
             this.primaryStage.setScene(scene);
             this.primaryStage.setTitle("ROSLab Development Environment Prototype");
             this.primaryStage.show();
