@@ -76,6 +76,12 @@ public class Joint extends Feature implements Endpoint {
         return null;
     }
 
+    @Override
+    public boolean isInput() {
+        // TODO Maintain input/output notion for Joints?
+        return true;
+    }
+
     public Joint getClone(String name, HWBlock parent) {
         return new Joint(name, parent, this.getAnnotationsCopy(), fanIn, fanIn);
     }

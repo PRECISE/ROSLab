@@ -224,6 +224,11 @@ public class ROSPort extends Feature implements Endpoint {
         return null;
     }
 
+    @Override
+    public boolean isInput() {
+        return topic.isSubscriber();
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()

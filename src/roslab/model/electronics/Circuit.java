@@ -154,8 +154,12 @@ public class Circuit extends Node implements Endpoint {
     }
 
     @Override
+    public boolean isInput() {
+        return true;
+    }
+
+    @Override
     public Circuit clone(String name) {
         return new Circuit(name, this);
     }
-
 }
