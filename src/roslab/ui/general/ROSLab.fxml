@@ -7,20 +7,23 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml" fx:controller="roslab.ROSLabController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ROSLabController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
+            <MenuItem mnemonicParsing="false" text="New Configuration" />
+            <MenuItem mnemonicParsing="false" onAction="#openLibrary" text="Open Library…" />
+            <MenuItem mnemonicParsing="false" onAction="#openConfiguration" text="Open Configuration…" />
+            <Menu mnemonicParsing="false" text="Open Recent Configuration" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
+            <MenuItem mnemonicParsing="false" text="Save Library" />
+            <MenuItem mnemonicParsing="false" text="Save Library As…" />
+            <MenuItem disable="false" mnemonicParsing="false" text="Save Configuration" visible="true" />
+            <MenuItem mnemonicParsing="false" text="Save Configuration As…" />
+            <MenuItem mnemonicParsing="false" text="Revert Configuration" />
+            <MenuItem mnemonicParsing="false" text="Close Configuration" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />
@@ -93,7 +96,7 @@
                 </ScrollPane>
               </content>
             </TitledPane>
-            <TitledPane animated="false" expanded="true" text="Layout">
+            <TitledPane animated="false" expanded="false" text="Layout">
               <content>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
                   <content>

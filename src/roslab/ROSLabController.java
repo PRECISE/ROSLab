@@ -267,18 +267,22 @@ public class ROSLabController implements Initializable {
         return config;
     }
 
+    @FXML
     private void openLibrary() {
         // TODO Use XStream here!
     }
 
-    private void openConfiguration() {
-        // TODO Use XStream here!
-    }
-
+    @FXML
     private void saveLibrary() {
         // TODO Use XStream here!
     }
 
+    @FXML
+    private void openConfiguration() {
+        // TODO Use XStream here!
+    }
+
+    @FXML
     private void saveConfiguration() {
         // TODO Use XStream here!
     }
