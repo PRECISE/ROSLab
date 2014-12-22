@@ -16,12 +16,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 
 import roslab.ROSLabController;
 import roslab.model.software.ROSNode;
 
+@SuppressWarnings("deprecation")
 public class NewUserDefinedDialog implements Initializable {
 
     @FXML
@@ -89,8 +89,7 @@ public class NewUserDefinedDialog implements Initializable {
         }
         else {
             // Show the error message
-            Action response = Dialogs.create().owner(dialogStage).title("Invalid Fields").masthead("Please correct invalid fields")
-                    .message(errorMessage).showError();
+            Dialogs.create().owner(dialogStage).title("Invalid Fields").masthead("Please correct invalid fields").message(errorMessage).showError();
             return false;
         }
     }
