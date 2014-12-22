@@ -33,6 +33,10 @@
     -fx-fill: blue;
 }
 
+.ROSPortOut {
+    -fx-fill: yellow;
+}
+
 .SelectionRectangle {
     -fx-fill: rgba(0,0,255,0.07);
     -fx-stroke: blue;
