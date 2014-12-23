@@ -40,6 +40,9 @@ public class ROSMsgType implements Comparable<ROSMsgType> {
     public String type;
 
     public ROSMsgType(String type) {
+        // TODO Add validation check against existing typeMap to ensure only
+        // valid ROSMsgType objects are created (ie. the type exists in the type
+        // map)
         this.type = type;
     }
 
