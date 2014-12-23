@@ -1,22 +1,27 @@
-name: Test
+name: Landshark
 devices:
 - name: IMU1
   dev_type: ROS
   topic: /imu1
   direction: pub
-  msg_type: {type: IMU}
+  msg_type: {type: Imu}
 - name: IMU2
   dev_type: ROS
   topic: /imu2
-  direction: sub
-  msg_type: {type: IMU}
+  direction: pub
+  msg_type: {type: Imu}
 - name: GPS
   dev_type: ROS
   topic: /gps
   direction: pub
-  msg_type: {type: GPS}
+  msg_type: {type: NavSatFix}
 - name: Joystick
   dev_type: ROS
   topic: /joy
+  direction: pub
+  msg_type: {type: Joy}
+- name: Cmd_Vel
+  dev_type: ROS
+  topic: /cmd_vel
   direction: sub
-  msg_type: {type: Joystick}
+  msg_type: {type: Twist}
