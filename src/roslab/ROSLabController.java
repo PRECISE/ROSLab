@@ -81,8 +81,8 @@ public class ROSLabController implements Initializable {
         // enableSelectionRectangle(hwPane);
         // enableSelectionRectangle(eePane);
 
-        library.loadPlatform("test");
-        config = new Configuration("Test", new ArrayList<Node>(), new ArrayList<Link>());
+        library.loadPlatform("landshark");
+        config = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
         tree = new ROSLabTree(library, config, this);
 
         // Setup TreeView
