@@ -235,7 +235,7 @@ public class ROSPort extends Feature implements Endpoint {
      */
     @Override
     public String toString() {
-        return name + " (" + parent + ")";
+        return name + " (" + topic.toString() + ")";
     }
 
     public ROSPort getClone(String name, ROSNode parent) {

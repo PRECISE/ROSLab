@@ -11,6 +11,7 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import roslab.ROSLabController;
 import roslab.model.general.Configuration;
+import roslab.model.general.Feature;
 import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
@@ -53,8 +54,8 @@ public class ROSLabTree extends TreeItem<String> {
             for (TreeItem<String> s : this.getChildren()) {
                 if (n.getClass().getSimpleName().equals(s.getValue())) {
                     NodeTreeItem newNode = new NodeTreeItem(n, this.controller);
-                    for (String f : n.getFeatures().keySet()) {
-                        newNode.getChildren().add(new ContextMenuTreeItem(f));
+                    for (Feature f : n.getFeatures().values()) {
+                        newNode.getChildren().add(new ContextMenuTreeItem(f.toString()));
                     }
                     s.getChildren().add(newNode);
                     nodeAdded = true;

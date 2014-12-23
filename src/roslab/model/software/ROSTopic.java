@@ -88,7 +88,7 @@ public class ROSTopic implements Cloneable {
      */
     @Override
     public String toString() {
-        return "ROSTopic [" + (topic != null ? "topic=" + topic + ", " : "") + (type != null ? "type=" + type + ", " : "") + "direction=" + direction
-                + "]";
+        return (topic != null ? "topic=" + topic + ", " : "") + (type != null ? "type=" + type + ", " : "") + "direction="
+                + (direction ? "subscribe" : "publish");
     }
 }
