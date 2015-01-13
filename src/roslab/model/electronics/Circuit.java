@@ -144,17 +144,55 @@ public class Circuit extends Node implements Endpoint {
      */
     @Override
     public boolean canConnect(Endpoint e) {
-        // Only allow ROSPorts to connect to other ROSPorts
         if (e instanceof Circuit) {
             Circuit c = (Circuit) e;
+
             // TODO Perform pin analysis here.
+            // TODO Improve performance here!! This is extremely naive, and not
+            // exactly how it should work anyway.
+            for (Pin p_src : c.getPins().values()) {
+                for (Pin p_dest : this.getPins().values()) {
+                    if (p_src.canConnect(p_dest)) {
+                        // Continue to try next pin if the current pin was able
+                        // to be connected.
+                        continue;
+                    }
+                }
+                // Return false if we tried all of the destination pins and none
+                // of them worked.
+                return false;
+            }
+            // Return true if we were able to connect all of the source pins.
+            return true;
         }
+        // Return false if the input endpoint is not a Circuit type.
         return false;
     }
 
     @Override
     public Link connect(Endpoint e) {
-        // TODO Auto-generated method stub
+        if (e instanceof Circuit && canConnect(e)) {
+            Circuit c = (Circuit) e;
+            WireBundle wb = new WireBundle(this, c);
+
+            // TODO Perform pin analysis here.
+            // TODO Improve performance here!! This is extremely naive, and not
+            // exactly how it should work anyway.
+            for (Pin p_src : c.getPins().values()) {
+                for (Pin p_dest : this.getPins().values()) {
+                    if (p_src.canConnect(p_dest)) {
+                        Wire w = p_src.connect(p_dest);
+                        if (w != null) {
+                            wb.addWire(w);
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            return wb;
+        }
+
         return null;
     }
 

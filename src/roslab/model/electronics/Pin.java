@@ -129,6 +129,49 @@ public class Pin extends Feature {
         this.pinIn = pinIn;
     }
 
+    public boolean canConnect(Pin p) {
+        // Check that input pin does not already have an assigned service that
+        // does not match this pin's assigned service. If so, they cannot be
+        // connected.
+        if (p.assignedService != null && p.assignedService.name != this.assignedService.name) {
+            return false;
+        }
+
+        // Check if any of the input pin's services match this pin's assigned
+        // service. If so, a connection can be made.
+        for (PinService ps : p.getServices()) {
+            if (ps.name == this.assignedService.name) {
+                return true;
+            }
+        }
+
+        // If none of the input pin's services match this pin's assigned
+        // service, no connection can be made.
+        return false;
+    }
+
+    /**
+     * This method attempts to connect one pin to another by finding a matching
+     * service (based on the service name). If the connection is possible, a
+     * Wire object representing the connection is returned.
+     *
+     * @param p
+     *            the Pin to connect to this Pin instance
+     * @return the Wire object representing the connected pins; null if the
+     *         connection cannot be made
+     */
+    public Wire connect(Pin p) {
+        if (canConnect(p)) {
+            for (PinService ps : p.getServices()) {
+                if (ps.name == this.assignedService.name) {
+                    p.assignedService = ps;
+                    return new Wire(this.name + "--" + p.name, this, p);
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * @param pin
      *            the pin string to be parsed
