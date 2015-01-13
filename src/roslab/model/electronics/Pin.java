@@ -129,7 +129,14 @@ public class Pin extends Feature {
         this.pinIn = pinIn;
     }
 
-    public static Pin getPinFromString(String pin, Circuit c) {
+    /**
+     * @param pin
+     *            the pin string to be parsed
+     * @param parent
+     *            the Pin's parent circuit
+     * @return the Pin object constructed from the parsed pin string
+     */
+    public static Pin getPinFromString(String pin, Circuit parent) {
         // Example:
         // GPIO,#,+,IO/PWM,1,+,IO,TIMER,15,1/MISO,#,+,IO,SPI,2,5/PWM_N,2,+,O,TIMER,1,6.B,14
         String[] pinArray = pin.split(".");
@@ -142,10 +149,10 @@ public class Pin extends Feature {
 
         if (pinArray.length == 2) {
             String[] portArray = pinArray[1].split(",");
-            result = new Pin(portArray[0] + portArray[1], c);
+            result = new Pin(portArray[0] + portArray[1], parent);
         }
         else {
-            result = new Pin(pinArray[0], c);
+            result = new Pin(pinArray[0], parent);
         }
 
         for (String serviceStr : pinArray[0].split("/")) {

@@ -13,6 +13,7 @@ import roslab.model.general.Endpoint;
 import roslab.model.general.Feature;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
+import roslab.processors.electronics.EagleSchematic;
 
 /**
  * @author Peter Gebhard
@@ -20,6 +21,7 @@ import roslab.model.general.Node;
 public class Circuit extends Node implements Endpoint {
 
     Circuit spec;
+    EagleSchematic schematic;
 
     // TODO CircuitType type;
     // TODO List<CircuitResource> resources;
@@ -54,6 +56,21 @@ public class Circuit extends Node implements Endpoint {
     @Override
     public Circuit getSpec() {
         return spec;
+    }
+
+    /**
+     * @return the schematic
+     */
+    public EagleSchematic getSchematic() {
+        return schematic;
+    }
+
+    /**
+     * @param schematic
+     *            the schematic to set
+     */
+    public void setSchematic(EagleSchematic schematic) {
+        this.schematic = schematic;
     }
 
     @SuppressWarnings("unchecked")

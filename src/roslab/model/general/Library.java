@@ -3,11 +3,16 @@
  */
 package roslab.model.general;
 
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import roslab.model.software.ROSDevice;
+import roslab.processors.electronics.EagleSchematic;
 import roslab.processors.general.PlatformParser;
 
 /**
@@ -112,9 +117,31 @@ public class Library {
         return nodes.remove(n);
     }
 
+    public void loadElectronics() {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("resources", "electronics_lib"))) {
+            for (Path entry : stream) {
+                if (entry.getFileName().toString().endsWith(".sch")) {
+                    addNode(EagleSchematic.buildCircuitFromSchematic(new EagleSchematic(entry.toFile())));
+                }
+            }
+        }
+        catch (IOException x) {
+            // IOException can never be thrown by the iteration.
+            // In this snippet, it can only be thrown by newDirectoryStream.
+            System.err.println(x);
+        }
+    }
+
+    /**
+     * Clear the library contents and load nodes from input platform.
+     *
+     * @param platformName
+     *            the name of the platform to load
+     */
     public void loadPlatform(String platformName) {
         PlatformParser pp = new PlatformParser(Paths.get("resources", "platforms", platformName + ".yaml").toFile());
         this.name = pp.platform.name;
+        this.nodes.clear();
         for (Device dev : pp.platform.devices) {
             if (dev instanceof ROSDevice) {
                 addNode(ROSDevice.buildNodeFromDevice((ROSDevice) dev));

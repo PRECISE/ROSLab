@@ -7,7 +7,7 @@ import roslab.model.general.Configuration;
 import roslab.processors.ModelProcessor;
 
 /**
- * @author shaz
+ * @author Peter Gebhard
  */
 public class SoftwareModelProcessor extends ModelProcessor {
 
