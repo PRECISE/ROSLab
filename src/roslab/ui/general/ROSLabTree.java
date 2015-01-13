@@ -386,4 +386,9 @@ public class ROSLabTree extends TreeItem<String> {
     public void removeConfigLink(Link l) {
         configTree.removeLink(l);
     }
+
+    public void switchLibrary(String libType) {
+        // TODO Handle switching of library node contents based on desired
+        // library type (specified by the input libType string).
+    }
 }
