@@ -56,6 +56,15 @@
         <TreeView fx:id="treeView" prefHeight="254.0" prefWidth="150.0" />
         <TabPane prefHeight="200.0" prefWidth="200.0" side="TOP" tabClosingPolicy="UNAVAILABLE">
           <tabs>
+            <Tab fx:id="eeTab" closable="false" onSelectionChanged="#tabChanged" text="Electrical">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane fx:id="eePane" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </Tab>
             <Tab fx:id="swTab" closable="false" onSelectionChanged="#tabChanged" text="Software">
               <content>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
@@ -70,15 +79,6 @@
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
                   <content>
                     <AnchorPane fx:id="hwPane" prefHeight="200.0" prefWidth="200.0" />
-                  </content>
-                </ScrollPane>
-              </content>
-            </Tab>
-            <Tab fx:id="eeTab" closable="false" onSelectionChanged="#tabChanged" text="Electrical">
-              <content>
-                <ScrollPane prefHeight="200.0" prefWidth="200.0">
-                  <content>
-                    <AnchorPane fx:id="eePane" prefHeight="200.0" prefWidth="200.0" />
                   </content>
                 </ScrollPane>
               </content>
