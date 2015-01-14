@@ -48,28 +48,17 @@ public class EagleSchematic {
             // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             doc.getDocumentElement().normalize();
 
-            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+            System.out.println("Schematic : " + this.schematic.getName());
 
-            NodeList nList = doc.getElementsByTagName("staff");
-
-            System.out.println("----------------------------");
+            NodeList nList = doc.getElementsByTagName("net");
 
             for (int temp = 0; temp < nList.getLength(); temp++) {
-
                 Node nNode = nList.item(temp);
 
-                System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
                     Element eElement = (Element) nNode;
-
-                    System.out.println("Staff id : " + eElement.getAttribute("id"));
-                    System.out.println("First Name : " + eElement.getElementsByTagName("firstname").item(0).getTextContent());
-                    System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
-                    System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
-                    System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
-
+                    nets.add(eElement.getAttribute("name"));
+                    System.out.println("  Net : " + eElement.getAttribute("name"));
                 }
             }
         }
@@ -153,6 +142,7 @@ public class EagleSchematic {
         Circuit c = new Circuit(sch.getName());
         c.setSchematic(sch);
         for (String net : sch.getNets()) {
+            System.out.println("N: " + net);
             c.addPin(Pin.getPinFromString(net, c));
         }
         return c;

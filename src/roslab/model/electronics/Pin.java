@@ -182,8 +182,14 @@ public class Pin extends Feature {
     public static Pin getPinFromString(String pin, Circuit parent) {
         // Example:
         // GPIO,#,+,IO/PWM,1,+,IO,TIMER,15,1/MISO,#,+,IO,SPI,2,5/PWM_N,2,+,O,TIMER,1,6.B,14
-        String[] pinArray = pin.split(".");
+        String[] pinArray = { pin };
 
+        // Split on period character if the string contains them.
+        if (pin.contains(".")) {
+            pinArray = pin.split("\\.");
+        }
+
+        // The input pin string should never have more than one period.
         if (pinArray.length > 2) {
             throw new IllegalArgumentException("Bad input pin string - too many periods");
         }
@@ -191,8 +197,13 @@ public class Pin extends Feature {
         Pin result = null;
 
         if (pinArray.length == 2) {
-            String[] portArray = pinArray[1].split(",");
-            result = new Pin(portArray[0] + portArray[1], parent);
+            if (pinArray[1].contains(",")) {
+                String[] portArray = pinArray[1].split("\\,");
+                result = new Pin(portArray[0] + portArray[1], parent);
+            }
+            else {
+                result = new Pin(pinArray[1], parent);
+            }
         }
         else {
             result = new Pin(pinArray[0], parent);
@@ -241,6 +252,11 @@ public class Pin extends Feature {
             }
 
             result.getServices().add(new PinService(service, serviceNum, oneToMany, io, superService, superServiceNum, af));
+        }
+
+        // If the pin only has one service, make that the assigned service.
+        if (result.getServices().size() == 1) {
+            result.assignedService = result.getServices().get(0);
         }
 
         return result;
