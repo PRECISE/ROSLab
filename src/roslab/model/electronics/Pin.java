@@ -200,9 +200,12 @@ public class Pin extends Feature {
             if (pinArray[1].contains(",")) {
                 String[] portArray = pinArray[1].split("\\,");
                 result = new Pin(portArray[0] + portArray[1], parent);
+                result.setPortName(portArray[0]);
+                result.setPinIn(Integer.parseInt(portArray[1]));
             }
             else {
                 result = new Pin(pinArray[1], parent);
+                result.setPortName(pinArray[1]);
             }
         }
         else {
