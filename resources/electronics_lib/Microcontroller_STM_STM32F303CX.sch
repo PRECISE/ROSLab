@@ -4925,7 +4925,7 @@ chip</description>
 <label x="246.38" y="350.52" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="GPIO,#,+,IO/QEP,2,-,I,TIMER,2,1/PWM,2,+,IO,TIMER,2,1/PWM_N,1,+,O,TIMER,15,9/.A,1" class="0">
+<net name="GPIO,#,+,IO/QEP,2,-,I,TIMER,2,1/PWM,2,+,IO,TIMER,2,1/PWM_N,1,+,O,TIMER,15,9.A,1" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="PA1"/>
 <wire x1="254" y1="347.98" x2="251.46" y2="347.98" width="0.1524" layer="91"/>
@@ -4989,7 +4989,7 @@ chip</description>
 <label x="246.38" y="327.66" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="GPIO,#,+,IO/SCL,+,IO,I2C,2,4/PWM,2,+,IO,TIMER,1,6/QEP,2,+,I,TIMER,1,6/TXRX,-,O,UART,1,7/PWM,3,+,IO,TIMER,2,10.A,9" class="0">
+<net name="GPIO,#,+,IO/SCL,#,+,IO,I2C,2,4/PWM,2,+,IO,TIMER,1,6/QEP,2,+,I,TIMER,1,6/TXRX,#,-,O,UART,1,7/PWM,3,+,IO,TIMER,2,10.A,9" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="PA9"/>
 <wire x1="254" y1="325.12" x2="251.46" y2="325.12" width="0.1524" layer="91"/>
@@ -4997,7 +4997,7 @@ chip</description>
 <label x="246.38" y="325.12" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="GPIO,#,+,IO/SDA,+,IO,I2C,2,4/PWM,3,+,IO,TIMER,1,6/TXRX,-,I,UART,1,7/PWM,4,+,IO,TIMER,2,10.A,10" class="0">
+<net name="GPIO,#,+,IO/SDA,#,+,IO,I2C,2,4/PWM,3,+,IO,TIMER,1,6/TXRX,#,-,I,UART,1,7/PWM,4,+,IO,TIMER,2,10.A,10" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="PA10"/>
 <wire x1="254" y1="322.58" x2="251.46" y2="322.58" width="0.1524" layer="91"/>
