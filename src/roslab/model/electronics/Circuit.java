@@ -150,8 +150,8 @@ public class Circuit extends Node implements Endpoint {
             // TODO Perform pin analysis here.
             // TODO Improve performance here!! This is extremely naive, and not
             // exactly how it should work anyway.
-            for (Pin p_src : c.getPins().values()) {
-                for (Pin p_dest : this.getPins().values()) {
+            for (Pin p_src : this.getPins().values()) {
+                for (Pin p_dest : c.getPins().values()) {
                     if (p_src.canConnect(p_dest)) {
                         // Continue to try next pin if the current pin was able
                         // to be connected.
@@ -178,8 +178,8 @@ public class Circuit extends Node implements Endpoint {
             // TODO Perform pin analysis here.
             // TODO Improve performance here!! This is extremely naive, and not
             // exactly how it should work anyway.
-            for (Pin p_src : c.getPins().values()) {
-                for (Pin p_dest : this.getPins().values()) {
+            for (Pin p_src : this.getPins().values()) {
+                for (Pin p_dest : c.getPins().values()) {
                     if (p_src.canConnect(p_dest)) {
                         Wire w = p_src.connect(p_dest);
                         if (w != null) {
