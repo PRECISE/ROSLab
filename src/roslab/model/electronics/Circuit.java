@@ -146,21 +146,30 @@ public class Circuit extends Node implements Endpoint {
     public boolean canConnect(Endpoint e) {
         if (e instanceof Circuit) {
             Circuit c = (Circuit) e;
+            boolean ableToConnect = false;
 
             // TODO Perform pin analysis here.
             // TODO Improve performance here!! This is extremely naive, and not
             // exactly how it should work anyway.
             for (Pin p_src : this.getPins().values()) {
+
+                // Test each destination pin to see if there's one that the
+                // source pin can connect to.
                 for (Pin p_dest : c.getPins().values()) {
                     if (p_src.canConnect(p_dest)) {
-                        // Continue to try next pin if the current pin was able
-                        // to be connected.
-                        continue;
+                        ableToConnect = true;
+                        break;
                     }
                 }
-                // Return false if we tried all of the destination pins and none
-                // of them worked.
-                return false;
+
+                if (!ableToConnect) {
+                    // Return false if we tried all of the destination pins and
+                    // none of them worked.
+                    return false;
+                }
+
+                // Reset 'ableToConnect' flag for testing next pin
+                ableToConnect = false;
             }
             // Return true if we were able to connect all of the source pins.
             return true;

@@ -87,7 +87,6 @@ public class NewLinkDialog implements Initializable {
     private void handleOk() {
         if (isInputValid()) {
             controller.addConfigLink(new Link(srcBox.getValue(), destBox.getValue()));
-
             okClicked = true;
             dialogStage.close();
         }

@@ -51,10 +51,14 @@ public class Pin extends Feature {
      * @param portName
      * @param pinIn
      */
-    public Pin(String name, Circuit parent, Map<String, String> annotations, List<PinService> services, String portName, int pinIn) {
+    public Pin(String name, Circuit parent, Map<String, String> annotations, List<PinService> services, PinService assignedService, String portName,
+            int pinIn) {
         super(name, parent, annotations);
         if (services != null) {
             this.services = services;
+        }
+        if (assignedService != null) {
+            this.assignedService = assignedService;
         }
         if (portName == null) {
             throw new IllegalArgumentException("Bad port name input.");
@@ -266,7 +270,7 @@ public class Pin extends Feature {
     }
 
     public Pin getClone(String name, Circuit parent) {
-        return new Pin(name, parent, this.getAnnotationsCopy(), this.getServicesCopy(), portName, pinIn);
+        return new Pin(name, parent, this.getAnnotationsCopy(), this.getServicesCopy(), assignedService, portName, pinIn);
     }
 
     private List<PinService> getServicesCopy() {
