@@ -5,6 +5,8 @@ package roslab.model.general;
 
 import java.util.Map;
 
+import roslab.model.ui.UIEndpoint;
+
 /**
  * @author Peter Gebhard
  */
@@ -13,6 +15,8 @@ public interface Endpoint {
     public String getName();
 
     public Node getParent();
+
+    public UIEndpoint getUIEndpoint();
 
     public Map<String, String> getAnnotations();
 

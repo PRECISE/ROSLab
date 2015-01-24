@@ -10,6 +10,7 @@ import java.util.Map;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Feature;
 import roslab.model.general.Link;
+import roslab.model.ui.UIEndpoint;
 
 /**
  * @author Peter Gebhard
@@ -222,6 +223,11 @@ public class ROSPort extends Feature implements Endpoint {
             return l;
         }
         return null;
+    }
+
+    @Override
+    public UIEndpoint getUIEndpoint() {
+        return this.getParent().getUINode().getUIEndpoint(this);
     }
 
     @Override
