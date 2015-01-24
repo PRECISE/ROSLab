@@ -64,7 +64,7 @@ public class NewLinkDialog implements Initializable {
         if (srcBox.getValue() != null) {
             ObservableList<Endpoint> destEndpoints = FXCollections.observableArrayList();
             for (Endpoint e : srcBox.getItems()) {
-                if (srcBox.getValue().canConnect(e)) {
+                if (e != srcBox.getValue() && srcBox.getValue().canConnect(e)) {
                     destEndpoints.add(e);
                 }
             }
