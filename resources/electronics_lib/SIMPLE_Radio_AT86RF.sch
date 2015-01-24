@@ -7234,15 +7234,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="25.4" y1="-2.54" x2="20.32" y2="-2.54" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="GPIO,#,+,I/SS,#,-,I,SPI,1" class="0">
-<segment>
-<label x="30.48" y="-5.08" size="1.778" layer="95" xref="yes"/>
-<pinref part="U$43" gate="G$1" pin="BLOCK_REQUIREMENT"/>
-<pinref part="U$51" gate="G$1" pin="\SEL"/>
-<wire x1="25.4" y1="-5.08" x2="20.32" y2="-5.08" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="1_8V,#,+,I/2_4V,#,+,I/2_5V,#,+,I/2_8V,#,+,I/2_85V,#,+,I/3V,#,+,I/3_3V,#,+,I/3_6V,#,+,I" class="0">
+<net name="3_3V,#,+,I" class="0">
 <segment>
 <wire x1="25.4" y1="-22.86" x2="22.86" y2="-22.86" width="0.1524" layer="91"/>
 <pinref part="U$51" gate="G$1" pin="EVDD"/>
