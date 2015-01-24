@@ -184,6 +184,21 @@ public class UINode extends Group {
     }
 
     /**
+     * @return the node text string
+     */
+    public String getNodeText() {
+        return nodeText.getText();
+    }
+
+    /**
+     * @param text
+     *            the node text string to set
+     */
+    public void setNodeText(String text) {
+        nodeText.setText(text);
+    }
+
+    /**
      * @return the endpoints
      */
     public List<UIEndpoint> getUIEndpoints() {

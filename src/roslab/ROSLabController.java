@@ -218,6 +218,7 @@ public class ROSLabController implements Initializable {
                 hwPane.getChildren().add(uin);
                 break;
             case "Circuit":
+                uin.setNodeText("");
                 eePane.getChildren().add(uin);
                 break;
         }
