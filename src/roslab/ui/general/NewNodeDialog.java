@@ -29,9 +29,9 @@ import roslab.model.general.Node;
 public class NewNodeDialog implements Initializable {
 
     @FXML
-    private ComboBox<Node> nodeBox;
-    @FXML
     private TextField nameField;
+    @FXML
+    private ComboBox<Node> nodeBox;
 
     private Stage dialogStage;
     private boolean addClicked = false;
@@ -85,8 +85,12 @@ public class NewNodeDialog implements Initializable {
     private boolean isInputValid() {
         String errorMessage = "";
 
+        if (nameField.getText() == null || nameField.getText().equals("")) {
+            errorMessage += "No name given!\n";
+        }
+
         if (nodeBox.getValue() == null) {
-            errorMessage += "No node selected!\n";
+            errorMessage += "No node type selected!\n";
         }
 
         if (errorMessage.length() == 0) {
