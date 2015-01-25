@@ -19,6 +19,7 @@ public class Pin extends Feature {
     PinService assignedService = null;
     String portName = "";
     int pinIn = 0;
+    String net = null;
 
     /**
      * @param name
@@ -52,7 +53,7 @@ public class Pin extends Feature {
      * @param pinIn
      */
     public Pin(String name, Circuit parent, Map<String, String> annotations, List<PinService> services, PinService assignedService, String portName,
-            int pinIn) {
+            int pinIn, String net) {
         super(name, parent, annotations);
         if (services != null) {
             this.services = services;
@@ -67,6 +68,7 @@ public class Pin extends Feature {
             this.portName = portName;
         }
         this.pinIn = pinIn;
+        this.net = net;
     }
 
     /**
@@ -133,18 +135,33 @@ public class Pin extends Feature {
         this.pinIn = pinIn;
     }
 
+    /**
+     * @return the net
+     */
+    public String getNet() {
+        return net;
+    }
+
+    /**
+     * @param net
+     *            the net to set
+     */
+    public void setNet(String net) {
+        this.net = net;
+    }
+
     public boolean canConnect(Pin p) {
         // Check that input pin does not already have an assigned service that
         // does not match this pin's assigned service. If so, they cannot be
         // connected.
-        if (p.assignedService != null && p.assignedService.name != this.assignedService.name) {
+        if (p.assignedService != null && !p.assignedService.name.equals(this.assignedService.name)) {
             return false;
         }
 
         // Check if any of the input pin's services match this pin's assigned
         // service. If so, a connection can be made.
         for (PinService ps : p.getServices()) {
-            if (ps.name == this.assignedService.name) {
+            if (ps.name.equals(this.assignedService.name)) {
                 return true;
             }
         }
@@ -269,8 +286,8 @@ public class Pin extends Feature {
         return result;
     }
 
-    public Pin getClone(String name, Circuit parent) {
-        return new Pin(name, parent, this.getAnnotationsCopy(), this.getServicesCopy(), assignedService, portName, pinIn);
+    public Pin clone(String name, Circuit parent) {
+        return new Pin(name, parent, this.getAnnotationsCopy(), this.getServicesCopy(), assignedService, portName, pinIn, net);
     }
 
     private List<PinService> getServicesCopy() {
