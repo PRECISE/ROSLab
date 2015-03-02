@@ -2,6 +2,8 @@ package roslab.ui.general;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,12 +12,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import roslab.ROSLabController;
+import roslab.model.electronics.Circuit;
 import roslab.model.general.Configuration;
 import roslab.model.general.Feature;
 import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
 import roslab.model.software.ROSNode;
+import roslab.processors.electronics.EagleSchematic;
 import roslab.processors.software.ROSNodeCodeGenerator;
 
 public class ROSLabTree extends TreeItem<String> {
@@ -234,10 +238,12 @@ public class ROSLabTree extends TreeItem<String> {
 
         @Override
         public ContextMenu getMenu() {
-            MenuItem mItem = new MenuItem("Generate single-system code");
+            // MenuItem mItem = new MenuItem("Generate single-system code");
+            MenuItem mItem = new MenuItem("Generate merged circuit");
             mItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
+                    // Handle ROSNode nodes
                     for (Node n : controller.getConfig().getNodesOfType(ROSNode.class)) {
                         try {
                             if (n.getAnnotation("user-defined") != null && n.getAnnotation("user-defined").equals("true")) {
@@ -247,6 +253,15 @@ public class ROSLabTree extends TreeItem<String> {
                         catch (IOException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    // Handle Circuit nodes
+                    List<EagleSchematic> schematics = new ArrayList<EagleSchematic>();
+                    for (Node n : controller.getConfig().getNodesOfType(Circuit.class)) {
+                        schematics.add(((Circuit) n).getSchematic());
+                    }
+                    if (schematics.size() > 1) {
+                        EagleSchematic.merge(schematics, "Merged.sch");
                     }
                 }
             });

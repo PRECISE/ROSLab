@@ -13,6 +13,7 @@ import roslab.model.general.Endpoint;
 import roslab.model.general.Feature;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
+import roslab.model.ui.UIEndpoint;
 import roslab.processors.electronics.EagleSchematic;
 
 /**
@@ -33,6 +34,7 @@ public class Circuit extends Node implements Endpoint {
     public Circuit(String name, Circuit spec) {
         super(name, new HashMap<String, Pin>(), spec.getAnnotationsCopy());
         this.spec = spec;
+        this.schematic = spec.schematic.clone();
         this.features = spec.getPinsCopy(this);
     }
 
@@ -90,7 +92,7 @@ public class Circuit extends Node implements Endpoint {
     public Map<String, Pin> getPinsCopy(Circuit c) {
         Map<String, Pin> copy = new HashMap<String, Pin>();
         for (Entry<String, ? extends Feature> e : features.entrySet()) {
-            copy.put(e.getKey(), ((Pin) e.getValue()).getClone(e.getKey(), c));
+            copy.put(e.getKey(), ((Pin) e.getValue()).clone(e.getKey(), c));
         }
         return copy;
     }
@@ -148,6 +150,8 @@ public class Circuit extends Node implements Endpoint {
             Circuit c = (Circuit) e;
             boolean ableToConnect = false;
 
+            // TODO Only try to connect BLOCK_REQUIREMENT pins
+
             // TODO Perform pin analysis here.
             // TODO Improve performance here!! This is extremely naive, and not
             // exactly how it should work anyway.
@@ -193,6 +197,13 @@ public class Circuit extends Node implements Endpoint {
                         Wire w = p_src.connect(p_dest);
                         if (w != null) {
                             wb.addWire(w);
+
+                            // Make connection in EagleSchematics
+                            Map<EagleSchematic, String> schematicNetMap = new HashMap<EagleSchematic, String>();
+                            schematicNetMap.put(this.schematic, w.src.net);
+                            schematicNetMap.put(c.schematic, w.dest.net);
+                            EagleSchematic.connect(schematicNetMap, w.name);
+
                             continue;
                         }
                     }
@@ -215,6 +226,11 @@ public class Circuit extends Node implements Endpoint {
         ArrayList<Endpoint> list = new ArrayList<Endpoint>();
         list.add(this);
         return list;
+    }
+
+    @Override
+    public UIEndpoint getUIEndpoint() {
+        return uiNode.getUIEndpoint(this);
     }
 
     @Override

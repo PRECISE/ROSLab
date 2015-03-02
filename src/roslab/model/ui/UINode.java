@@ -61,8 +61,17 @@ public class UINode extends Group {
         if (node instanceof Endpoint) {
             // If the node itself is the endpoint, add it on the left side,
             // halfway down
-            this.endpoints
-                    .add(new UIEndpoint((Endpoint) node, this, this.nodeRect.getX(), this.nodeRect.getY() + this.nodeRect.getHeight() / 2, true));
+
+            // TODO: WARNING! This is a hack to get the MCU endpoint to show on
+            // left side. Find a better way to do this!
+            if (node.getName().equals("MCU")) {
+                this.endpoints.add(new UIEndpoint((Endpoint) node, this, this.nodeRect.getX(), this.nodeRect.getY() + this.nodeRect.getHeight() / 2,
+                        true));
+            }
+            else {
+                this.endpoints.add(new UIEndpoint((Endpoint) node, this, this.nodeRect.getX() + this.nodeRect.getWidth(), this.nodeRect.getY()
+                        + this.nodeRect.getHeight() / 2, false));
+            }
         }
         else {
             int endpointIndex = 0;
