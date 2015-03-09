@@ -330,6 +330,19 @@ public class ROSLabTree extends TreeItem<String> {
             this.link = link;
             this.controller = controller;
         }
+
+        @Override
+        public ContextMenu getMenu() {
+            MenuItem mItem = new MenuItem("Delete");
+            mItem.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    controller.removeConfigLink(link);
+                }
+            });
+
+            return new ContextMenu(mItem);
+        }
     }
 
     public final class TreeCellImpl extends TreeCell<String> {
