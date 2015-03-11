@@ -14,7 +14,9 @@ import java.util.Map;
 public class PinMatcher {
 
     /**
-     * @return the schematic's name
+     * Solves a pin-match matrix.
+     *
+     * @return a mapping of matchings
      */
     public static Map<Integer, Integer> match(Integer[][] pinMatrix) {
         Map<Integer, Integer> result = new HashMap<Integer, Integer>();
@@ -113,7 +115,7 @@ public class PinMatcher {
         for (int i = 0; i < pinMatrix.length; i++) {
             for (int j = 0; j < pinMatrix[i].length; j++) {
                 if (pinMatrix[i][j] >= 0) {
-                    result[j] += pinMatrix[i][j];
+                    result[i] += pinMatrix[i][j];
                 }
             }
         }
