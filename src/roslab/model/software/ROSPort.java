@@ -226,6 +226,11 @@ public class ROSPort extends Feature implements Endpoint {
     }
 
     @Override
+    public void disconnect(Link l) {
+        links.remove(l);
+    }
+
+    @Override
     public UIEndpoint getUIEndpoint() {
         return this.getParent().getUINode().getUIEndpoint(this);
     }
