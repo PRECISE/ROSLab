@@ -3,6 +3,7 @@
  */
 package roslab.model.general;
 
+import java.util.List;
 import java.util.Map;
 
 import roslab.model.ui.UIEndpoint;
@@ -20,6 +21,8 @@ public interface Endpoint {
 
     public Map<String, String> getAnnotations();
 
+    public List<? extends Link> getLinks();
+
     public boolean isInput();
 
     public boolean isFanIn();
@@ -29,5 +32,7 @@ public interface Endpoint {
     public boolean canConnect(Endpoint e);
 
     public Link connect(Endpoint e);
+
+    public void disconnect(Link l);
 
 }

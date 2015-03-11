@@ -3,6 +3,8 @@
  */
 package roslab.model.mechanics;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import roslab.model.general.Endpoint;
@@ -17,6 +19,8 @@ public class Joint extends Feature implements Endpoint {
 
     boolean fanIn;
     boolean fanOut;
+
+    List<Link> links = new ArrayList<Link>();
 
     /**
      * @param name
@@ -75,6 +79,16 @@ public class Joint extends Feature implements Endpoint {
     public Link connect(Endpoint e) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void disconnect(Link l) {
+        links.remove(l);
+    }
+
+    @Override
+    public List<Link> getLinks() {
+        return links;
     }
 
     @Override
