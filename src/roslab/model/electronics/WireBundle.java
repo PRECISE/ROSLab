@@ -42,5 +42,4 @@ public class WireBundle extends Link {
     public boolean removeWire(Wire w) {
         return wires.remove(w);
     }
-
 }

@@ -80,4 +80,11 @@ public class Link {
         this.uiLink = uiLink;
     }
 
+    public void destroy() {
+        uiLink.disconnect();
+        src.disconnect(this);
+        dest.disconnect(this);
+        uiLink = null;
+    }
+
 }
