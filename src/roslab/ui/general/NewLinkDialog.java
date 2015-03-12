@@ -22,10 +22,7 @@ import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 
 import roslab.ROSLabController;
-import roslab.model.electronics.Circuit;
-import roslab.model.electronics.WireBundle;
 import roslab.model.general.Endpoint;
-import roslab.model.general.Link;
 
 @SuppressWarnings("deprecation")
 public class NewLinkDialog implements Initializable {
@@ -88,12 +85,7 @@ public class NewLinkDialog implements Initializable {
     @FXML
     private void handleOk() {
         if (isInputValid()) {
-            if (srcBox.getValue() instanceof Circuit) {
-                controller.addConfigLink(new WireBundle(srcBox.getValue(), destBox.getValue()));
-            }
-            else {
-                controller.addConfigLink(new Link(srcBox.getValue(), destBox.getValue()));
-            }
+            controller.addConfigLink(srcBox.getValue().connect(destBox.getValue()));
             okClicked = true;
             dialogStage.close();
         }
