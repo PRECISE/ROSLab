@@ -37,7 +37,7 @@ public class UILink extends Line {
         dest.addUILink(this);
     }
 
-    public void destroy() {
+    public void disconnect() {
         src.removeUILink(this);
         dest.removeUILink(this);
     }

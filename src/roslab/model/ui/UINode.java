@@ -59,19 +59,10 @@ public class UINode extends Group {
             this.nodeRect.getStyleClass().add(this.node.getClass().getSimpleName());
         }
         if (node instanceof Endpoint) {
-            // If the node itself is the endpoint, add it on the left side,
-            // halfway down
-
-            // TODO: WARNING! This is a hack to get the MCU endpoint to show on
-            // left side. Find a better way to do this!
-            if (node.getName().equals("MCU")) {
-                this.endpoints.add(new UIEndpoint((Endpoint) node, this, this.nodeRect.getX(), this.nodeRect.getY() + this.nodeRect.getHeight() / 2,
-                        true));
-            }
-            else {
-                this.endpoints.add(new UIEndpoint((Endpoint) node, this, this.nodeRect.getX() + this.nodeRect.getWidth(), this.nodeRect.getY()
-                        + this.nodeRect.getHeight() / 2, false));
-            }
+            // If the node itself is the endpoint, add it in the center and
+            // invisible
+            this.endpoints.add(new UIEndpoint((Endpoint) node, this, this.nodeRect.getX() + this.nodeRect.getWidth() / 2, this.nodeRect.getY()
+                    + this.nodeRect.getHeight() / 2, false, false));
         }
         else {
             int endpointIndex = 0;
@@ -111,12 +102,12 @@ public class UINode extends Group {
                 // put half of the endpoints on the left side
                 if (endpointIndex < endpointCount / 2) {
                     this.endpoints.add(new UIEndpoint((Endpoint) f, this, this.nodeRect.getX(), this.nodeRect.getY()
-                            + (ENDPOINT_SIZE * endpointIndex) + ENDPOINT_Y_OFFSET, true));
+                            + (ENDPOINT_SIZE * endpointIndex) + ENDPOINT_Y_OFFSET, true, true));
                 }
                 else {
                     // put the other half on the right side
                     this.endpoints.add(new UIEndpoint((Endpoint) f, this, this.nodeRect.getX() + this.nodeRect.getWidth(), this.nodeRect.getY()
-                            + (ENDPOINT_SIZE * (endpointIndex - endpointCount / 2)) + ENDPOINT_Y_OFFSET, false));
+                            + (ENDPOINT_SIZE * (endpointIndex - endpointCount / 2)) + ENDPOINT_Y_OFFSET, false, true));
                 }
                 endpointIndex++;
             }
@@ -178,6 +169,8 @@ public class UINode extends Group {
                 }
             }
         });
+
+        this.toFront();
     }
 
     private void setWidth(int i) {

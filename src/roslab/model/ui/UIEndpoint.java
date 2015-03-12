@@ -42,7 +42,7 @@ public class UIEndpoint extends Group {
      * @param centerX
      * @param centerY
      */
-    public UIEndpoint(Endpoint endpoint, UINode uiparent, double centerX, double centerY, boolean rightSideText) {
+    public UIEndpoint(Endpoint endpoint, UINode uiparent, double centerX, double centerY, boolean rightSideText, boolean visible) {
         super();
         this.endpoint = endpoint;
         this.endpointCircle = new Circle(centerX, centerY, DEFAULT_RADIUS);
@@ -55,6 +55,8 @@ public class UIEndpoint extends Group {
         setupEndpointText(this.endpoint, this.rightSideText);
         this.uiparent = uiparent;
         this.getChildren().addAll(this.endpointCircle, this.endpointText);
+        this.endpointCircle.setVisible(visible);
+        this.endpointText.setVisible(visible);
     }
 
     /**
@@ -141,6 +143,7 @@ public class UIEndpoint extends Group {
     public void addUILink(UILink uilink) {
         this.uilinks.add(uilink);
         this.getChildren().add(uilink);  // TODO Does this really work?
+        uilink.toBack();
     }
 
     /**
@@ -149,6 +152,7 @@ public class UIEndpoint extends Group {
      */
     public void removeUILink(UILink uilink) {
         this.uilinks.remove(uilink);
+        this.getChildren().remove(uilink);
     }
 
     public void setMouse(MouseEvent mouseEvent) {
