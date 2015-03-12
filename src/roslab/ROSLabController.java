@@ -25,7 +25,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import org.apache.log4j.BasicConfigurator;
+
 import roslab.model.general.Configuration;
+import roslab.model.general.Endpoint;
 import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
@@ -74,6 +78,8 @@ public class ROSLabController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         assert treeView != null : "fx:id\"treeView\" was not injected";
+
+        BasicConfigurator.configure();
 
         // TODO: get highlighting and selection of Nodes based on selection
         // rectangle
@@ -218,7 +224,6 @@ public class ROSLabController implements Initializable {
                 hwPane.getChildren().add(uin);
                 break;
             case "Circuit":
-                uin.setNodeText("");
                 eePane.getChildren().add(uin);
                 break;
         }
@@ -247,12 +252,22 @@ public class ROSLabController implements Initializable {
         }
         config.removeNode(n);
         tree.removeConfigNode(n);
+
+        // Remove any links associated with this node
+        for (Endpoint e : n.getEndpoints()) {
+            for (Link l : e.getLinks()) {
+                removeConfigLink(l);
+            }
+        }
+
+        n = null;
     }
 
     public void removeConfigLink(Link l) {
-        l.getUILink().destroy();
+        l.destroy();
         config.removeLink(l);
         tree.removeConfigLink(l);
+        l = null;
     }
 
     /**

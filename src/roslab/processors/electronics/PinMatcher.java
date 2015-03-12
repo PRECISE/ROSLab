@@ -90,7 +90,7 @@ public class PinMatcher {
     }
 
     private static Integer[] rowSums(Integer[][] pinMatrix) {
-        Integer[] result = new Integer[pinMatrix[0].length];
+        Integer[] result = new Integer[pinMatrix.length];
         for (int e = 0; e < result.length; e++) {
             result[e] = 0;
         }
@@ -107,7 +107,7 @@ public class PinMatcher {
     }
 
     private static Integer[] columnSums(Integer[][] pinMatrix) {
-        Integer[] result = new Integer[pinMatrix.length];
+        Integer[] result = new Integer[pinMatrix[0].length];
         for (int e = 0; e < result.length; e++) {
             result[e] = 0;
         }
@@ -115,7 +115,7 @@ public class PinMatcher {
         for (int i = 0; i < pinMatrix.length; i++) {
             for (int j = 0; j < pinMatrix[i].length; j++) {
                 if (pinMatrix[i][j] >= 0) {
-                    result[i] += pinMatrix[i][j];
+                    result[j] += pinMatrix[i][j];
                 }
             }
         }
