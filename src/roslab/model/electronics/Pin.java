@@ -19,6 +19,7 @@ public class Pin extends Feature {
     PinService assignedService = null;
     String portName = "";
     int pinIn = 0;
+    boolean required = false;
     String net = null;
 
     /**
@@ -37,8 +38,6 @@ public class Pin extends Feature {
     /**
      * @param name
      * @param parent
-     * @param annotations
-     * @param services
      */
     public Pin(String name, Circuit parent) {
         super(name, parent);
@@ -51,9 +50,11 @@ public class Pin extends Feature {
      * @param services
      * @param portName
      * @param pinIn
+     * @param required
+     * @param net
      */
     public Pin(String name, Circuit parent, Map<String, String> annotations, List<PinService> services, PinService assignedService, String portName,
-            int pinIn, String net) {
+            int pinIn, boolean required, String net) {
         super(name, parent, annotations);
         if (services != null) {
             this.services = services;
@@ -68,6 +69,7 @@ public class Pin extends Feature {
             this.portName = portName;
         }
         this.pinIn = pinIn;
+        this.required = required;
         this.net = net;
     }
 
@@ -150,11 +152,26 @@ public class Pin extends Feature {
         this.net = net;
     }
 
+    /**
+     * @return the required flag
+     */
+    public boolean getRequired() {
+        return required;
+    }
+
+    /**
+     * @param required
+     *            the required flag to set
+     */
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
     public boolean canConnect(Pin p) {
         // Check that input pin does not already have an assigned service that
         // does not match this pin's assigned service. If so, they cannot be
         // connected.
-        if (p.assignedService != null && !p.assignedService.name.equals(this.assignedService.name)) {
+        if (this.assignedService == null || (p.assignedService != null && !p.assignedService.name.equals(this.assignedService.name))) {
             return false;
         }
 
@@ -184,9 +201,9 @@ public class Pin extends Feature {
     public Wire connect(Pin p) {
         if (canConnect(p)) {
             for (PinService ps : p.getServices()) {
-                if (ps.name == this.assignedService.name) {
+                if (ps.name.equals(this.assignedService.name)) {
                     p.assignedService = ps;
-                    return new Wire(this.name + "--" + p.name, this, p);
+                    return new Wire(this.parent.getName() + "." + ps.name + "--" + p.parent.getName() + "." + p.assignedService.name, this, p);
                 }
             }
         }
@@ -287,7 +304,7 @@ public class Pin extends Feature {
     }
 
     public Pin clone(String name, Circuit parent) {
-        return new Pin(name, parent, this.getAnnotationsCopy(), this.getServicesCopy(), assignedService, portName, pinIn, net);
+        return new Pin(name, parent, this.getAnnotationsCopy(), this.getServicesCopy(), assignedService, portName, pinIn, required, net);
     }
 
     private List<PinService> getServicesCopy() {
@@ -297,5 +314,4 @@ public class Pin extends Feature {
         }
         return copy;
     }
-
 }

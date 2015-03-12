@@ -15,6 +15,7 @@ import roslab.model.general.Link;
 import roslab.model.general.Node;
 import roslab.model.ui.UIEndpoint;
 import roslab.processors.electronics.EagleSchematic;
+import roslab.processors.electronics.PinMatcher;
 
 /**
  * @author Peter Gebhard
@@ -23,6 +24,8 @@ public class Circuit extends Node implements Endpoint {
 
     Circuit spec;
     EagleSchematic schematic;
+
+    List<WireBundle> wireBundles = new ArrayList<WireBundle>();
 
     // TODO CircuitType type;
     // TODO List<CircuitResource> resources;
@@ -89,6 +92,18 @@ public class Circuit extends Node implements Endpoint {
         return (Map<String, Pin>) features;
     }
 
+    public Map<String, Pin> getRequiredPins() {
+        Map<String, Pin> result = new HashMap<String, Pin>();
+
+        for (Pin p : this.getPins().values()) {
+            if (p.required) {
+                result.put(p.getName(), p);
+            }
+        }
+
+        return result;
+    }
+
     public Map<String, Pin> getPinsCopy(Circuit c) {
         Map<String, Pin> copy = new HashMap<String, Pin>();
         for (Entry<String, ? extends Feature> e : features.entrySet()) {
@@ -114,9 +129,8 @@ public class Circuit extends Node implements Endpoint {
         }
 
         // TODO: Need to add optimizing algorithm here to handle cases where
-        // there is initially
-        // no requested service unused, but through some reassignment of pins,
-        // we could make it work.
+        // there is initially no requested service unused, but through some
+        // reassignment of pins, we could make it work.
 
         return null;
     }
@@ -148,72 +162,95 @@ public class Circuit extends Node implements Endpoint {
     public boolean canConnect(Endpoint e) {
         if (e instanceof Circuit) {
             Circuit c = (Circuit) e;
-            boolean ableToConnect = false;
+            Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
+            List<Pin> componentPins = getConnectedComponentPins();
+            componentPins.addAll(this.getRequiredPins().values());
 
-            // TODO Only try to connect BLOCK_REQUIREMENT pins
-
-            // TODO Perform pin analysis here.
-            // TODO Improve performance here!! This is extremely naive, and not
-            // exactly how it should work anyway.
-            for (Pin p_src : this.getPins().values()) {
-
-                // Test each destination pin to see if there's one that the
-                // source pin can connect to.
-                for (Pin p_dest : c.getPins().values()) {
-                    if (p_src.canConnect(p_dest)) {
-                        ableToConnect = true;
-                        break;
-                    }
-                }
-
-                if (!ableToConnect) {
-                    // Return false if we tried all of the destination pins and
-                    // none of them worked.
-                    return false;
-                }
-
-                // Reset 'ableToConnect' flag for testing next pin
-                ableToConnect = false;
+            // Fill the pin matching matrix
+            Integer[][] matrix = new Integer[componentPins.size()][c.getRequiredPins().size()];
+            int mIndex = 0;
+            for (Pin p : componentPins) {
+                matrix[mIndex] = generateRow(c, p);
+                mIndex++;
             }
-            // Return true if we were able to connect all of the source pins.
-            return true;
+
+            mapping = PinMatcher.match(matrix);
+
+            return mapping != null;
         }
-        // Return false if the input endpoint is not a Circuit type.
+
         return false;
+    }
+
+    private List<Pin> getConnectedComponentPins() {
+        List<Pin> result = new ArrayList<Pin>();
+
+        for (WireBundle wb : this.wireBundles) {
+            for (Wire w : wb.wires) {
+                result.add(w.src);
+            }
+        }
+
+        return result;
     }
 
     @Override
     public Link connect(Endpoint e) {
         if (e instanceof Circuit && canConnect(e)) {
             Circuit c = (Circuit) e;
+
+            Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
+            List<Pin> componentPins = getConnectedComponentPins();
+            componentPins.addAll(this.getRequiredPins().values());
+
+            // Fill the pin matching matrix
+            Integer[][] matrix = new Integer[componentPins.size()][c.getRequiredPins().size()];
+            int mIndex = 0;
+            for (Pin p : componentPins) {
+                matrix[mIndex] = generateRow(c, p);
+                mIndex++;
+            }
+
+            mapping = PinMatcher.match(matrix);
+
+            // Return false if the match did not work, ie. the component cannot
+            // be connected.
+            if (mapping == null) {
+                return null;
+            }
+
             WireBundle wb = new WireBundle(this, c);
 
-            // TODO Perform pin analysis here.
-            // TODO Improve performance here!! This is extremely naive, and not
-            // exactly how it should work anyway.
-            for (Pin p_src : this.getPins().values()) {
-                for (Pin p_dest : c.getPins().values()) {
-                    if (p_src.canConnect(p_dest)) {
-                        Wire w = p_src.connect(p_dest);
-                        if (w != null) {
-                            wb.addWire(w);
+            for (Entry<Integer, Integer> pinPair : mapping.entrySet()) {
+                Wire w = ((Pin) componentPins.toArray()[pinPair.getKey()]).connect((Pin) c.getPins().values().toArray()[pinPair.getValue()]);
+                if (w != null) {
+                    wb.addWire(w);
 
-                            // Make connection in EagleSchematics
-                            Map<EagleSchematic, String> schematicNetMap = new HashMap<EagleSchematic, String>();
-                            schematicNetMap.put(this.schematic, w.src.net);
-                            schematicNetMap.put(c.schematic, w.dest.net);
-                            EagleSchematic.connect(schematicNetMap, w.name);
-
-                            continue;
-                        }
-                    }
+                    // Make connection in EagleSchematics
+                    Map<EagleSchematic, String> schematicNetMap = new HashMap<EagleSchematic, String>();
+                    schematicNetMap.put(this.schematic, w.src.net);
+                    schematicNetMap.put(c.schematic, w.dest.net);
+                    EagleSchematic.connect(schematicNetMap, w.name);
                 }
             }
+
+            wireBundles.add(wb);
 
             return wb;
         }
 
         return null;
+    }
+
+    @Override
+    public void disconnect(Link l) {
+        wireBundles.remove(l);
+        // TODO Remove wire bundle connections from EagleSchematic netMap
+    }
+
+    @Override
+    public List<WireBundle> getLinks() {
+        return wireBundles;
     }
 
     @Override
@@ -241,5 +278,22 @@ public class Circuit extends Node implements Endpoint {
     @Override
     public Circuit clone(String name) {
         return new Circuit(name, this);
+    }
+
+    private Integer[] generateRow(Circuit c, Pin p) {
+        Integer[] result = new Integer[c.getPins().size()];
+        int i = 0;
+
+        for (Pin pin : c.getPins().values()) {
+            if (p.canConnect(pin)) {
+                result[i] = 1;
+            }
+            else {
+                result[i] = 0;
+            }
+            i++;
+        }
+
+        return result;
     }
 }
