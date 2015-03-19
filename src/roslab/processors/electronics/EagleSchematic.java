@@ -188,7 +188,7 @@ public class EagleSchematic {
             Document mDoc = dBuilder.parse(mergedSch);
             mDoc.getDocumentElement().normalize();
             Node mDocLayersNode = null;
-            Node mDocLibrariesNode = null;
+            Element mDocLibrariesNode = null;
             Node mDocPackagesNode = null;
             Node mDocSymbolsNode = null;
             Node mDocDeviceSetsNode = null;
@@ -203,13 +203,15 @@ public class EagleSchematic {
                 mDocLayersNode = mDoc.createElement("layers");
             }
 
-            NodeList mDocLibraryList = mDoc.getElementsByTagName("library");
+            NodeList mDocLibraryList = mDoc.getElementsByTagName("libraries");
             if (mDocLibraryList.getLength() > 0) {
-                mDocLibrariesNode = mDocLibraryList.item(0).getParentNode();
+                mDocLibrariesNode = (Element) mDocLibraryList.item(0);
             }
             else {
                 mDocLibrariesNode = mDoc.createElement("libraries");
             }
+            NodeList mDocLibraryList2 = mDoc.getElementsByTagName("library");
+            Element nTest = (Element) mDocLibraryList2.item(1).getParentNode();
 
             NodeList mDocPartList = mDoc.getElementsByTagName("part");
             if (mDocPartList.getLength() > 0) {
@@ -253,13 +255,13 @@ public class EagleSchematic {
                 NodeList docLayerList = doc.getElementsByTagName("layer");
                 for (int i = 0; i < docLayerList.getLength(); i++) {
                     Element docLayer = (Element) docLayerList.item(i);
-                    logger.debug("Layer doc: " + docLayer.getAttribute("id"));
+                    logger.debug("Layer doc: " + docLayer.getAttribute("name"));
 
                     // Check if layer exists already in merge document
                     for (int j = 0; j < mDocLayerList.getLength(); j++) {
                         Element mDocLayer = (Element) mDocLayerList.item(j);
-                        logger.debug("Layer mDoc: " + mDocLayer.getAttribute("id"));
-                        if (mDocLayer.getAttribute("id").equals(docLayer.getAttribute("id"))) {
+                        logger.debug("Layer mDoc: " + mDocLayer.getAttribute("name"));
+                        if (mDocLayer.getAttribute("name").equals(docLayer.getAttribute("name"))) {
                             exists = true;
                             logger.debug("Layer EXISTS");
                             break;
@@ -267,7 +269,15 @@ public class EagleSchematic {
                     }
                     // If the layer does not exist in the merge document, add it
                     if (!exists) {
-                        logger.debug("Layer doc: " + docLayer.getAttribute("id"));
+                        logger.debug("Layer doc: " + docLayer.getAttribute("name"));
+
+                        int newNum = Integer.parseInt(docLayer.getAttribute("number"));
+                        while (!isUniqueLayerNum(mDocLayerList, newNum) || !isUniqueLayerNum(docLayerList, newNum)) {
+                            newNum++;
+                        }
+
+                        docLayer.setAttribute("number", Integer.toString(newNum));
+
                         mDocLayersNode.appendChild(mDoc.importNode(docLayer, true));
                     }
                     // Reset 'exists' flag
@@ -278,12 +288,12 @@ public class EagleSchematic {
                 NodeList docLibraryList = doc.getElementsByTagName("library");
                 for (int i = 0; i < docLibraryList.getLength(); i++) {
                     Element docLibrary = (Element) docLibraryList.item(i);
-                    logger.debug("Library doc: [" + i + " / " + docLibraryList.getLength() + " ]" + docLibrary.getAttribute("name"));
+                    logger.debug("Library doc: [" + i + " / " + docLibraryList.getLength() + " ] " + docLibrary.getAttribute("name"));
 
                     // Check if library exists already in merge document
-                    for (int j = 0; j < mDocLibraryList.getLength(); j++) {
-                        Element mDocLibrary = (Element) mDocLibraryList.item(j);
-                        logger.debug("Library mDoc: [" + j + " / " + mDocLibraryList.getLength() + " ]" + mDocLibrary.getAttribute("name"));
+                    for (int j = 0; j < mDocLibraryList2.getLength(); j++) {
+                        Element mDocLibrary = (Element) mDocLibraryList2.item(j);
+                        logger.debug("Library mDoc: [" + j + " / " + mDocLibraryList2.getLength() + " ] " + mDocLibrary.getAttribute("name"));
                         if (mDocLibrary.getAttribute("name").equals(docLibrary.getAttribute("name"))) {
                             exists = true;
 
@@ -314,6 +324,8 @@ public class EagleSchematic {
                                 if (!packageExists) {
                                     logger.debug("Package doc does NOT exist: " + docPackage.getAttribute("name"));
                                     mDocPackagesNode.appendChild(mDoc.importNode(docPackage, true));
+                                    mDocLibrary.appendChild(mDocPackagesNode);
+                                    mDocLibrariesNode.appendChild(mDocLibrary);
                                 }
                                 // Reset 'packageExists' flag
                                 packageExists = false;
@@ -374,11 +386,16 @@ public class EagleSchematic {
                                 // If the symbol does not exist in the merge
                                 // document's library, add it
                                 if (!devsetExists) {
+                                    logger.debug("DeviceSet doc does NOT exist: " + ((Element) docDeviceSetList.item(k)).getAttribute("name"));
                                     mDocDeviceSetsNode.appendChild(mDoc.importNode(docDeviceSetList.item(k), true));
                                 }
-                                // Reset 'symbolExists' flag
+                                // Reset 'devsetExists' flag
                                 devsetExists = false;
                             }
+
+                            // Break out of the loop if we found the library
+                            // already exists.
+                            break;
                         }
                     }
 
@@ -392,7 +409,6 @@ public class EagleSchematic {
                 }
 
                 // Handle merging of parts
-                boolean partExists = false;
                 NodeList docPartList = doc.getElementsByTagName("part");
                 for (int p = 0; p < docPartList.getLength(); p++) {
                     Element docPart = (Element) docPartList.item(p);
@@ -401,27 +417,40 @@ public class EagleSchematic {
                         Element mDocPart = (Element) mDocPartList.item(m);
                         logger.debug("Part mDoc: " + mDocPart.getAttribute("name"));
                         if (mDocPart.getAttribute("name").equals(docPart.getAttribute("name"))) {
-                            partExists = true;
-
                             // If there is a name conflict, pick a unique name
                             // for part. Try again if there is still a conflict
                             // with the new name.
                             String newName = makeUniqueName(docPart.getAttribute("name"));
-                            while (!isUniqueName(mDocPartList, newName)) {
+                            while (!isUniqueName(mDocPartList, newName) || !isUniqueName(docPartList, newName)) {
                                 newName = makeUniqueName(newName);
                             }
+
+                            // Update all references to the old part name in
+                            // pinref and instance tags
+                            NodeList docPinrefList = doc.getElementsByTagName("pinref");
+                            for (int pinref = 0; pinref < docPinrefList.getLength(); pinref++) {
+                                Element docPinref = (Element) docPinrefList.item(pinref);
+                                if (docPinref.getAttribute("part").equals(docPart.getAttribute("name"))) {
+                                    logger.debug("Pinref doc: " + docPinref.getAttribute("part"));
+                                    docPinref.setAttribute("part", newName);
+                                }
+                            }
+                            NodeList docInstanceList = doc.getElementsByTagName("instance");
+                            for (int inst = 0; inst < docInstanceList.getLength(); inst++) {
+                                Element docInst = (Element) docInstanceList.item(inst);
+                                if (docInst.getAttribute("part").equals(docPart.getAttribute("name"))) {
+                                    logger.debug("Instance doc: " + docInst.getAttribute("part"));
+                                    docInst.setAttribute("part", newName);
+                                }
+                            }
+
                             docPart.setAttribute("name", newName);
                         }
                     }
 
-                    // If the symbol does not exist in the merge
-                    // document's library, add it.
-                    if (!partExists) {
-                        mDocPartsNode.appendChild(mDoc.importNode(docPart, true));
-                    }
-
-                    // Reset 'symbolExists' flag
-                    partExists = false;
+                    // Merge the part from the original document to the new
+                    // merge document
+                    mDocPartsNode.appendChild(mDoc.importNode(docPart, true));
                 }
 
                 // Handle net renaming
@@ -507,6 +536,15 @@ public class EagleSchematic {
 
         // Replace the ending number with the incremented value
         return name.substring(0, i).concat(String.valueOf(num));
+    }
+
+    private static boolean isUniqueLayerNum(NodeList mDocList, int newNum) {
+        for (int m = 0; m < mDocList.getLength(); m++) {
+            if (((Element) mDocList.item(m)).getAttribute("number").equals(newNum)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
