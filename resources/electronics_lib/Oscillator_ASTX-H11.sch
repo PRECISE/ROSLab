@@ -3666,7 +3666,7 @@ Source: AVX .. aphvc.pdf</description>
 <junction x="-20.32" y="5.08"/>
 </segment>
 </net>
-<net name="5MHZ_CMOS,#,+,O,OSCILLATOR/10MHZ_CMOS,#,+,O,OSCILLATOR/12MHZ_CMOS,#,+,O,OSCILLATOR/16MHZ_CMOS,#,+,O,OSCILLATOR/20MHZ_CMOS,#,+,O,OSCILLATOR/24MHZ_CMOS,#,+,O,OSCILLATOR/32MHZ_CMOS,#,+,O,OSCILLATOR/40MHZ_CMOS,#,+,O,OSCILLATOR/44MHZ_CMOS,#,+,O,OSCILLATOR" class="0">
+<net name="16MHZ_CMOS,#,+,O,OSCILLATOR" class="0">
 <segment>
 <pinref part="U$54" gate="G$1" pin="OUT"/>
 <pinref part="U$44" gate="G$1" pin="BLOCK_REQUIREMENT"/>

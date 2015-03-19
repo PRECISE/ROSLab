@@ -708,7 +708,7 @@ Standard 3-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <segment>
 <pinref part="JP1" gate="G$1" pin="2"/>
 <wire x1="27.94" y1="71.12" x2="30.48" y2="71.12" width="0.1524" layer="91"/>
-<pinref part="U$39" gate="G$1" pin="BLOCK_REQUIREMENT"/>
+<pinref part="U$39" gate="G$1" pin="BLOCK_OPTIONAL"/>
 <label x="35.56" y="71.12" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>

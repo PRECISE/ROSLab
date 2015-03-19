@@ -3652,7 +3652,7 @@ Metric Code Size 5664</description>
 <pinref part="U$1" gate="G$1" pin="GND"/>
 </segment>
 </net>
-<net name="1_2V,#,+,O/1_8V,#,+,O/2_5V,#,+,O/2_85V,#,+,O/3_3V,#,+,O/5V,#,+,O" class="0">
+<net name="3_3V,#,+,O" class="0">
 <segment>
 <pinref part="C_BYP_OUT_1" gate="G$1" pin="1"/>
 <wire x1="33.02" y1="15.24" x2="33.02" y2="27.94" width="0.1524" layer="91"/>
@@ -3663,7 +3663,7 @@ Metric Code Size 5664</description>
 <label x="33.02" y="33.02" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="V_SUPPLY,#,+,I/V_BATT,#,+,I/2_5V,#,+,I/2_85V,#,+,I/3V,#,+,I/3_3V,#,+,I/3_6V,#,+,I/3_7V,#,+,I/4_5V,#,+,I/4_8V,#,+,I/5V,#,+,I/6V,#,+,I/7_2V,#,+,I/7_4V,#,+,I/7_5V,#,+,I/8_4V,#,+,I/9V,#,+,I/9_6V,#,+,I/10_5V,#,+,I/11_1V,#,+,I/12V,#,+,I" class="0">
+<net name="5V,#,+,I" class="0">
 <segment>
 <pinref part="C_BYP_IN_1" gate="G$1" pin="1"/>
 <wire x1="7.62" y1="33.02" x2="7.62" y2="27.94" width="0.1524" layer="91"/>
