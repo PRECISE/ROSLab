@@ -175,17 +175,21 @@ public class Pin extends Feature {
             return false;
         }
 
+        boolean result = true;
+
         // Check if any of the input pin's services match this pin's assigned
         // service. If so, a connection can be made.
+        boolean serviceCheck = false;
         for (PinService ps : p.getServices()) {
             if (ps.name.equals(this.assignedService.name)) {
-                return true;
+                serviceCheck = true;
             }
         }
+        result = result && serviceCheck;
 
         // If none of the input pin's services match this pin's assigned
         // service, no connection can be made.
-        return false;
+        return result;
     }
 
     /**
