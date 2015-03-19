@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="0.625" errors="0" skipped="0" tests="315" name="org.antlr.stringtemplate.test.TestStringTemplate">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/usr/java/jdk1.6.0_11/jre/lib/amd64"/>
+    <property name="java.vm.version" value="11.0-b16"/>
+    <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
+    <property name="java.vendor.url" value="http://java.sun.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/jim/stringtemplate-3.2.1"/>
+    <property name="java.runtime.version" value="1.6.0_11-b03"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="basedir" value="/home/jim/stringtemplate-3.2.1"/>
+    <property name="java.endorsed.dirs" value="/usr/java/jdk1.6.0_11/jre/lib/endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="surefire.real.class.path" value="/tmp/surefirebooter4751958194640846394.jar"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="os.name" value="Linux"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/jdk1.6.0_11/jre/lib/amd64/server:/usr/java/jdk1.6.0_11/jre/lib/amd64:/usr/java/jdk1.6.0_11/jre/../lib/amd64:/usr/java/packages/lib/amd64:/lib:/usr/lib"/>
+    <property name="surefire.test.class.path" value="/home/jim/stringtemplate-3.2.1/target/test-classes:/home/jim/stringtemplate-3.2.1/target/classes:/home/jim/.m2/repository/junit/junit/4.5/junit-4.5.jar:/home/jim/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/home/jim/stringtemplate-3.2.1/src:"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="50.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Server Compiler"/>
+    <property name="os.version" value="2.6.18-164.2.1.el5"/>
+    <property name="user.home" value="/home/jim"/>
+    <property name="user.timezone" value="America/Los_Angeles"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="1.6"/>
+    <property name="user.name" value="jim"/>
+    <property name="java.class.path" value="/home/jim/stringtemplate-3.2.1/target/test-classes:/home/jim/stringtemplate-3.2.1/target/classes:/home/jim/.m2/repository/junit/junit/4.5/junit-4.5.jar:/home/jim/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/home/jim/stringtemplate-3.2.1/src:"/>
+    <property name="java.vm.specification.version" value="1.0"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/usr/java/jdk1.6.0_11/jre"/>
+    <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.language" value="en"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.6.0_11"/>
+    <property name="java.ext.dirs" value="/usr/java/jdk1.6.0_11/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="sun.boot.class.path" value="/usr/java/jdk1.6.0_11/jre/lib/resources.jar:/usr/java/jdk1.6.0_11/jre/lib/rt.jar:/usr/java/jdk1.6.0_11/jre/lib/sunrsasign.jar:/usr/java/jdk1.6.0_11/jre/lib/jsse.jar:/usr/java/jdk1.6.0_11/jre/lib/jce.jar:/usr/java/jdk1.6.0_11/jre/lib/charsets.jar:/usr/java/jdk1.6.0_11/jre/classes"/>
+    <property name="java.vendor" value="Sun Microsystems Inc."/>
+    <property name="localRepository" value="/home/jim/.m2/repository"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase time="0.033" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testInterfaceFileFormat"/>
+  <testcase time="0.032" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNoGroupLoader"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCannotFindInterfaceFile"/>
+  <testcase time="0.027" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMultiDirGroupLoading"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testGroupSatisfiesSingleInterface"/>
+  <testcase time="0.004" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testGroupExtendsSuperGroup"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testGroupExtendsSuperGroupWithAngleBrackets"/>
+  <testcase time="0.004" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMissingInterfaceTemplate"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMissingOptionalInterfaceTemplate"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMismatchedInterfaceTemplate"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testGroupFileFormat"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEscapedTemplateDelimiters"/>
+  <testcase time="0.005" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTemplateParameterDecls"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTemplateRedef"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMissingInheritedAttribute"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testFormalArgumentAssignment"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testUndefinedArgumentAssignment"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testFormalArgumentAssignmentInApply"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testUndefinedArgumentAssignmentInApply"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testUndefinedAttributeReference"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testUndefinedDefaultAttributeReference"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAngleBracketsWithGroupFile"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAngleBracketsNoGroup"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRegionRef"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmbeddedRegionRef"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRegionRefAngleBrackets"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmbeddedRegionRefAngleBrackets"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmbeddedRegionRefWithNewlinesAngleBrackets"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRegionRefWithDefAngleBrackets"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRegionRefWithDefInConditional"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRegionRefWithImplicitDefInConditional"/>
+  <testcase time="0.005" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRegionOverride"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRegionOverrideRefSuperRegion"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRegionOverrideRefSuperRegion3Levels"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRegionOverrideRefSuperImplicitRegion"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmbeddedRegionRedefError"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testImplicitRegionRedefError"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testImplicitOverriddenRegionRedefError"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testUnknownRegionDefError"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSuperRegionRefError"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMissingEndRegionError"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMissingEndRegionErrorAngleBrackets"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSimpleInheritance"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testOverrideInheritance"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMultiLevelInheritance"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testComplicatedInheritance"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="test3LevelSuperRef"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testExprInParens"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMultipleAdditions"/>
+  <testcase time="0.004" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCollectionAttributes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParenthesizedExpression"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyTemplateNameExpression"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyTemplateNameTemplateEval"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTemplateNameExpression"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMissingEndDelimiter"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSetButNotRefd"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullTemplateApplication"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullTemplateToMultiValuedApplication"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testChangingAttrValueTemplateApplicationToVector"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testChangingAttrValueRepeatedTemplateApplicationToVector"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAlternatingTemplateApplication"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testExpressionAsRHSOfAssignment"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTemplateApplicationAsRHSOfAssignment"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParameterAndAttributeScoping"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testComplicatedSeparatorExpr"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAttributeRefButtedUpAgainstEndifAndWhitespace"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testStringCatenationOnSingleValuedAttributeViaTemplateLiteral"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testStringCatenationOpOnArg"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testStringCatenationOpOnArgWithEqualsInString"/>
+  <testcase time="0.005" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyingTemplateFromDiskWithPrecompiledIF"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMultiValuedAttributeWithAnonymousTemplateUsingIndexVariableI"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testFindTemplateInCLASSPATH"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyTemplateToSingleValuedAttribute"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testStringLiteralAsAttribute"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyTemplateToSingleValuedAttributeWithDefaultAttribute"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyAnonymousTemplateToSingleValuedAttribute"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyAnonymousTemplateToMultiValuedAttribute"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyAnonymousTemplateToAggregateAttribute"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRepeatedApplicationOfTemplateToSingleValuedAttribute"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRepeatedApplicationOfTemplateToMultiValuedAttributeWithSeparator"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMultiValuedAttributeWithSeparator"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSingleValuedAttributes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIFTemplate"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIFCondWithParensTemplate"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIFCondWithParensDollarDelimsTemplate"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIFBoolean"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNestedIFTemplate"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIFConditionWithTemplateApplication"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testObjectPropertyReference"/>
+  <testcase time="0.004" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyRepeatedAnonymousTemplateWithForeignTemplateRefToMultiValuedAttribute"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRecursion"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNestedAnonymousTemplates"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAnonymousTemplateAccessToEnclosingAttributes"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNestedAnonymousTemplatesAgain"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEscapes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEscapesOutsideExpressions"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testElseClause"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testElseIfClause"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testElseIfClauseAngleBrackets"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testElseIfClause2"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testElseIfClauseAndElse"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNestedIF"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmbeddedMultiLineIF"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSimpleIndentOfAttributeList"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndentOfMultilineAttributes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndentOfMultipleBlankLines"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndentBetweenLeftJustifiedLiterals"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNestedIndent"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAlternativeWriter"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyAnonymousTemplateToMapAndSet"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDumpMapAndSet"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyAnonymousTemplateToArrayAndMapProperty"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSuperTemplateRef"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplySuperTemplateRef"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLazyEvalOfSuperInApplySuperTemplateRef"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTemplatePolymorphism"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testListOfEmbeddedTemplateSeesEnclosingAttributes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testInheritArgumentFromRecursiveTemplateApplication"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDeliberateRecursiveTemplateApplication"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testImmediateTemplateAsAttributeLoop"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTemplateAlias"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTemplateGetPropertyGetsAttribute"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testComplicatedIndirectTemplateApplication"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndirectTemplateApplication"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndirectTemplateWithArgsApplication"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullIndirectTemplateApplication"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullIndirectTemplate"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testHashMapPropertyFetch"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testHashMapPropertyFetchEmbeddedStringTemplate"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmbeddedComments"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmbeddedCommentsAngleBracketed"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineBreak"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineBreak2"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineBreakNoWhiteSpace"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineBreakDollar"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineBreakDollar2"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineBreakNoWhiteSpaceDollar"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCharLiterals"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNewlineNormalizationInTemplateString"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNewlineNormalizationInTemplateStringPC"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNewlineNormalizationInAttribute"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testUnicodeLiterals"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmptyIteratedValueGetsSeparator"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMissingIteratedConditionalValueGetsNOSeparator"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMissingIteratedConditionalValueGetsNOSeparator2"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMissingIteratedDoubleConditionalValueGetsNOSeparator"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIteratedConditionalWithEmptyElseValueGetsSeparator"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testWhiteSpaceAtEndOfTemplate"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSizeZeroButNonNullListGetsNoOutput"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullListGetsNoOutput"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmptyListGetsNoOutput"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmptyListNoIteratorGetsNoOutput"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmptyExprAsFirstLineGetsNoOutput"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSizeZeroOnLineByItselfGetsNoOutput"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSizeZeroOnLineWithIndentGetsNoOutput"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSimpleAutoIndent"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testComputedPropertyName"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNonNullButEmptyIteratorTestsFalse"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDoNotInheritAttributesThroughFormalArgs"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testArgEvaluationContext"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testPassThroughAttributes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testPassThroughAttributes2"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDefaultArgument"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDefaultArgument2"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDefaultArgumentManuallySet"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDefaultArgumentImplicitlySet"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDefaultArgumentAsTemplate"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDefaultArgumentAsTemplate2"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDoNotUseDefaultArgument"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDefaultArgumentInParensToEvalEarly"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testArgumentsAsTemplates"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTemplateArgumentEvaluatedInSurroundingContext"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testArgumentsAsTemplatesDefaultDelimiters"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testDefaultArgsWhenNotInvoked"/>
+  <testcase time="0.009" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRendererForST"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRendererWithFormat"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRendererWithFormatAndList"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRendererWithFormatAndSeparator"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRendererWithFormatAndSeparatorAndNull"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmbeddedRendererSeesEnclosing"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRendererForGroup"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testOverriddenRenderer"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMap"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapValuesAreTemplates"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapKeyLookupViaTemplate"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapMissingDefaultValueIsEmpty"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapHiddenByFormalArg"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapEmptyValueAndAngleBracketStrings"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapDefaultValue"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapEmptyDefaultValue"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapDefaultValueIsKey"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapDefaultStringAsKey"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapDefaultIsDefaultString"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapViaEnclosingTemplates"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapViaEnclosingTemplates2"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmptyGroupTemplate"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmptyStringAndEmptyAnonTemplateAsParameterUsingAngleBracketLexer"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEmptyStringAndEmptyAnonTemplateAsParameterUsingDollarLexer"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="test8BitEuroChars"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="test16BitUnicodeChar"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testFirstOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTruncOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRestOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRestOpEmptyList"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testReUseOfRestResult"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLastOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCombinedOp"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCatListAndSingleAttribute"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testReUseOfCat"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCatListAndEmptyAttributes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNestedOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testFirstWithOneAttributeOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLastWithOneAttributeOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLastWithLengthOneListAttributeOp"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRestWithOneAttributeOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRestWithLengthOneListAttributeOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRepeatedRestOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testRepeatedIteratedAttrFromArg"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIncomingLists"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIncomingListsAreNotModified"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIncomingListsAreNotModified2"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIncomingArraysAreOk"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMultipleRefsToListAttribute"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyTemplateWithSingleFormalArgs"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testApplyTemplateWithNoFormalArgs"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAnonTemplateArgs"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAnonTemplateWithArgHasNoITArg"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAnonTemplateArgs2"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testFirstWithCatAttribute"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testFirstWithListOfMaps"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testJustCat"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCat2Attributes"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCat2AttributesWithApply"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCat3Attributes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCatWithTemplateApplicationAsElement"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCatWithIFAsElement"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCatWithNullTemplateApplicationAsElement"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testCatWithNestedTemplateApplicationAsElement"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testListAsTemplateArgument"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSingleExprTemplateArgument"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSingleExprTemplateArgumentInApply"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSoleFormalTemplateArgumentInMultiApply"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSingleExprTemplateArgumentError"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testInvokeIndirectTemplateWithSingleFormalArgs"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParallelAttributeIteration"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParallelAttributeIterationWithNullValue"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParallelAttributeIterationHasI"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParallelAttributeIterationWithDifferentSizes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParallelAttributeIterationWithSingletons"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParallelAttributeIterationWithMismatchArgListSizes"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParallelAttributeIterationWithMissingArgs"/>
+  <testcase time="0.003" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testParallelAttributeIterationWithDifferentSizesTemplateRefInsideToo"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testAnonTemplateOnLeftOfApply"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testOverrideThroughConditional"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNonPublicPropertyAccess"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndexVar"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndex0Var"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndexVarWithMultipleExprs"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndex0VarWithMultipleExprs"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testArgumentContext"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNoDotsInAttributeNames"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNoDotsInTemplateNames"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrap"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapWithNormalizedNewlines"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapAnchored"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSubtemplatesAnchorToo"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testFortranLineWrap"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapWithDiffAnchor"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapEdgeCase"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapLastCharIsNewline"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapCharAfterWrapIsNewline"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapForAnonTemplate"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapForAnonTemplateAnchored"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapForAnonTemplateComplicatedWrap"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndentBeyondLineWidth"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testIndentedExpr"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNestedIndentedExpr"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNestedWithIndentAndTrackStartOfExpr"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineDoesNotWrapDueToLiteral"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSingleValueWrap"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLineWrapInNestedExpr"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testBackslash"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testBackslash2"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEscapeEscape"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testEscapeEscapeNestedAngle"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testListOfIntArrays"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullOptionSingleNullValue"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullOptionHasEmptyNullValue"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullOptionSingleNullValueInList"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullValueInList"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullValueInListNoNullOption"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullValueInListWithTemplateApply"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullValueInListWithTemplateApplyNullFirstValue"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullSingleValueInListWithTemplateApply"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testNullSingleValueWithTemplateApply"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLengthOp"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLengthOpWithMap"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLengthOpWithSet"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLengthOpNull"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLengthOpSingleValue"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLengthOpPrimitive"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLengthOpOfListWithNulls"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testStripOpOfListWithNulls"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testStripOpOfListOfListsWithNulls"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testStripOpOfSingleAlt"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testStripOpOfNull"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testReUseOfStripResult"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLengthOpOfStrippedListWithNulls"/>
+  <testcase time="0" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testLengthOpOfStrippedListWithNullsFrontAndBack"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapKeys"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapValues"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testMapKeysWithIntegerType"/>
+  <testcase time="0.002" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testSuperReferenceInIfClause"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testListLiteralWithEmptyElements"/>
+  <testcase time="0.001" classname="org.antlr.stringtemplate.test.TestStringTemplate" name="testTemplateApplicationAsOptionValue"/>
+</testsuite>

@@ -1,0 +1,1 @@
+$port_name$_pub.publish($port_name$);

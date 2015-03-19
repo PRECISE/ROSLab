@@ -1,0 +1,24 @@
+Blocks included (in order, but don't have to be) are:
+1) Communication_Plug_USB_Micro_B_FCI_10103594-0001LF
+2) Microcontroller_STM_STM32F303CX
+3) Regulator_LDO_1117
+4) Oscillator_ASTX-H11
+5) Standard_Servo_Header
+6) Standard_Servo_Header
+
+Connections:
+Squares are optional (not required for this block to work)
+Diamonds are recommended (they are not required, but could make the block work better)
+Octogons are required (the block does not work without this connection)
+
+Coneections are (block out) -> net name -> (block in)
+1) -> D+,-,USB,1 -> 2)
+1) -> D-,-,USB,1 -> 2)
+1) -> 5V_USB,+,1 -> 3)
+1) -> 5V_USB,+,1-> 5)
+1) -> 5V_USB,+,1-> 6)
+2) -> TIMER,PWM,-,1 -> 5)
+2) -> TIMER,PWM,-,2 -> 6)
+3) -> 3_3V,+,1 -> 2)
+3) -> 3_3V,+,1 -> 4)
+4) -> 16MHZ_CMOS,#,+,O,OSCILLATOR-> 5)

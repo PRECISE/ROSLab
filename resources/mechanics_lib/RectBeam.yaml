@@ -1,0 +1,7 @@
+connections: []
+interfaces:
+  tabedge: {interface: tabedge, subcomponent: bar}
+  topedge.1: {interface: topedge.1, subcomponent: bar}
+  botedge.1: {interface: botedge.1, subcomponent: bar}
+parameters: {depth: null, width: null, length: null}
+subcomponents: {}

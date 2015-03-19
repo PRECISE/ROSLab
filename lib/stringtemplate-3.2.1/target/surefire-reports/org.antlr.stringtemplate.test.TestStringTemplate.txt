@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.antlr.stringtemplate.test.TestStringTemplate
+-------------------------------------------------------------------------------
+Tests run: 315, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.656 sec

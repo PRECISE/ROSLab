@@ -1,0 +1,7 @@
+connections: []
+interfaces:
+  topedge.0: {interface: topedge.0, subcomponent: split}
+  topedge.1: {interface: topedge.1, subcomponent: split}
+  topedge.2: {interface: topedge.2, subcomponent: split}
+parameters: {botlength: null, toplength: null}
+subcomponents: {}

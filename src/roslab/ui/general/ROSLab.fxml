@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ROSLabController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New Configuration" />
+            <MenuItem mnemonicParsing="false" onAction="#openLibrary" text="Open Library…" />
+            <MenuItem mnemonicParsing="false" onAction="#openConfiguration" text="Open Configuration…" />
+            <Menu mnemonicParsing="false" text="Open Recent Configuration" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Save Library" />
+            <MenuItem mnemonicParsing="false" text="Save Library As…" />
+            <MenuItem disable="false" mnemonicParsing="false" text="Save Configuration" visible="true" />
+            <MenuItem mnemonicParsing="false" text="Save Configuration As…" />
+            <MenuItem mnemonicParsing="false" text="Revert Configuration" />
+            <MenuItem mnemonicParsing="false" text="Close Configuration" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Undo" />
+            <MenuItem mnemonicParsing="false" text="Redo" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Cut" />
+            <MenuItem mnemonicParsing="false" text="Copy" />
+            <MenuItem mnemonicParsing="false" text="Paste" />
+            <MenuItem mnemonicParsing="false" text="Delete" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Select All" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" text="About ROSLab" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <SplitPane dividerPositions="0.3062360801781737, 0.7160356347438753" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+        <TreeView fx:id="treeView" prefHeight="254.0" prefWidth="150.0" />
+        <TabPane prefHeight="200.0" prefWidth="200.0" side="TOP" tabClosingPolicy="UNAVAILABLE">
+          <tabs>
+            <Tab fx:id="eeTab" closable="false" onSelectionChanged="#tabChanged" text="Electrical">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane fx:id="eePane" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </Tab>
+            <Tab fx:id="swTab" closable="false" onSelectionChanged="#tabChanged" text="Software">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane fx:id="swPane" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </Tab>
+            <Tab fx:id="hwTab" closable="false" onSelectionChanged="#tabChanged" text="Mechanical">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane fx:id="hwPane" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </Tab>
+          </tabs>
+        </TabPane>
+        <Accordion>
+          <panes>
+            <TitledPane animated="false" text="Features">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </TitledPane>
+            <TitledPane animated="false" expanded="false" text="Layout">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </TitledPane>
+            <TitledPane animated="false" expanded="false" text="Hierarchy">
+              <content>
+                <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                  </content>
+                </ScrollPane>
+              </content>
+            </TitledPane>
+          </panes>
+        </Accordion>
+      </items>
+    </SplitPane>
+    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+      <children>
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text=" " HBox.hgrow="ALWAYS">
+          <font>
+            <Font size="11.0" fx:id="x3" />
+          </font>
+          <textFill>
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
+          </textFill>
+        </Label>
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label font="$x3" maxWidth="-1.0" text=" " textFill="$x4" HBox.hgrow="NEVER" />
+      </children>
+      <padding>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding>
+    </HBox>
+  </children>
+</VBox>

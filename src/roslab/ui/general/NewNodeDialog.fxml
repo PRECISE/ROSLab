@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane fx:id="newNodeDialog" hgap="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="164.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ui.general.NewNodeDialog">
+  <children>
+    <VBox maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+      <children>
+        <Label fx:id="messageLabel" prefWidth="121.0" text="New Node" textAlignment="LEFT" wrapText="true">
+          <font>
+            <Font name="System Bold" size="13.0" />
+          </font>
+        </Label>
+      </children>
+    </VBox>
+    <HBox maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="0" GridPane.rowIndex="2">
+      <children>
+        <HBox id="HBox" fx:id="actionParent" alignment="CENTER">
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+        </HBox>
+        <Pane maxWidth="+Infinity" HBox.hgrow="ALWAYS" />
+        <Button fx:id="cancelButton" cancelButton="true" minWidth="80.0" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" HBox.hgrow="NEVER">
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+        </Button>
+        <HBox id="HBox" fx:id="okParent" alignment="CENTER">
+          <children>
+            <Button id="okButton" fx:id="addButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleAdd" text="Add" HBox.hgrow="NEVER">
+              <HBox.margin>
+                <Insets left="14.0" />
+              </HBox.margin>
+            </Button>
+          </children>
+        </HBox>
+      </children>
+    </HBox>
+    <GridPane prefHeight="116.0" prefWidth="296.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+      <children>
+        <Label text="Node Type " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <ComboBox id="typeDropdown" fx:id="nodeBox" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:value="Item 1" />
+              <String fx:value="Item 2" />
+              <String fx:value="Item 3" />
+            </FXCollections>
+          </items>
+        </ComboBox>
+        <TextField fx:id="nameField" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="Name " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" maxWidth="96.0" minWidth="10.0" prefWidth="76.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="269.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+  </children>
+  <columnConstraints>
+    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="+Infinity" minWidth="-Infinity" prefWidth="345.0" />
+  </columnConstraints>
+  <padding>
+    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+  </padding>
+  <rowConstraints>
+    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="16.0" valignment="CENTER" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="287.0" minHeight="-Infinity" prefHeight="56.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="33.0" minHeight="-Infinity" prefHeight="30.0" vgrow="NEVER" />
+  </rowConstraints>
+</GridPane>

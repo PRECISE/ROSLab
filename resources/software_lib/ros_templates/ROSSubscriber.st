@@ -1,0 +1,1 @@
+ros::Subscriber $port_name$_sub = node.subscribe<$port_type$>("$port_topic$", 1, $port_name$_callback);

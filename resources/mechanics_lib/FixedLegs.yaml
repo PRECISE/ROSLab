@@ -1,0 +1,51 @@
+connections:
+- - [bar, tabedge]
+  - [split, botedge]
+  - Flat
+  - {}
+- - [split, topedge.2]
+  - [leg1, front]
+  - Flat
+  - {}
+- - [split, topedge.0]
+  - [leg2, right]
+  - Flat
+  - {}
+- - [leg1, right]
+  - [bar, botedge.1]
+  - Tab
+  - {angle: 90, depth: 6, name: tab1}
+- - [leg2, front]
+  - [bar, topedge.1]
+  - Tab
+  - {angle: 90, depth: 6, name: tab2}
+interfaces:
+  botedge: {interface: botedge, subcomponent: bar}
+  topedge: {interface: topedge, subcomponent: bar}
+parameters: {depth: null, height: null, leg.beamwidth: null, length: null}
+subcomponents:
+  bar:
+    object: RectBeam
+    parameters:
+      depth: [x, leg.beamwidth]
+      length: [x, length]
+      width: [x, depth]
+  leg1:
+    object: PointedLeg
+    parameters:
+      beamwidth: [x, leg.beamwidth]
+      length: [x, height]
+  leg2:
+    object: PointedLeg
+    parameters:
+      beamwidth: [x, leg.beamwidth]
+      length: [x, height]
+  split:
+    object: SplitEdge
+    parameters:
+      botlength:
+      - (x[0],)
+      - [length, leg.beamwidth]
+      toplength:
+      - (x[1], x[0] - 2*x[1], x[1])
+      - [length, leg.beamwidth]

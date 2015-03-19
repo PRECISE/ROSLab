@@ -1,0 +1,78 @@
+package FabByExample.proto;
+
+import "symbolic.proto";
+
+// A set of templates so that we can encode children without nesting
+message TemplateSet {
+    repeated Template template = 1;
+	optional int32 root_template_id = 2;
+}
+
+message Template {
+    optional int32 id = 1;  // required
+    optional string name = 2;
+    repeated symbolic.Parameter parameter = 3;
+    optional MappingFunction mapping_function = 4;
+    optional FeasibleSet feasible_set = 5;
+    repeated int32 child_template_id = 6;
+}
+
+// Abstractly, a function that takes a list of parameters and returns
+// a mesh or a 2D drawing
+message MappingFunction {
+    optional LinearMappingFunction3 linear_3 = 1;
+    optional LinearMappingFunction2 linear_2 = 2;
+    optional CompositionMappingFunction composition = 3;
+    optional ExternalMeshFileMappingFunction external_mesh_file = 4;
+}
+
+// A mapping function that returns the mesh after the transformation
+message ExternalMeshFileMappingFunction {
+    optional string stl_filename = 1;
+    optional symbolic.AffineMatrix3S transform = 2;
+}
+
+// A mapping function that returns the composition of the outputs of
+// other templates (e.x. children templates)
+message CompositionMappingFunction {
+    repeated int32 template_id = 1;
+}
+
+// A mapping function that represents the mesh as a linear combination
+// of the parameters.
+message LinearMappingFunction3 {
+    optional symbolic.Mesh3S mesh = 1;
+}
+
+// A mapping function that represents the 2D drawing as a linear
+// combination of the parameters.
+message LinearMappingFunction2 {
+    optional symbolic.Drawing2S drawing = 1;
+}
+
+// Abstractly, the set of allowed vectors of parameters for the template
+message FeasibleSet {
+    optional ConstraintList constraint_list = 1;
+}
+
+// A feasible set represented as a list of constraints
+message ConstraintList {
+    repeated Constraint constraint = 1;
+    repeated int32 inherited_template_id = 2;
+}
+
+// A single constraint
+message Constraint {
+    optional LinearConstraint linear_constraint = 1;
+}
+
+// A linear constraint, which represents either linear_expr = 0 or
+// linear_expr < 0
+message LinearConstraint {
+    enum Type {
+        EQUALITY = 1;
+        LESS_THAN_ZERO = 2;
+    }
+    optional symbolic.LinearExpr expr = 1;
+    optional Type type = 2;
+}
