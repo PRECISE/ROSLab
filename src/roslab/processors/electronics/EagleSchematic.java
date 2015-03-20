@@ -256,15 +256,19 @@ public class EagleSchematic {
                 NodeList docLayerList = doc.getElementsByTagName("layer");
                 for (int i = 0; i < docLayerList.getLength(); i++) {
                     Element docLayer = (Element) docLayerList.item(i);
-                    logger.debug("Layer doc:  [" + i + " / " + docLayerList.getLength() + " ] " + docLayer.getAttribute("name"));
+                    // logger.debug("Layer doc:  [" + i + " / " +
+                    // docLayerList.getLength() + " ] " +
+                    // docLayer.getAttribute("name"));
 
                     // Check if layer exists already in merge document
                     for (int j = 0; j < mDocLayerList.getLength(); j++) {
                         Element mDocLayer = (Element) mDocLayerList.item(j);
-                        logger.debug("Layer mDoc:  [" + j + " / " + mDocLayerList.getLength() + " ] " + mDocLayer.getAttribute("name"));
+                        // logger.debug("Layer mDoc:  [" + j + " / " +
+                        // mDocLayerList.getLength() + " ] " +
+                        // mDocLayer.getAttribute("name"));
                         if (mDocLayer.getAttribute("name").equals(docLayer.getAttribute("name"))) {
                             exists = true;
-                            logger.debug("Layer EXISTS");
+                            // logger.debug("Layer EXISTS");
                             break;
                         }
                     }
@@ -385,7 +389,7 @@ public class EagleSchematic {
                                 logger.debug("DeviceSet doc: [" + k + " / " + docDeviceSetList.getLength() + " ] "
                                         + docDeviceSet.getAttribute("name"));
                                 for (int m = 0; m < mDocDeviceSetList.getLength(); m++) {
-                                    Element mDocDeviceSet = (Element) docDeviceSetList.item(m);
+                                    Element mDocDeviceSet = (Element) mDocDeviceSetList.item(m);
                                     logger.debug("DeviceSet mDoc: [" + m + " / " + mDocDeviceSetList.getLength() + " ] "
                                             + mDocDeviceSet.getAttribute("name"));
                                     if (mDocDeviceSet.getAttribute("name").equals(docDeviceSet.getAttribute("name"))) {
