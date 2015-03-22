@@ -142,10 +142,10 @@ public class UIEndpoint extends Group {
      */
     public void addUILink(UILink uilink) {
         this.uilinks.add(uilink);
-        this.getChildren().add(uilink);  // TODO Does this really work?
-        uilink.toBack();
-        uilink.src.toFront();
-        uilink.dest.toFront();
+        UILink thisUILink = this.uilinks.get(this.uilinks.indexOf(uilink));
+        this.getChildren().add(thisUILink);
+        thisUILink.toBack();
+        this.toFront();
     }
 
     /**
