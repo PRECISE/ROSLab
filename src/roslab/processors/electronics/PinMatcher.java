@@ -3,7 +3,9 @@
  */
 package roslab.processors.electronics;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,34 +31,51 @@ public class PinMatcher {
             Integer[] rowSums = rowSums(pinMatrix);
             Integer[] colSums = columnSums(pinMatrix);
 
-            int i = minNonZeroSumIndex(rowSums);
-            int j = maskedMinNonZeroSumIndex(colSums, pinMatrix[i]);
-            result.put(i, j);
+            int minTotal = Integer.MAX_VALUE;
+            int minRow = 0;
+            int minCol = 0;
 
-            maskMatrixRow(pinMatrix, i);
-            maskMatrixColumn(pinMatrix, j);
+            List<Integer> rowSumIndices = minNonZeroSum(rowSums);
+            for (Integer r : rowSumIndices) {
+                int c = maskedMinNonZeroSumIndex(colSums, pinMatrix[r]);
+                if (colSums[c] < minTotal) {
+                    minRow = r;
+                    minCol = c;
+                    minTotal = colSums[c];
+                }
+            }
+
+            result.put(minRow, minCol);
+
+            maskMatrixRow(pinMatrix, minRow);
+            maskMatrixColumn(pinMatrix, minCol);
         }
 
         // Return the match result
         return result;
     }
 
-    private static int minNonZeroSumIndex(Integer[] sums) {
+    private static List<Integer> minNonZeroSum(Integer[] sums) {
         if (sums.length == 0) {
             throw new IllegalArgumentException();
         }
 
-        int sum = Integer.MAX_VALUE;
-        int index = -1;
+        int min = Integer.MAX_VALUE;
+        List<Integer> indices = new ArrayList<Integer>();
 
         for (int i = 0; i < sums.length; i++) {
-            if (sums[i] > 0 && sums[i] < sum) {
-                sum = sums[i];
-                index = i;
+            if (sums[i] > 0 && sums[i] < min) {
+                min = sums[i];
             }
         }
 
-        return index;
+        for (int i = 0; i < sums.length; i++) {
+            if (sums[i] == min) {
+                indices.add(i);
+            }
+        }
+
+        return indices;
     }
 
     private static int maskedMinNonZeroSumIndex(Integer[] sums, Integer[] mask) {

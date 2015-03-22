@@ -89,6 +89,7 @@ public class ROSLabController implements Initializable {
 
         // library.loadPlatform("landshark");
         library.loadElectronics();
+        // PythonLibraryHelper p = new PythonLibraryHelper();
         config = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
         tree = new ROSLabTree(library, config, this);
 
