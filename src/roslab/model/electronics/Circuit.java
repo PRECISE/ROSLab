@@ -163,7 +163,7 @@ public class Circuit extends Node implements Endpoint {
         if (e instanceof Circuit) {
             Circuit c = (Circuit) e;
             Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
-            List<Pin> componentPins = getConnectedComponentPins();
+            List<Pin> componentPins = c.getConnectedComponentPins();
             componentPins.addAll(this.getRequiredPins().values());
 
             // Fill the pin matching matrix
@@ -235,6 +235,7 @@ public class Circuit extends Node implements Endpoint {
             }
 
             wireBundles.add(wb);
+            c.wireBundles.add(wb);
 
             return wb;
         }
@@ -244,7 +245,8 @@ public class Circuit extends Node implements Endpoint {
 
     @Override
     public void disconnect(Link l) {
-        wireBundles.remove(l);
+        ((Circuit) l.getSrc()).wireBundles.remove(l);
+        ((Circuit) l.getDest()).wireBundles.remove(l);
         // TODO Remove wire bundle connections from EagleSchematic netMap
     }
 
