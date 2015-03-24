@@ -182,7 +182,24 @@ public class Pin extends Feature {
         boolean serviceCheck = false;
         for (PinService ps : p.getServices()) {
             if (ps.name.equals(this.assignedService.name)) {
-                serviceCheck = true;
+                boolean ioCheck = false;
+                if (!this.assignedService.io.equals("#")
+                        && ((this.assignedService.io.equals("I") && ps.io.equals("O")) || (this.assignedService.io.equals("O") && ps.io.equals("I")))) {
+                    ioCheck = true;
+                }
+                if (this.assignedService.io.equals("#")) {
+                    ioCheck = true;
+                }
+                serviceCheck = serviceCheck && ioCheck;
+
+                // TODO Modify this to make sure pins in the same SuperService
+                // will connect to the same SuperService on the destination
+                // circuit
+                boolean superServiceCheck = false;
+                if (ps.superServiceName.equals(this.assignedService.superServiceName)) {
+                    superServiceCheck = true;
+                }
+                serviceCheck = serviceCheck && superServiceCheck;
             }
         }
         result = result && serviceCheck;
