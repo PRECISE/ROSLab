@@ -104,6 +104,18 @@ public class Circuit extends Node implements Endpoint {
         return result;
     }
 
+    private Map<String, Pin> getUnconnectedRequiredPins() {
+        Map<String, Pin> result = new HashMap<String, Pin>();
+
+        for (Pin p : this.getPins().values()) {
+            if (p.required && !((Circuit) p.getParent()).isPinConnected(p)) {
+                result.put(p.getName(), p);
+            }
+        }
+
+        return result;
+    }
+
     public Map<String, Pin> getPinsCopy(Circuit c) {
         Map<String, Pin> copy = new HashMap<String, Pin>();
         for (Entry<String, ? extends Feature> e : features.entrySet()) {
@@ -164,7 +176,7 @@ public class Circuit extends Node implements Endpoint {
             Circuit c = (Circuit) e;
             Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
             List<Pin> componentPins = c.getConnectedComponentPins();
-            componentPins.addAll(this.getRequiredPins().values());
+            componentPins.addAll(this.getUnconnectedRequiredPins().values());
 
             // Fill the pin matching matrix
             Integer[][] matrix = new Integer[componentPins.size()][c.getRequiredPins().size()];
@@ -174,7 +186,7 @@ public class Circuit extends Node implements Endpoint {
                 mIndex++;
             }
 
-            mapping = PinMatcher.match(matrix);
+            mapping = PinMatcher.match(matrix, (Pin[]) componentPins.toArray(), (Pin[]) c.getRequiredPins().values().toArray());
 
             return mapping != null;
         }
@@ -211,7 +223,7 @@ public class Circuit extends Node implements Endpoint {
                 mIndex++;
             }
 
-            mapping = PinMatcher.match(matrix);
+            mapping = PinMatcher.match(matrix, (Pin[]) componentPins.toArray(), (Pin[]) c.getRequiredPins().values().toArray());
 
             // Return false if the match did not work, ie. the component cannot
             // be connected.
@@ -241,6 +253,17 @@ public class Circuit extends Node implements Endpoint {
         }
 
         return null;
+    }
+
+    public boolean isPinConnected(Pin p) {
+        for (WireBundle wb : wireBundles) {
+            for (Wire w : wb.wires) {
+                if (w.src.equals(p) || w.dest.equals(p)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
