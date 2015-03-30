@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import roslab.model.electronics.Pin;
+
 /**
  * Pin Matching algorithm
  *
@@ -20,14 +22,10 @@ public class PinMatcher {
      *
      * @return a mapping of matchings
      */
-    public static Map<Integer, Integer> match(Integer[][] pinMatrix) {
+    public static Map<Integer, Integer> match(Integer[][] pinMatrix, Pin[] rowPins, Pin[] colPins) {
         Map<Integer, Integer> result = new HashMap<Integer, Integer>();
 
-        while (!fullyConnected(pinMatrix)) {
-            if (!remainingConnectables(pinMatrix)) {
-                return null;
-            }
-
+        while (remainingConnectables(pinMatrix)) {
             Integer[] rowSums = rowSums(pinMatrix);
             Integer[] colSums = columnSums(pinMatrix);
 
@@ -48,7 +46,12 @@ public class PinMatcher {
             result.put(minRow, minCol);
 
             maskMatrixRow(pinMatrix, minRow);
-            maskMatrixColumn(pinMatrix, minCol);
+
+            // Mask a column if that column pin is not one-to-many
+            if (rowPins == null || colPins == null
+                    || colPins[minCol].getServiceByName(rowPins[minCol].getAssignedService().getName()).getOne_to_many() != '+') {
+                maskMatrixColumn(pinMatrix, minCol);
+            }
         }
 
         // Return the match result

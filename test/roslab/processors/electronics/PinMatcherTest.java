@@ -41,11 +41,11 @@ public class PinMatcherTest {
         // assertEquals(matchMatrix, PinMatcher.match(testMatrix));
         Integer[][] randMatrix = randomMatrix();
         Integer[][] beginMatrix = copyMatrix(randMatrix);
-        matchMatrix = PinMatcher.match(randMatrix);
+        matchMatrix = PinMatcher.match(randMatrix, null, null);
         while (matchMatrix == null) {
             randMatrix = randomMatrix();
             beginMatrix = copyMatrix(randMatrix);
-            matchMatrix = PinMatcher.match(randMatrix);
+            matchMatrix = PinMatcher.match(randMatrix, null, null);
         }
         System.out.println(beginMatrix);
     }
