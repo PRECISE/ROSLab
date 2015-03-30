@@ -20,6 +20,7 @@ public class Pin extends Feature {
     String portName = "";
     int pinIn = 0;
     boolean required = false;
+    int destinationSet = -1;
     String net = null;
 
     /**
@@ -240,22 +241,29 @@ public class Pin extends Feature {
      */
     public static Pin getPinFromString(String pin, Circuit parent) {
         // Example:
-        // GPIO,#,+,IO/PWM,1,+,IO,TIMER,15,1/MISO,#,+,IO,SPI,2,5/PWM_N,2,+,O,TIMER,1,6.B,14
+        // GPIO,#,+,IO/PWM,1,+,IO,TIMER,15,1/MISO,#,+,IO,SPI,2,5/PWM_N,2,+,O,TIMER,1,6.B,14@1
         String[] pinArray = { pin };
+        int destSet = -1;
 
-        // Split on period character if the string contains them.
-        if (pin.contains(".")) {
-            pinArray = pin.split("\\.");
+        // Split on 'at' character to get the destination set value.
+        if (pinArray[0].contains("@")) {
+            pinArray = pin.split("\\@");
+            destSet = Integer.parseInt(pinArray[1]);
         }
 
-        // The input pin string should never have more than one period.
+        // Split on period character if the string contains them.
+        if (pinArray[0].contains(".")) {
+            pinArray = pinArray[0].split("\\.");
+        }
+
+        // The input pin string should never have more than two periods.
         if (pinArray.length > 2) {
             throw new IllegalArgumentException("Bad input pin string - too many periods");
         }
 
         Pin result = null;
 
-        if (pinArray.length == 2) {
+        if (pinArray.length > 1) {
             if (pinArray[1].contains(",")) {
                 String[] portArray = pinArray[1].split("\\,");
                 result = new Pin(portArray[0] + portArray[1], parent);
@@ -270,6 +278,8 @@ public class Pin extends Feature {
         else {
             result = new Pin(pinArray[0], parent);
         }
+
+        result.destinationSet = destSet;
 
         for (String serviceStr : pinArray[0].split("/")) {
             StringTokenizer st = new StringTokenizer(serviceStr, ",");
@@ -334,5 +344,14 @@ public class Pin extends Feature {
             copy.add(ps.clone());
         }
         return copy;
+    }
+
+    public PinService getServiceByName(String name) {
+        for (PinService p : services) {
+            if (p.name.equals(name)) {
+                return p;
+            }
+        }
+        return null;
     }
 }
