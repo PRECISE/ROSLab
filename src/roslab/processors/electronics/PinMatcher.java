@@ -49,7 +49,7 @@ public class PinMatcher {
 
             // Mask a column if that column pin is not one-to-many
             if (rowPins == null || colPins == null
-                    || colPins[minCol].getServiceByName(rowPins[minCol].getAssignedService().getName()).getOne_to_many() != '+') {
+                    || colPins[minCol].getServiceByName(rowPins[minRow].getAssignedService().getName()).getOne_to_many() != '+') {
                 maskMatrixColumn(pinMatrix, minCol);
             }
         }
