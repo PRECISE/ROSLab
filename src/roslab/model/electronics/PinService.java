@@ -21,6 +21,15 @@ public class PinService implements Cloneable {
      * @param number
      * @param io
      */
+    public PinService(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @param name
+     * @param number
+     * @param io
+     */
     public PinService(String name, int number, String io) {
         this.name = name;
         this.number = number;
