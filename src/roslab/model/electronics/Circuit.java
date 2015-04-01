@@ -108,7 +108,9 @@ public class Circuit extends Node implements Endpoint {
         Map<String, Pin> result = new HashMap<String, Pin>();
 
         for (Pin p : this.getPins().values()) {
-            if (p.required && !((Circuit) p.getParent()).isPinConnected(p)) {
+            // Check if the pin is required, but also check if the pin is either
+            // unconnected or it is a bussable connection
+            if (p.required && (!((Circuit) p.getParent()).isPinConnected(p) || (p.assignedService != null && p.assignedService.one_to_many == '+'))) {
                 result.put(p.getName(), p);
             }
         }
@@ -172,23 +174,37 @@ public class Circuit extends Node implements Endpoint {
      */
     @Override
     public boolean canConnect(Endpoint e) {
-        if (e instanceof Circuit) {
+        if (e instanceof Circuit && this.getUnconnectedRequiredPins().size() > 0) {
             Circuit c = (Circuit) e;
             Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
             List<Pin> componentPins = c.getConnectedComponentPins();
             componentPins.addAll(this.getUnconnectedRequiredPins().values());
 
             // Fill the pin matching matrix
-            Integer[][] matrix = new Integer[componentPins.size()][c.getRequiredPins().size()];
+            Integer[][] matrix = new Integer[componentPins.size()][c.getPins().size()];
             int mIndex = 0;
             for (Pin p : componentPins) {
                 matrix[mIndex] = generateRow(c, p);
                 mIndex++;
             }
 
-            mapping = PinMatcher.match(matrix, (Pin[]) componentPins.toArray(), (Pin[]) c.getRequiredPins().values().toArray());
+            mapping = PinMatcher.match(matrix, Pin.toPinArray(componentPins), Pin.toPinArray(new ArrayList<Pin>(c.getPins().values())));
 
-            return mapping != null;
+            if (mapping == null) {
+                return false;
+            }
+
+            // Check if any new connections were made (to connect specifically
+            // to this component)
+            int cConnectedPinCount = c.getConnectedComponentPins().size();
+            boolean containsNewPinConnection = false;
+            for (Integer i : mapping.keySet()) {
+                if (i >= cConnectedPinCount) {
+                    containsNewPinConnection = true;
+                }
+            }
+
+            return containsNewPinConnection;
         }
 
         return false;
@@ -199,7 +215,12 @@ public class Circuit extends Node implements Endpoint {
 
         for (WireBundle wb : this.wireBundles) {
             for (Wire w : wb.wires) {
-                result.add(w.src);
+                if (this.equals(w.src.getParent())) {
+                    result.add(w.dest);
+                }
+                else {
+                    result.add(w.src);
+                }
             }
         }
 
@@ -208,48 +229,56 @@ public class Circuit extends Node implements Endpoint {
 
     @Override
     public Link connect(Endpoint e) {
-        if (e instanceof Circuit && canConnect(e)) {
+        if (e instanceof Circuit) {
             Circuit c = (Circuit) e;
 
-            Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
-            List<Pin> componentPins = getConnectedComponentPins();
-            componentPins.addAll(this.getRequiredPins().values());
+            if (canConnect(c)) {
+                Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
+                List<Pin> componentPins = getConnectedComponentPins();
+                componentPins.addAll(this.getUnconnectedRequiredPins().values());
 
-            // Fill the pin matching matrix
-            Integer[][] matrix = new Integer[componentPins.size()][c.getRequiredPins().size()];
-            int mIndex = 0;
-            for (Pin p : componentPins) {
-                matrix[mIndex] = generateRow(c, p);
-                mIndex++;
-            }
-
-            mapping = PinMatcher.match(matrix, (Pin[]) componentPins.toArray(), (Pin[]) c.getRequiredPins().values().toArray());
-
-            // Return false if the match did not work, ie. the component cannot
-            // be connected.
-            if (mapping == null) {
-                return null;
-            }
-
-            WireBundle wb = new WireBundle(this, c);
-
-            for (Entry<Integer, Integer> pinPair : mapping.entrySet()) {
-                Wire w = ((Pin) componentPins.toArray()[pinPair.getKey()]).connect((Pin) c.getPins().values().toArray()[pinPair.getValue()]);
-                if (w != null) {
-                    wb.addWire(w);
-
-                    // Make connection in EagleSchematics
-                    Map<EagleSchematic, String> schematicNetMap = new HashMap<EagleSchematic, String>();
-                    schematicNetMap.put(this.schematic, w.src.net);
-                    schematicNetMap.put(c.schematic, w.dest.net);
-                    EagleSchematic.connect(schematicNetMap, w.name);
+                // Fill the pin matching matrix
+                Integer[][] matrix = new Integer[componentPins.size()][c.getPins().size()];
+                int mIndex = 0;
+                for (Pin p : componentPins) {
+                    matrix[mIndex] = generateRow(c, p);
+                    mIndex++;
                 }
+
+                mapping = PinMatcher.match(matrix, Pin.toPinArray(componentPins), Pin.toPinArray(new ArrayList<Pin>(c.getPins().values())));
+
+                // Return false if the match did not work, ie. the component
+                // cannot be connected.
+                if (mapping == null || mapping.isEmpty()) {
+                    return null;
+                }
+
+                WireBundle wb = new WireBundle(this, c);
+
+                for (Entry<Integer, Integer> pinPair : mapping.entrySet()) {
+                    Wire w = ((Pin) componentPins.toArray()[pinPair.getKey()]).connect((Pin) c.getPins().values().toArray()[pinPair.getValue()]);
+                    if (w != null) {
+                        wb.addWire(w);
+
+                        // Make connection in EagleSchematics
+                        Map<EagleSchematic, String> schematicNetMap = new HashMap<EagleSchematic, String>();
+                        schematicNetMap.put(this.schematic, w.src.net);
+                        schematicNetMap.put(c.schematic, w.dest.net);
+                        EagleSchematic.connect(schematicNetMap, w.name);
+                    }
+                }
+
+                wireBundles.add(wb);
+                c.wireBundles.add(wb);
+
+                return wb;
             }
 
-            wireBundles.add(wb);
-            c.wireBundles.add(wb);
-
-            return wb;
+            // Try connecting in the other direction if the original direction
+            // doesn't work
+            else if (c.canConnect(this)) {
+                c.connect(this);
+            }
         }
 
         return null;
