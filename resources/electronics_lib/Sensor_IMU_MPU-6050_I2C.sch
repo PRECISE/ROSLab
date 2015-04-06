@@ -5717,7 +5717,7 @@ type 0309, grid 2.5 mm</description>
 <label x="-38.1" y="5.08" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="GPIO,#,+,O" class="0">
+<net name="GPIO,#,+,O.INT" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="INT"/>
 <wire x1="17.78" y1="0" x2="20.32" y2="0" width="0.1524" layer="91"/>
