@@ -159,7 +159,8 @@ public class EagleSchematic {
             throw new IllegalArgumentException("Cannot merge schematics if the input list contains less than 2.");
         }
 
-        File mergedSch = new File(schematics.get(0).getSchematicFile().getParent() + File.separatorChar + filename);
+        File mergedSch = new File(schematics.get(0).getSchematicFile().getParentFile().getParentFile().getAbsolutePath() + File.separatorChar
+                + "merged_output" + File.separatorChar + filename);
 
         // Find which schematic file is the largest in line count; assuming that
         // one is the most important, choose it as the one to accept merges from
