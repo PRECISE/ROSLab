@@ -233,11 +233,21 @@ public class Pin extends Feature {
                     p.assignedService = ps;
 
                     // Handle bussable service
-                    if (ps.one_to_many == '+') {
+                    if (ps.one_to_many == '+' && this.assignedService.one_to_many != '-') {
                         return new Wire(ps.name, this, p);
                     }
 
-                    return new Wire(this.parent.getName() + "." + ps.name + "--" + p.parent.getName() + "." + p.assignedService.name, this, p);
+                    String wireString = "";
+                    wireString += this.parent.getName() + "." + this.assignedService.name;
+                    if (this.assignedService.number != -1) {
+                        wireString += "." + this.assignedService.number;
+                    }
+                    wireString += "--" + p.parent.getName() + "." + p.assignedService.name;
+                    if (p.assignedService.number != -1) {
+                        wireString += "." + p.assignedService.number;
+                    }
+
+                    return new Wire(wireString, this, p);
                 }
             }
         }
@@ -302,7 +312,7 @@ public class Pin extends Feature {
             if (st.hasMoreTokens()) {
                 String temp = st.nextToken();
                 if (!temp.equals("#")) {
-                    ps.superServiceNumber = Integer.valueOf(temp);
+                    ps.number = Integer.valueOf(temp);
                 }
             }
             if (st.hasMoreTokens()) {
