@@ -92,6 +92,11 @@ public class Circuit extends Node implements Endpoint {
         return (Map<String, Pin>) features;
     }
 
+    /**
+     * Get the circuit's required pins.
+     *
+     * @return A map of pin names to Pin objects (only the required pins)
+     */
     public Map<String, Pin> getRequiredPins() {
         Map<String, Pin> result = new HashMap<String, Pin>();
 
@@ -104,12 +109,35 @@ public class Circuit extends Node implements Endpoint {
         return result;
     }
 
-    private Map<String, Pin> getUnconnectedRequiredPins() {
+    /**
+     * Check if the pin is required and unconnected
+     *
+     * @return A map of pin names to Pin objects (only the unconnected required
+     *         pins)
+     */
+    public Map<String, Pin> getUnconnectedRequiredPins() {
         Map<String, Pin> result = new HashMap<String, Pin>();
 
         for (Pin p : this.getPins().values()) {
-            // Check if the pin is required, but also check if the pin is either
-            // unconnected or it is a bussable connection
+            if (p.required && !((Circuit) p.getParent()).isPinConnected(p)) {
+                result.put(p.getName(), p);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Check if the pin is required, but also check if the pin is either
+     * unconnected or it is a bussable connection
+     *
+     * @return A map of pin names to Pin objects (only the unconnected required
+     *         pins)
+     */
+    public Map<String, Pin> getUnconnectedOrBussableRequiredPins() {
+        Map<String, Pin> result = new HashMap<String, Pin>();
+
+        for (Pin p : this.getPins().values()) {
             if (p.required && (!((Circuit) p.getParent()).isPinConnected(p) || (p.assignedService != null && p.assignedService.one_to_many == '+'))) {
                 result.put(p.getName(), p);
             }
@@ -174,11 +202,11 @@ public class Circuit extends Node implements Endpoint {
      */
     @Override
     public boolean canConnect(Endpoint e) {
-        if (e instanceof Circuit && this.getUnconnectedRequiredPins().size() > 0) {
+        if (e instanceof Circuit && this.getUnconnectedOrBussableRequiredPins().size() > 0) {
             Circuit c = (Circuit) e;
             Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
             List<Pin> componentPins = c.getConnectedComponentPins();
-            componentPins.addAll(this.getUnconnectedRequiredPins().values());
+            componentPins.addAll(this.getUnconnectedOrBussableRequiredPins().values());
 
             // Fill the pin matching matrix
             Integer[][] matrix = new Integer[componentPins.size()][c.getPins().size()];
@@ -235,7 +263,7 @@ public class Circuit extends Node implements Endpoint {
             if (canConnect(c)) {
                 Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
                 List<Pin> componentPins = c.getConnectedComponentPins();
-                componentPins.addAll(this.getUnconnectedRequiredPins().values());
+                componentPins.addAll(this.getUnconnectedOrBussableRequiredPins().values());
 
                 // Fill the pin matching matrix
                 Integer[][] matrix = new Integer[componentPins.size()][c.getPins().size()];

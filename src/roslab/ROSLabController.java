@@ -480,4 +480,8 @@ public class ROSLabController implements Initializable {
     public void setStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
+
+    public Stage getStage() {
+        return this.primaryStage;
+    }
 }
