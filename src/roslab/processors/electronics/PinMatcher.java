@@ -48,14 +48,19 @@ public class PinMatcher {
             maskMatrixRow(pinMatrix, minRow);
 
             // Mask a column if that column pin is not one-to-many
-            if (rowPins == null || colPins == null
-                    || colPins[minCol].getServiceByName(rowPins[minRow].getAssignedService().getName()).getOne_to_many() != '+') {
+            if (shouldMaskColumn(rowPins, colPins, minRow, minCol)) {
                 maskMatrixColumn(pinMatrix, minCol);
             }
         }
 
         // Return the match result
         return result;
+    }
+
+    private static boolean shouldMaskColumn(Pin[] rowPins, Pin[] colPins, int minRow, int minCol) {
+        return rowPins == null || colPins == null
+                || colPins[minCol].getServiceByName(rowPins[minRow].getAssignedService().getName()).getOne_to_many() != '+'
+                || rowPins[minRow].getAssignedService().getOne_to_many() == '-';
     }
 
     private static List<Integer> minNonZeroSum(Integer[] sums) {

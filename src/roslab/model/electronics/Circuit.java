@@ -234,7 +234,7 @@ public class Circuit extends Node implements Endpoint {
 
             if (canConnect(c)) {
                 Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
-                List<Pin> componentPins = getConnectedComponentPins();
+                List<Pin> componentPins = c.getConnectedComponentPins();
                 componentPins.addAll(this.getUnconnectedRequiredPins().values());
 
                 // Fill the pin matching matrix
@@ -255,19 +255,22 @@ public class Circuit extends Node implements Endpoint {
 
                 WireBundle wb = new WireBundle(this, c);
 
+                // TODO Doesn't handle pin removing and reattaching!
+
                 for (Entry<Integer, Integer> pinPair : mapping.entrySet()) {
                     Wire w = ((Pin) componentPins.toArray()[pinPair.getKey()]).connect((Pin) c.getPins().values().toArray()[pinPair.getValue()]);
-                    if (w != null) {
+                    // TODO Check each wire and see if the source pin has either
+                    // an existing wire, and if so, check if the destination pin
+                    // is different than the existing wire's destination, if so,
+                    // delete it from its wire bundle and add this new wire to
+                    // that existing wire bundle
+                    if (w != null && w.src.getParent().equals(this)) {
                         wb.addWire(w);
-
-                        // Make connection in EagleSchematics
-                        Map<EagleSchematic, String> schematicNetMap = new HashMap<EagleSchematic, String>();
-                        schematicNetMap.put(this.schematic, w.src.net);
-                        schematicNetMap.put(c.schematic, w.dest.net);
-                        EagleSchematic.connect(schematicNetMap, w.name);
                     }
                 }
 
+                // Add this WireBundle to the list of WireBundles in this
+                // circuit and the destination circuit
                 wireBundles.add(wb);
                 c.wireBundles.add(wb);
 

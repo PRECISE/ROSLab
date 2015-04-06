@@ -32,6 +32,9 @@ import org.w3c.dom.NodeList;
 
 import roslab.model.electronics.Circuit;
 import roslab.model.electronics.Pin;
+import roslab.model.electronics.Wire;
+import roslab.model.electronics.WireBundle;
+import roslab.model.general.Link;
 
 /**
  * Parse EAGLE Schematics (XML)
@@ -579,6 +582,17 @@ public class EagleSchematic {
         }
     }
 
+    public static void connectWires(List<Link> links) {
+        for (Link wb : links) {
+            for (Wire w : ((WireBundle) wb).getWires()) {
+                Map<EagleSchematic, String> schematicNetMap = new HashMap<EagleSchematic, String>();
+                schematicNetMap.put(((Circuit) w.getSrc().getParent()).getSchematic(), w.getSrc().getNet());
+                schematicNetMap.put(((Circuit) w.getDest().getParent()).getSchematic(), w.getDest().getNet());
+                EagleSchematic.connect(schematicNetMap, w.getName());
+            }
+        }
+    }
+
     public static Circuit buildCircuitFromSchematic(EagleSchematic sch) {
         Circuit c = new Circuit(sch.getName());
         c.setSchematic(sch);
@@ -598,6 +612,15 @@ public class EagleSchematic {
     @Override
     public EagleSchematic clone() {
         return new EagleSchematic(schematic);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "EagleSchematic [" + (schematic != null ? "schematic=" + schematic : "") + "]";
     }
 
 }

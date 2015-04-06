@@ -261,6 +261,7 @@ public class ROSLabTree extends TreeItem<String> {
                         schematics.add(((Circuit) n).getSchematic());
                     }
                     if (schematics.size() > 1) {
+                        EagleSchematic.connectWires(controller.getConfig().getLinks());
                         EagleSchematic.merge(schematics, "Merged.sch");
                     }
                 }
