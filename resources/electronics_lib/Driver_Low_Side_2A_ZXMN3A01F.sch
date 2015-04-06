@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -71,6 +71,7 @@
 <layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="99" name="SpiceOrder" color="5" fill="1" visible="yes" active="yes"/>
 <layer number="100" name="Muster" color="7" fill="1" visible="no" active="no"/>
 <layer number="101" name="Patch_Top" color="12" fill="4" visible="yes" active="yes"/>
 <layer number="102" name="Vscore" color="7" fill="1" visible="yes" active="yes"/>
@@ -3421,6 +3422,37 @@ type 0309, grid 2.5 mm</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="block_parts">
+<packages>
+</packages>
+<symbols>
+<symbol name="BLOCK_REQUIREMENT">
+<pin name="BLOCK_REQUIREMENT" x="0" y="0" visible="pad" length="short" direction="sup"/>
+<wire x1="2.54" y1="0.508" x2="3.302" y2="1.27" width="0.254" layer="94"/>
+<wire x1="3.302" y1="1.27" x2="4.318" y2="1.27" width="0.254" layer="94"/>
+<wire x1="4.318" y1="1.27" x2="5.08" y2="0.508" width="0.254" layer="94"/>
+<wire x1="5.08" y1="0.508" x2="5.08" y2="-0.508" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-0.508" x2="4.318" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="4.318" y1="-1.27" x2="3.302" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="3.302" y1="-1.27" x2="2.54" y2="-0.508" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-0.508" x2="2.54" y2="0.508" width="0.254" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="BLOCK_REQUIREMENT">
+<gates>
+<gate name="G$1" symbol="BLOCK_REQUIREMENT" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -3435,6 +3467,8 @@ type 0309, grid 2.5 mm</description>
 <part name="Q1" library="SparkFun-DiscreteSemi" deviceset="MOSFET-NCHANNEL" device="SMD" value="ZXMN3A01F"/>
 <part name="R_LIM_1" library="resistor" deviceset="R-US_" device="R0603" value="330Ω"/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
+<part name="U$1" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
+<part name="U$2" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3446,13 +3480,13 @@ type 0309, grid 2.5 mm</description>
 
 &lt;p&gt;Connect DRIVER_OUT_X to load&lt;/p&gt;</description>
 <plain>
-<text x="48.26" y="58.42" size="1.778" layer="97" rot="R180">Connect PWM_X to the PWMxx microcontroller pin</text>
-<text x="76.2" y="71.12" size="1.778" layer="97">Connect DRIVER_OUT_X to the load</text>
 </plain>
 <instances>
 <instance part="Q1" gate="G$1" x="76.2" y="58.42"/>
 <instance part="R_LIM_1" gate="G$1" x="60.96" y="58.42"/>
-<instance part="GND1" gate="1" x="76.2" y="43.18"/>
+<instance part="GND1" gate="1" x="76.2" y="48.26"/>
+<instance part="U$1" gate="G$1" x="53.34" y="58.42" rot="R180"/>
+<instance part="U$2" gate="G$1" x="76.2" y="66.04" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -3464,23 +3498,27 @@ type 0309, grid 2.5 mm</description>
 <wire x1="66.04" y1="58.42" x2="68.58" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="DRIVER_OUT_1" class="0">
+<net name="LOAD,#,+,O" class="0">
 <segment>
 <pinref part="Q1" gate="G$1" pin="D"/>
-<wire x1="76.2" y1="71.12" x2="76.2" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="66.04" x2="76.2" y2="63.5" width="0.1524" layer="91"/>
+<pinref part="U$2" gate="G$1" pin="BLOCK_REQUIREMENT"/>
+<label x="76.2" y="66.04" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="GND" class="0">
 <segment>
 <pinref part="Q1" gate="G$1" pin="S"/>
-<wire x1="76.2" y1="53.34" x2="76.2" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="53.34" x2="76.2" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="GND1" gate="1" pin="GND"/>
 </segment>
 </net>
-<net name="PWM_1" class="0">
+<net name="GPIO,#,-,I/PWM,#,-,I,TIMER" class="0">
 <segment>
 <pinref part="R_LIM_1" gate="G$1" pin="1"/>
-<wire x1="55.88" y1="58.42" x2="48.26" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="58.42" x2="53.34" y2="58.42" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="BLOCK_REQUIREMENT"/>
+<label x="48.26" y="58.42" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 </nets>
