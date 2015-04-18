@@ -11,6 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Feature;
@@ -21,15 +22,14 @@ import roslab.model.general.Node;
  */
 public class UINode extends Group {
 
-    private static final int CHARACTER_SIZE = 7;  // The pixel width of
-    // characters in displayed
-    // strings
+    private static final int CHARACTER_SIZE = 4; // Character pixel width
     private static final int DEFAULT_HEIGHT = 80;
     private static final int DEFAULT_WIDTH = 80;
     private static final int ENDPOINT_SIZE = 20;
     private static final double ENDPOINT_Y_OFFSET = 20;
     private static final int UINODE_WIDTH_PADDING = 70;
-    private static final double TEXT_Y_OFFSET = 30;
+    private static final double TEXT_X_OFFSET = 10;
+    private static final double TEXT_Y_OFFSET = 4;
 
     Node node;
     Rectangle nodeRect;
@@ -50,9 +50,13 @@ public class UINode extends Group {
      */
     public UINode(Node node, double xx, double yy) {
         super();
-        this.nodeRect = new Rectangle(xx, yy, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        this.nodeRect = new Rectangle(xx, yy, DEFAULT_WIDTH + node.getName().length() * CHARACTER_SIZE, DEFAULT_HEIGHT);
         this.nodeRect.getStyleClass().add(getClass().getSimpleName());
-        this.nodeText = new Text(this.nodeRect.getX() + this.nodeRect.getWidth() / 2, this.nodeRect.getY() + TEXT_Y_OFFSET, node.getName());
+        this.nodeText = new Text(this.nodeRect.getX() + TEXT_X_OFFSET, this.nodeRect.getY() + (this.nodeRect.getHeight() / 2) + TEXT_Y_OFFSET,
+                node.getName());
+        this.nodeText.setFont(new Font(16)); // TODO: Change to monospaced font
+        // to correct center spacing
+        this.nodeText.setMouseTransparent(true);
         this.node = node;
         if (node != null) {
             // Set node-class-specific style
