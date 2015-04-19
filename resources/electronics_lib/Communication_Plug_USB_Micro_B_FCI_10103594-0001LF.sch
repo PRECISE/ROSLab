@@ -5592,7 +5592,7 @@ type 0309, grid 2.5 mm</description>
 <busses>
 </busses>
 <nets>
-<net name="5V,#,+,O/5V_USB,#,+,O" class="0">
+<net name="5V,#,+,O@2" class="0">
 <segment>
 <pinref part="C_USB_DC1" gate="G$1" pin="1"/>
 <wire x1="15.24" y1="15.24" x2="15.24" y2="35.56" width="0.1524" layer="91"/>
@@ -5639,7 +5639,7 @@ type 0309, grid 2.5 mm</description>
 <pinref part="CN2" gate="G$1" pin="D+"/>
 </segment>
 </net>
-<net name="D+,#,-,IO,USB,1" class="0">
+<net name="D+,#,-,IO,USB,1@1" class="0">
 <segment>
 <pinref part="R1" gate="G$1" pin="2"/>
 <wire x1="27.94" y1="22.86" x2="30.48" y2="22.86" width="0.1524" layer="91"/>
@@ -5647,7 +5647,7 @@ type 0309, grid 2.5 mm</description>
 <label x="35.56" y="22.86" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="D-,#,-,IO,USB,1" class="0">
+<net name="D-,#,-,IO,USB,1@1" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
 <pinref part="U$3" gate="G$1" pin="BLOCK_REQUIREMENT"/>
