@@ -8,7 +8,6 @@ import java.util.List;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -20,7 +19,7 @@ import roslab.model.general.Node;
 /**
  * @author Peter Gebhard
  */
-public class UINode extends Group {
+public class UINode extends Rectangle {
 
     private static final int CHARACTER_SIZE = 4; // Character pixel width
     private static final int DEFAULT_HEIGHT = 80;
@@ -32,7 +31,6 @@ public class UINode extends Group {
     private static final double TEXT_Y_OFFSET = 4;
 
     Node node;
-    Rectangle nodeRect;
     Text nodeText;
     List<UIEndpoint> endpoints = new ArrayList<UIEndpoint>();
 
@@ -49,24 +47,22 @@ public class UINode extends Group {
      * @param yy
      */
     public UINode(Node node, double xx, double yy) {
-        super();
-        this.nodeRect = new Rectangle(xx, yy, DEFAULT_WIDTH + node.getName().length() * CHARACTER_SIZE, DEFAULT_HEIGHT);
-        this.nodeRect.getStyleClass().add(getClass().getSimpleName());
-        this.nodeText = new Text(this.nodeRect.getX() + TEXT_X_OFFSET, this.nodeRect.getY() + (this.nodeRect.getHeight() / 2) + TEXT_Y_OFFSET,
-                node.getName());
+        super(xx, yy, DEFAULT_WIDTH + node.getName().length() * CHARACTER_SIZE, DEFAULT_HEIGHT);
+        this.getStyleClass().add(getClass().getSimpleName());
+        this.nodeText = new Text(this.getX() + TEXT_X_OFFSET, this.getY() + (this.getHeight() / 2) + TEXT_Y_OFFSET, node.getName());
         this.nodeText.setFont(new Font(16)); // TODO: Change to monospaced font
         // to correct center spacing
         this.nodeText.setMouseTransparent(true);
         this.node = node;
         if (node != null) {
             // Set node-class-specific style
-            this.nodeRect.getStyleClass().add(this.node.getClass().getSimpleName());
+            this.getStyleClass().add(this.node.getClass().getSimpleName());
         }
         if (node instanceof Endpoint) {
             // If the node itself is the endpoint, add it in the center and
             // invisible
-            this.endpoints.add(new UIEndpoint((Endpoint) node, this, this.nodeRect.getX() + this.nodeRect.getWidth() / 2, this.nodeRect.getY()
-                    + this.nodeRect.getHeight() / 2, false, false));
+            this.endpoints.add(new UIEndpoint((Endpoint) node, this, this.getX() + this.getWidth() / 2, this.getY() + this.getHeight() / 2, false,
+                    false));
         }
         else {
             int endpointIndex = 0;
@@ -87,15 +83,15 @@ public class UINode extends Group {
             }
 
             // Check if the UINode is high enough to show all endpoints
-            if (this.nodeRect.getWidth() < (longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
+            if (this.getWidth() < (longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
                     + UINODE_WIDTH_PADDING) {
                 this.setWidth((longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
                         + UINODE_WIDTH_PADDING);
             }
 
             // Check if the UINode is high enough to show all endpoints
-            if (this.nodeRect.getHeight() < Math.ceil(endpointCount / 2.0) * ENDPOINT_SIZE + ENDPOINT_Y_OFFSET) {
-                this.nodeRect.setHeight(Math.ceil(endpointCount / 2.0) * ENDPOINT_SIZE + ENDPOINT_Y_OFFSET);
+            if (this.getHeight() < Math.ceil(endpointCount / 2.0) * ENDPOINT_SIZE + ENDPOINT_Y_OFFSET) {
+                this.setHeight(Math.ceil(endpointCount / 2.0) * ENDPOINT_SIZE + ENDPOINT_Y_OFFSET);
             }
 
             endpointIndex = 0;
@@ -105,28 +101,28 @@ public class UINode extends Group {
             for (Feature f : node.getFeatures().values()) {
                 // put half of the endpoints on the left side
                 if (endpointIndex < endpointCount / 2) {
-                    this.endpoints.add(new UIEndpoint((Endpoint) f, this, this.nodeRect.getX(), this.nodeRect.getY()
-                            + (ENDPOINT_SIZE * endpointIndex) + ENDPOINT_Y_OFFSET, true, true));
+                    this.endpoints.add(new UIEndpoint((Endpoint) f, this, this.getX(), this.getY() + (ENDPOINT_SIZE * endpointIndex)
+                            + ENDPOINT_Y_OFFSET, true, true));
                 }
                 else {
                     // put the other half on the right side
-                    this.endpoints.add(new UIEndpoint((Endpoint) f, this, this.nodeRect.getX() + this.nodeRect.getWidth(), this.nodeRect.getY()
+                    this.endpoints.add(new UIEndpoint((Endpoint) f, this, this.getX() + this.getWidth(), this.getY()
                             + (ENDPOINT_SIZE * (endpointIndex - endpointCount / 2)) + ENDPOINT_Y_OFFSET, false, true));
                 }
                 endpointIndex++;
             }
         }
 
-        this.getChildren().addAll(this.nodeRect, this.nodeText);
-        this.getChildren().addAll(this.endpoints);
+        // this.getChildren().addAll(this.nodeRect, this.nodeText);
+        // this.getChildren().addAll(this.endpoints);
         this.node.setUINode(this);
 
-        this.nodeRect.setOnMousePressed(new EventHandler<MouseEvent>() {
+        this.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 // record a delta distance for the drag and drop operation.
-                mousex = nodeRect.getX() - mouseEvent.getX();
-                mousey = nodeRect.getY() - mouseEvent.getY();
+                mousex = getX() - mouseEvent.getX();
+                mousey = getY() - mouseEvent.getY();
                 mousexText = nodeText.getX() - mouseEvent.getX();
                 mouseyText = nodeText.getY() - mouseEvent.getY();
                 for (UIEndpoint e : endpoints) {
@@ -136,18 +132,18 @@ public class UINode extends Group {
             }
         });
 
-        this.nodeRect.setOnMouseReleased(new EventHandler<MouseEvent>() {
+        this.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 setCursor(Cursor.OPEN_HAND);
             }
         });
 
-        this.nodeRect.setOnMouseDragged(new EventHandler<MouseEvent>() {
+        this.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                nodeRect.setX(mouseEvent.getX() + mousex);
-                nodeRect.setY(mouseEvent.getY() + mousey);
+                setX(mouseEvent.getX() + mousex);
+                setY(mouseEvent.getY() + mousey);
                 nodeText.setX(mouseEvent.getX() + mousexText);
                 nodeText.setY(mouseEvent.getY() + mouseyText);
                 for (UIEndpoint e : endpoints) {
@@ -156,7 +152,7 @@ public class UINode extends Group {
             }
         });
 
-        this.nodeRect.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        this.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (!mouseEvent.isPrimaryButtonDown()) {
@@ -165,7 +161,7 @@ public class UINode extends Group {
             }
         });
 
-        this.nodeRect.setOnMouseExited(new EventHandler<MouseEvent>() {
+        this.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (!mouseEvent.isPrimaryButtonDown()) {
@@ -174,12 +170,12 @@ public class UINode extends Group {
             }
         });
 
-        this.toFront();
+        this.nodeText.toFront();
     }
 
     private void setWidth(int i) {
-        this.nodeRect.setWidth(i);
-        this.nodeText.setX(this.nodeRect.getX() + (this.nodeRect.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
+        this.setWidth(i);
+        this.nodeText.setX(this.getX() + (this.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
     }
 
     /**
@@ -202,6 +198,13 @@ public class UINode extends Group {
      */
     public void setNodeText(String text) {
         nodeText.setText(text);
+    }
+
+    /**
+     * @return the node text string
+     */
+    public Text getNodeUIText() {
+        return nodeText;
     }
 
     /**
@@ -244,6 +247,11 @@ public class UINode extends Group {
      */
     public void setNode(Node node) {
         this.node = node;
+    }
+
+    public void toTheFront() {
+        this.toFront();
+        this.nodeText.toFront();
     }
 
 }

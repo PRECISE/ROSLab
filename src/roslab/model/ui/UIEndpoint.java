@@ -17,6 +17,7 @@ import roslab.model.general.Node;
  * @author Peter Gebhard
  */
 public class UIEndpoint extends Group {
+    // TODO: Change the parent class to Circle so that we can handle Z-Ordering!
 
     private static final int CHARACTER_SIZE = 7;
     private static final int DEFAULT_RADIUS = 5;

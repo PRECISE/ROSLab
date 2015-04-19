@@ -3,6 +3,7 @@ package roslab;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -10,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
@@ -69,6 +71,7 @@ public class ROSLabController implements Initializable {
     Random r = new Random();
     Library library = new Library(new ArrayList<Node>());
     Configuration config;
+    Group eeUIObjects;
     Rectangle selectionRectangle;
     double selectionX;
     double selectionY;
@@ -92,6 +95,8 @@ public class ROSLabController implements Initializable {
         // PythonLibraryHelper p = new PythonLibraryHelper();
         config = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
         tree = new ROSLabTree(library, config, this);
+        eeUIObjects = new Group();
+        eePane.getChildren().add(eeUIObjects);
 
         // Setup TreeView
         treeView.setRoot(tree);
@@ -225,7 +230,21 @@ public class ROSLabController implements Initializable {
                 hwPane.getChildren().add(uin);
                 break;
             case "Circuit":
-                eePane.getChildren().add(uin);
+                eeUIObjects.getChildren().add(uin);
+                eeUIObjects.getChildren().add(uin.getNodeUIText());
+                eeUIObjects.getChildren().addAll(uin.getUIEndpoints());
+
+                // Order all of the UI objects
+                for (Object nn : eeUIObjects.getChildren().toArray()) {
+                    if (nn instanceof UINode) {
+                        ((UINode) nn).toTheFront();
+                    }
+                    if (nn instanceof UILink) {
+                        ((UILink) nn).toBack();
+                    }
+                }
+
+                // eePane.getChildren().add(uin);
                 break;
         }
         config.addNode(n);
@@ -234,6 +253,30 @@ public class ROSLabController implements Initializable {
 
     public void addConfigLink(Link l) {
         l.setUILink(new UILink(l));
+
+        String nodeClassName = l.getSrc().getParent().getClass().getName();
+        Object[] objArray = null;
+        switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
+            case "ROSNode":
+                // swPane.getChildren().add(uin);
+                break;
+            case "HWBlock":
+                // hwPane.getChildren().add(uin);
+                break;
+            case "Circuit":
+                objArray = eeUIObjects.getChildren().toArray();
+                break;
+        }
+        // Order all of the UI objects
+        for (Object nn : objArray) {
+            if (nn instanceof UINode) {
+                ((UINode) nn).toTheFront();
+            }
+            if (nn instanceof UILink) {
+                ((UILink) nn).toBack();
+            }
+        }
+
         config.addLink(l);
         tree.addConfigLink(l);
     }
@@ -256,7 +299,8 @@ public class ROSLabController implements Initializable {
 
         // Remove any links associated with this node
         for (Endpoint e : n.getEndpoints()) {
-            for (Link l : e.getLinks()) {
+            List<? extends Link> links = e.getLinks();
+            for (Link l : links) {
                 removeConfigLink(l);
             }
         }

@@ -279,7 +279,7 @@ public class ROSLabTree extends TreeItem<String> {
                             }
                         }
                         Dialogs.create().owner(controller.getStage()).title("Missing Required Links")
-                                .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
+                        .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
                     }
                     else if (schematics.size() > 1) {
                         EagleSchematic.connectWires(controller.getConfig().getLinks());
@@ -287,6 +287,8 @@ public class ROSLabTree extends TreeItem<String> {
                     }
                 }
             });
+
+            // TODO This item is not yet included in ContextMenu
             MenuItem m2Item = new MenuItem("Generate multi-system container and code...");
             m2Item.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -294,6 +296,7 @@ public class ROSLabTree extends TreeItem<String> {
                     // TODO Pop up external interface dialog
                 }
             });
+
             return new ContextMenu(mItem);
         }
     }
