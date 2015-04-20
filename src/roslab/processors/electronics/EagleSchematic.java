@@ -507,6 +507,18 @@ public class EagleSchematic {
                 }
             }
 
+            // TODO Test out removing 'constant' attribute from 'attribute' tags
+            // (Eagle shows a warning)
+            //
+            // NodeList mDocAttrList = mDoc.getElementsByTagName("attribute");
+            // for (int at = 0; at < mDocAttrList.getLength(); at++) {
+            // Element mDocAttr = (Element) mDocAttrList.item(at);
+            // logger.debug("Attribute mDoc: [" + at + " / " +
+            // mDocAttrList.getLength() + " ] " +
+            // mDocAttr.getAttribute("attribute"));
+            // mDocAttr.removeAttribute("constant");
+            // }
+
             // Transform DOM back to Schematic file
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer();

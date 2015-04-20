@@ -113,8 +113,6 @@ public class UINode extends Rectangle {
             }
         }
 
-        // this.getChildren().addAll(this.nodeRect, this.nodeText);
-        // this.getChildren().addAll(this.endpoints);
         this.node.setUINode(this);
 
         this.setOnMousePressed(new EventHandler<MouseEvent>() {
