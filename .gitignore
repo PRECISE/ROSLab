@@ -8,3 +8,5 @@ bin
 build
 user.settings
 *.pyc
+
+resources/merged_output/*

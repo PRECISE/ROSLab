@@ -3,8 +3,12 @@
  */
 package roslab.processors.electronics;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import roslab.model.electronics.Pin;
 
 /**
  * Pin Matching algorithm
@@ -18,45 +22,68 @@ public class PinMatcher {
      *
      * @return a mapping of matchings
      */
-    public static Map<Integer, Integer> match(Integer[][] pinMatrix) {
+    public static Map<Integer, Integer> match(Integer[][] pinMatrix, Pin[] rowPins, Pin[] colPins) {
         Map<Integer, Integer> result = new HashMap<Integer, Integer>();
 
-        while (!fullyConnected(pinMatrix)) {
-            if (!remainingConnectables(pinMatrix)) {
-                return null;
-            }
-
+        while (remainingConnectables(pinMatrix)) {
             Integer[] rowSums = rowSums(pinMatrix);
             Integer[] colSums = columnSums(pinMatrix);
 
-            int i = minNonZeroSumIndex(rowSums);
-            int j = maskedMinNonZeroSumIndex(colSums, pinMatrix[i]);
-            result.put(i, j);
+            int minTotal = Integer.MAX_VALUE;
+            int minRow = 0;
+            int minCol = 0;
 
-            maskMatrixRow(pinMatrix, i);
-            maskMatrixColumn(pinMatrix, j);
+            List<Integer> rowSumIndices = minNonZeroSum(rowSums);
+            for (Integer r : rowSumIndices) {
+                int c = maskedMinNonZeroSumIndex(colSums, pinMatrix[r]);
+                if (colSums[c] < minTotal) {
+                    minRow = r;
+                    minCol = c;
+                    minTotal = colSums[c];
+                }
+            }
+
+            result.put(minRow, minCol);
+
+            maskMatrixRow(pinMatrix, minRow);
+
+            // Mask a column if that column pin is not one-to-many
+            if (shouldMaskColumn(rowPins, colPins, minRow, minCol)) {
+                maskMatrixColumn(pinMatrix, minCol);
+            }
         }
 
         // Return the match result
         return result;
     }
 
-    private static int minNonZeroSumIndex(Integer[] sums) {
+    private static boolean shouldMaskColumn(Pin[] rowPins, Pin[] colPins, int minRow, int minCol) {
+        return rowPins == null || colPins == null
+                || colPins[minCol].getServiceByName(rowPins[minRow].getAssignedService().getName()).getOne_to_many() != '+'
+                || rowPins[minRow].getAssignedService().getOne_to_many() == '-';
+    }
+
+    private static List<Integer> minNonZeroSum(Integer[] sums) {
         if (sums.length == 0) {
             throw new IllegalArgumentException();
         }
 
-        int sum = Integer.MAX_VALUE;
-        int index = -1;
+        int min = Integer.MAX_VALUE;
+        List<Integer> indices = new ArrayList<Integer>();
 
         for (int i = 0; i < sums.length; i++) {
-            if (sums[i] > 0 && sums[i] < sum) {
-                sum = sums[i];
-                index = i;
+            if (sums[i] > 0 && sums[i] < min) {
+                min = sums[i];
             }
         }
 
-        return index;
+        for (int i = 0; i < sums.length; i++) {
+            if (sums[i] == min) {
+                indices.add(i);
+            }
+        }
+
+        return indices;
     }
 
     private static int maskedMinNonZeroSumIndex(Integer[] sums, Integer[] mask) {

@@ -7,6 +7,7 @@ import java.awt.MouseInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -15,6 +16,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+=======
+>>>>>>> master
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Circle;
@@ -36,7 +39,11 @@ public class UIEndpoint extends Circle {
     private static final double TEXT_X_OFFSET = 5;
     private static final double TEXT_Y_OFFSET = 3;
     Endpoint endpoint;
+<<<<<<< HEAD
+    Circle endpointCircle;
     Line addPortLine;
+=======
+>>>>>>> master
     Text endpointText;
     UINode uiparent;
     List<UILink> uilinks = new ArrayList<UILink>();
@@ -70,8 +77,12 @@ public class UIEndpoint extends Circle {
         addPortLine = new Line(centerX, centerY, centerX, centerY);
         addPortLine.setMouseTransparent(true);
         this.uiparent = uiparent;
+<<<<<<< HEAD
         this.getChildren().addAll(this.endpointCircle, this.endpointText, addPortLine);
+        this.endpointCircle.setVisible(visible);
+=======
         this.setVisible(visible);
+>>>>>>> master
         this.endpointText.setVisible(visible);
         addPortLine.setVisible(false);
         
@@ -282,6 +293,15 @@ public class UIEndpoint extends Circle {
             l.updateXY(mouseEvent, this);
         }
     }
+<<<<<<< HEAD
+
+    public double getCenterX() {
+        return this.endpointCircle.getCenterX();
+    }
+
+    public double getCenterY() {
+        return this.endpointCircle.getCenterY();
+    }
     
     public void setCircleStyle(boolean isSubscriber) {
     	if(isSubscriber) {
@@ -294,4 +314,6 @@ public class UIEndpoint extends Circle {
     private void setParentToFront() {
     	uiparent.toFront();
     }
+=======
+>>>>>>> master
 }

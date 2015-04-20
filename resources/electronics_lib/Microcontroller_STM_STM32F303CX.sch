@@ -4925,7 +4925,7 @@ chip</description>
 <label x="246.38" y="350.52" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="GPIO,#,+,IO/QEP,2,-,I,TIMER,2,1/PWM,2,+,IO,TIMER,2,1/PWM_N,1,+,O,TIMER,15,9.A,1" class="0">
+<net name="GPIO,#,+,IO/QEP,2,-,I,TIMER,2,1/PWM,2,+,IO,TIMER,2,1/PWM_N,1,+,O,TIMER,15,9/.A,1" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="PA1"/>
 <wire x1="254" y1="347.98" x2="251.46" y2="347.98" width="0.1524" layer="91"/>
@@ -5005,6 +5005,22 @@ chip</description>
 <label x="246.38" y="322.58" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
+<net name="GPIO,#,+,IO/PWM_N,1,+,O,TIMER,1,6/QEP,1,-,I,TIMER,4,10/PWM,1,+,IO,TIMER,4,10/PWM,4,+,IO,TIMER,1,11/D-,#,-,IO,USB,1,14/RX,#,-,I,CAN,#,9.A,11" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="PA11"/>
+<wire x1="254" y1="320.04" x2="251.46" y2="320.04" width="0.1524" layer="91"/>
+<pinref part="U$13" gate="G$1" pin="BLOCK_CONNECTOR"/>
+<label x="246.38" y="320.04" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="GPIO,#,+,IO/PWM,1,+,O,TIMER,16,1/PWM_N,2,+,O,TIMER,1,6/QEP,2,-,I,TIMER,4,10/PWM,2,+,IO,TIMER,4,10/D+,#,-,IO,USB,1,14/TX,#,-,O,CAN,#,9.A,12" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="PA12"/>
+<wire x1="254" y1="317.5" x2="251.46" y2="317.5" width="0.1524" layer="91"/>
+<pinref part="U$14" gate="G$1" pin="BLOCK_CONNECTOR"/>
+<label x="246.38" y="317.5" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
 <net name="GPIO,#,+,IO/PWM,3,+,IO,TIMER,3,2/PWM_N,2,+,O,TIMER,8,4/PWM_N,2,+,O,TIMER,1,6.B,0" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="PB0"/>
@@ -5059,6 +5075,22 @@ chip</description>
 <wire x1="302.26" y1="358.14" x2="304.8" y2="358.14" width="0.1524" layer="91"/>
 <pinref part="U$21" gate="G$1" pin="BLOCK_CONNECTOR"/>
 <label x="309.88" y="358.14" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="GPIO,#,+,IO/PWM,1,+,O,TIMER,16,1/PWM,3,+,IO,TIMER,4,2/SCL,#,+,IO,I2C,1,4/PWM,2,+,IO,TIMER,8,10/QEP,2,-,I,TIMER,8,10/RX,#,-,I,CAN,#,9.B,8" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="PB8"/>
+<wire x1="302.26" y1="327.66" x2="304.8" y2="327.66" width="0.1524" layer="91"/>
+<pinref part="U$22" gate="G$1" pin="BLOCK_CONNECTOR"/>
+<label x="309.88" y="327.66" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="GPIO,#,+,IO/PWM,1,+,O,TIMER,17,1/PWM,4,+,IO,TIMER,4,2/SDA,#,+,IO,I2C,1,4/PWM,3,+,IO,TIMER,8,10/TX,#,-,O,CAN,#,9.B,9" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="PB9"/>
+<wire x1="302.26" y1="325.12" x2="304.8" y2="325.12" width="0.1524" layer="91"/>
+<pinref part="U$23" gate="G$1" pin="BLOCK_CONNECTOR"/>
+<label x="309.88" y="325.12" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="GPIO,#,+,IO/PWM,3,+,IO,TIMER,2,1/TXRX,#,-,O,UART,3,7.B,10" class="0">

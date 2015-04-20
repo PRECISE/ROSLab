@@ -12,8 +12,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
+<<<<<<< HEAD
 import javafx.scene.Cursor;
+=======
+import javafx.scene.Group;
+>>>>>>> master
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
@@ -101,9 +104,14 @@ public class ROSLabController implements Initializable {
         // enableSelectionRectangle(hwPane);
         // enableSelectionRectangle(eePane);
 
+<<<<<<< HEAD
         library.loadPlatform("landshark");
 //        library.loadElectronics();
+=======
+        // library.loadPlatform("landshark");
+        library.loadElectronics();
         // PythonLibraryHelper p = new PythonLibraryHelper();
+>>>>>>> master
         config = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
         tree = new ROSLabTree(library, config, this);
         eeUIObjects = new Group();

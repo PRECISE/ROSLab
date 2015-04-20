@@ -23,6 +23,10 @@ public class Link {
             this.src = src;
             this.dest = dest;
         }
+        else if (dest.canConnect(src)) {
+            this.src = dest;
+            this.dest = src;
+        }
         else {
             throw new IllegalArgumentException("Cannot connect incompatible endpoints.");
         }

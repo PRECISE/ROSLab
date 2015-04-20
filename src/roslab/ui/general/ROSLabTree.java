@@ -11,8 +11,12 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
+
+import org.controlsfx.dialog.Dialogs;
+
 import roslab.ROSLabController;
 import roslab.model.electronics.Circuit;
+import roslab.model.electronics.Pin;
 import roslab.model.general.Configuration;
 import roslab.model.general.Feature;
 import roslab.model.general.Library;
@@ -257,14 +261,34 @@ public class ROSLabTree extends TreeItem<String> {
 
                     // Handle Circuit nodes
                     List<EagleSchematic> schematics = new ArrayList<EagleSchematic>();
+                    List<Circuit> circuitsWithUnconnectedRequireds = new ArrayList<Circuit>();
                     for (Node n : controller.getConfig().getNodesOfType(Circuit.class)) {
-                        schematics.add(((Circuit) n).getSchematic());
+                        Circuit c = (Circuit) n;
+                        if (c.getUnconnectedRequiredPins().size() > 0) {
+                            circuitsWithUnconnectedRequireds.add(c);
+                        }
+                        schematics.add(c.getSchematic());
+
                     }
-                    if (schematics.size() > 1) {
+                    if (circuitsWithUnconnectedRequireds.size() > 0) {
+                        String circuitString = "";
+                        for (Circuit c : circuitsWithUnconnectedRequireds) {
+                            circuitString += c.getName() + "\n";
+                            for (Pin p : c.getUnconnectedRequiredPins().values()) {
+                                circuitString += "  " + p.getName() + "\n";
+                            }
+                        }
+                        Dialogs.create().owner(controller.getStage()).title("Missing Required Links")
+                        .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
+                    }
+                    else if (schematics.size() > 1) {
+                        EagleSchematic.connectWires(controller.getConfig().getLinks());
                         EagleSchematic.merge(schematics, "Merged.sch");
                     }
                 }
             });
+
+            // TODO This item is not yet included in ContextMenu
             MenuItem m2Item = new MenuItem("Generate multi-system container and code...");
             m2Item.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -272,6 +296,7 @@ public class ROSLabTree extends TreeItem<String> {
                     // TODO Pop up external interface dialog
                 }
             });
+
             return new ContextMenu(mItem);
         }
     }

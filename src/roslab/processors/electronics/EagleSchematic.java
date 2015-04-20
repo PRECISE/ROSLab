@@ -32,6 +32,9 @@ import org.w3c.dom.NodeList;
 
 import roslab.model.electronics.Circuit;
 import roslab.model.electronics.Pin;
+import roslab.model.electronics.Wire;
+import roslab.model.electronics.WireBundle;
+import roslab.model.general.Link;
 
 /**
  * Parse EAGLE Schematics (XML)
@@ -153,10 +156,11 @@ public class EagleSchematic {
      */
     public static EagleSchematic merge(List<EagleSchematic> schematics, String filename) {
         if (schematics.size() < 2) {
-            throw new IllegalArgumentException("Cannot merge schematics if the input contains less than 2.");
+            throw new IllegalArgumentException("Cannot merge schematics if the input list contains less than 2.");
         }
 
-        File mergedSch = new File(schematics.get(0).getSchematicFile().getParent() + File.separatorChar + filename);
+        File mergedSch = new File(schematics.get(0).getSchematicFile().getParentFile().getParentFile().getAbsolutePath() + File.separatorChar
+                + "merged_output" + File.separatorChar + filename);
 
         // Find which schematic file is the largest in line count; assuming that
         // one is the most important, choose it as the one to accept merges from
@@ -195,25 +199,28 @@ public class EagleSchematic {
             Node mDocPartsNode = null;
             Node mDocSheetsNode = null;
 
+            NodeList mDocLayers = mDoc.getElementsByTagName("layers");
             NodeList mDocLayerList = mDoc.getElementsByTagName("layer");
-            if (mDocLayerList.getLength() > 0) {
-                mDocLayersNode = mDocLayerList.item(0).getParentNode();
+            if (mDocLayers.getLength() > 0) {
+                mDocLayersNode = mDocLayers.item(0);
             }
             else {
                 mDocLayersNode = mDoc.createElement("layers");
             }
 
+            NodeList mDocLibraries = mDoc.getElementsByTagName("libraries");
             NodeList mDocLibraryList = mDoc.getElementsByTagName("library");
-            if (mDocLibraryList.getLength() > 0) {
-                mDocLibrariesNode = mDocLibraryList.item(0).getParentNode();
+            if (mDocLibraries.getLength() > 0) {
+                mDocLibrariesNode = mDocLibraries.item(0);
             }
             else {
                 mDocLibrariesNode = mDoc.createElement("libraries");
             }
 
+            NodeList mDocParts = mDoc.getElementsByTagName("parts");
             NodeList mDocPartList = mDoc.getElementsByTagName("part");
-            if (mDocPartList.getLength() > 0) {
-                mDocPartsNode = mDocPartList.item(0).getParentNode();
+            if (mDocParts.getLength() > 0) {
+                mDocPartsNode = mDocParts.item(0);
             }
             else {
                 mDocPartsNode = mDoc.createElement("parts");
@@ -236,13 +243,13 @@ public class EagleSchematic {
                         }
                     }
 
+                    // Skip the rest of the merging and go to the next schematic
                     continue;
                 }
 
                 // Parse the schematic into a Document
                 Document doc = dBuilder.parse(sch.schematic);
                 doc.getDocumentElement().normalize();
-
                 logger.debug("Schematic: " + sch.getName());
 
                 // An 'exists' flag used when checking if an Element already
@@ -253,23 +260,38 @@ public class EagleSchematic {
                 NodeList docLayerList = doc.getElementsByTagName("layer");
                 for (int i = 0; i < docLayerList.getLength(); i++) {
                     Element docLayer = (Element) docLayerList.item(i);
-                    logger.debug("Layer doc: " + docLayer.getAttribute("id"));
+                    // logger.debug("Layer doc:  [" + i + " / " +
+                    // docLayerList.getLength() + " ] " +
+                    // docLayer.getAttribute("name"));
 
                     // Check if layer exists already in merge document
                     for (int j = 0; j < mDocLayerList.getLength(); j++) {
                         Element mDocLayer = (Element) mDocLayerList.item(j);
-                        logger.debug("Layer mDoc: " + mDocLayer.getAttribute("id"));
-                        if (mDocLayer.getAttribute("id").equals(docLayer.getAttribute("id"))) {
+                        // logger.debug("Layer mDoc:  [" + j + " / " +
+                        // mDocLayerList.getLength() + " ] " +
+                        // mDocLayer.getAttribute("name"));
+                        if (mDocLayer.getAttribute("name").equals(docLayer.getAttribute("name"))) {
                             exists = true;
-                            logger.debug("Layer EXISTS");
+                            // logger.debug("Layer EXISTS");
                             break;
                         }
                     }
+
                     // If the layer does not exist in the merge document, add it
                     if (!exists) {
-                        logger.debug("Layer doc: " + docLayer.getAttribute("id"));
+                        logger.debug("Layer doc DOES NOT exist: " + docLayer.getAttribute("name"));
+
+                        // Find a unique layer number if it isn't already
+                        int newNum = Integer.parseInt(docLayer.getAttribute("number"));
+                        while (!isUniqueLayerNum(mDocLayerList, newNum) || !isUniqueLayerNum(docLayerList, newNum)) {
+                            newNum++;
+                        }
+                        docLayer.setAttribute("number", Integer.toString(newNum));
+
+                        // Add the layer to the layers node
                         mDocLayersNode.appendChild(mDoc.importNode(docLayer, true));
                     }
+
                     // Reset 'exists' flag
                     exists = false;
                 }
@@ -278,20 +300,21 @@ public class EagleSchematic {
                 NodeList docLibraryList = doc.getElementsByTagName("library");
                 for (int i = 0; i < docLibraryList.getLength(); i++) {
                     Element docLibrary = (Element) docLibraryList.item(i);
-                    logger.debug("Library doc: [" + i + " / " + docLibraryList.getLength() + " ]" + docLibrary.getAttribute("name"));
+                    logger.debug("Library doc: [" + i + " / " + docLibraryList.getLength() + " ] " + docLibrary.getAttribute("name"));
 
                     // Check if library exists already in merge document
                     for (int j = 0; j < mDocLibraryList.getLength(); j++) {
                         Element mDocLibrary = (Element) mDocLibraryList.item(j);
-                        logger.debug("Library mDoc: [" + j + " / " + mDocLibraryList.getLength() + " ]" + mDocLibrary.getAttribute("name"));
+                        logger.debug("Library mDoc: [" + j + " / " + mDocLibraryList.getLength() + " ] " + mDocLibrary.getAttribute("name"));
                         if (mDocLibrary.getAttribute("name").equals(docLibrary.getAttribute("name"))) {
                             exists = true;
 
                             // Handle merging of packages in similar libraries
                             boolean packageExists = false;
+                            NodeList mDocPackagesList = mDocLibrary.getElementsByTagName("packages");
                             NodeList mDocPackageList = mDocLibrary.getElementsByTagName("package");
-                            if (mDocPackageList.getLength() > 0) {
-                                mDocPackagesNode = mDocPackageList.item(0).getParentNode();
+                            if (mDocPackagesList.getLength() > 0) {
+                                mDocPackagesNode = mDocPackagesList.item(0);
                             }
                             else {
                                 mDocPackagesNode = mDoc.createElement("packages");
@@ -299,10 +322,11 @@ public class EagleSchematic {
                             NodeList docPackageList = docLibrary.getElementsByTagName("package");
                             for (int k = 0; k < docPackageList.getLength(); k++) {
                                 Element docPackage = (Element) docPackageList.item(k);
-                                logger.debug("Package doc: " + docPackage.getAttribute("name"));
+                                logger.debug("Package doc:  [" + k + " / " + docPackageList.getLength() + " ] " + docPackage.getAttribute("name"));
                                 for (int m = 0; m < mDocPackageList.getLength(); m++) {
                                     Element mDocPackage = (Element) mDocPackageList.item(m);
-                                    logger.debug("Package mDoc: " + mDocPackage.getAttribute("name"));
+                                    logger.debug("Package mDoc:  [" + m + " / " + mDocPackageList.getLength() + " ] "
+                                            + mDocPackage.getAttribute("name"));
                                     if (mDocPackage.getAttribute("name").equals(docPackage.getAttribute("name"))) {
                                         logger.debug("Package doc DOES exist: " + docPackage.getAttribute("name"));
                                         packageExists = true;
@@ -321,9 +345,10 @@ public class EagleSchematic {
 
                             // Handle merging of symbols in similar libraries
                             boolean symbolExists = false;
+                            NodeList mDocSymbols = mDocLibrary.getElementsByTagName("symbols");
                             NodeList mDocSymbolList = mDocLibrary.getElementsByTagName("symbol");
-                            if (mDocSymbolList.getLength() > 0) {
-                                mDocSymbolsNode = mDocSymbolList.item(0).getParentNode();
+                            if (mDocSymbols.getLength() > 0) {
+                                mDocSymbolsNode = mDocSymbols.item(0);
                             }
                             else {
                                 mDocSymbolsNode = mDoc.createElement("symbols");
@@ -331,10 +356,10 @@ public class EagleSchematic {
                             NodeList docSymbolList = docLibrary.getElementsByTagName("symbol");
                             for (int k = 0; k < docSymbolList.getLength(); k++) {
                                 Element docSymbol = (Element) docSymbolList.item(k);
-                                logger.debug("Symbol doc: " + docSymbol.getAttribute("name"));
+                                logger.debug("Symbol doc: [" + k + " / " + docSymbolList.getLength() + " ] " + docSymbol.getAttribute("name"));
                                 for (int m = 0; m < mDocSymbolList.getLength(); m++) {
                                     Element mDocSymbol = (Element) mDocSymbolList.item(m);
-                                    logger.debug("Symbol mDoc: " + mDocSymbol.getAttribute("name"));
+                                    logger.debug("Symbol mDoc: [" + m + " / " + mDocSymbolList.getLength() + " ] " + mDocSymbol.getAttribute("name"));
                                     if (mDocSymbol.getAttribute("name").equals(docSymbol.getAttribute("name"))) {
                                         symbolExists = true;
                                         break;
@@ -347,81 +372,107 @@ public class EagleSchematic {
                                     logger.debug("Symbol doc does NOT exist: " + docSymbol.getAttribute("name"));
                                     mDocSymbolsNode.appendChild(mDoc.importNode(docSymbol, true));
                                 }
+
                                 // Reset 'symbolExists' flag
                                 symbolExists = false;
                             }
 
                             // Handle merging of devicesets in similar libraries
                             boolean devsetExists = false;
+                            NodeList mDocDeviceSets = mDocLibrary.getElementsByTagName("devicesets");
                             NodeList mDocDeviceSetList = mDocLibrary.getElementsByTagName("deviceset");
-                            if (mDocDeviceSetList.getLength() > 0) {
-                                mDocDeviceSetsNode = mDocDeviceSetList.item(0).getParentNode();
+                            if (mDocDeviceSets.getLength() > 0) {
+                                mDocDeviceSetsNode = mDocDeviceSets.item(0);
                             }
                             else {
                                 mDocDeviceSetsNode = mDoc.createElement("devicesets");
                             }
                             NodeList docDeviceSetList = docLibrary.getElementsByTagName("deviceset");
                             for (int k = 0; k < docDeviceSetList.getLength(); k++) {
-                                logger.debug("DeviceSet doc: " + ((Element) docDeviceSetList.item(k)).getAttribute("name"));
+                                Element docDeviceSet = (Element) docDeviceSetList.item(k);
+                                logger.debug("DeviceSet doc: [" + k + " / " + docDeviceSetList.getLength() + " ] "
+                                        + docDeviceSet.getAttribute("name"));
                                 for (int m = 0; m < mDocDeviceSetList.getLength(); m++) {
-                                    logger.debug("DeviceSet mDoc: " + ((Element) mDocDeviceSetList.item(m)).getAttribute("name"));
-                                    if (((Element) mDocDeviceSetList.item(m)).getAttribute("name").equals(
-                                            ((Element) docDeviceSetList.item(k)).getAttribute("name"))) {
+                                    Element mDocDeviceSet = (Element) mDocDeviceSetList.item(m);
+                                    logger.debug("DeviceSet mDoc: [" + m + " / " + mDocDeviceSetList.getLength() + " ] "
+                                            + mDocDeviceSet.getAttribute("name"));
+                                    if (mDocDeviceSet.getAttribute("name").equals(docDeviceSet.getAttribute("name"))) {
                                         devsetExists = true;
                                         break;
                                     }
                                 }
+
                                 // If the symbol does not exist in the merge
                                 // document's library, add it
                                 if (!devsetExists) {
-                                    mDocDeviceSetsNode.appendChild(mDoc.importNode(docDeviceSetList.item(k), true));
+                                    logger.debug("DeviceSet doc does NOT exist: " + docDeviceSet.getAttribute("name"));
+                                    mDocDeviceSetsNode.appendChild(mDoc.importNode(docDeviceSet, true));
                                 }
-                                // Reset 'symbolExists' flag
+
+                                // Reset 'devsetExists' flag
                                 devsetExists = false;
                             }
+
+                            // Break out of the loop if we found the library
+                            // already exists.
+                            break;
                         }
                     }
 
                     // If the library does not exist in the merge document,
                     // add it
                     if (!exists) {
-                        mDocLibrariesNode.appendChild(mDoc.importNode(docLibraryList.item(i), true));
+                        mDocLibrariesNode.appendChild(mDoc.importNode(docLibrary, true));
                     }
                     // Reset 'exists' flag
                     exists = false;
                 }
 
                 // Handle merging of parts
-                boolean partExists = false;
                 NodeList docPartList = doc.getElementsByTagName("part");
                 for (int p = 0; p < docPartList.getLength(); p++) {
                     Element docPart = (Element) docPartList.item(p);
-                    logger.debug("Part doc: " + docPart.getAttribute("name"));
+                    logger.debug("Part doc: [" + p + " / " + docPartList.getLength() + " ] " + docPart.getAttribute("name"));
                     for (int m = 0; m < mDocPartList.getLength(); m++) {
                         Element mDocPart = (Element) mDocPartList.item(m);
-                        logger.debug("Part mDoc: " + mDocPart.getAttribute("name"));
+                        logger.debug("Part mDoc: [" + m + " / " + mDocPartList.getLength() + " ] " + mDocPart.getAttribute("name"));
                         if (mDocPart.getAttribute("name").equals(docPart.getAttribute("name"))) {
-                            partExists = true;
-
                             // If there is a name conflict, pick a unique name
                             // for part. Try again if there is still a conflict
                             // with the new name.
                             String newName = makeUniqueName(docPart.getAttribute("name"));
-                            while (!isUniqueName(mDocPartList, newName)) {
+                            while (!isUniqueName(mDocPartList, newName) || !isUniqueName(docPartList, newName)) {
                                 newName = makeUniqueName(newName);
                             }
+
+                            // Update all references to the old part name in
+                            // pinref and instance tags
+                            NodeList docPinrefList = doc.getElementsByTagName("pinref");
+                            for (int pinref = 0; pinref < docPinrefList.getLength(); pinref++) {
+                                Element docPinref = (Element) docPinrefList.item(pinref);
+                                if (docPinref.getAttribute("part").equals(docPart.getAttribute("name"))) {
+                                    logger.debug("Pinref doc: [" + pinref + " / " + docPinrefList.getLength() + " ] "
+                                            + docPinref.getAttribute("part"));
+                                    docPinref.setAttribute("part", newName);
+                                }
+                            }
+                            NodeList docInstanceList = doc.getElementsByTagName("instance");
+                            for (int inst = 0; inst < docInstanceList.getLength(); inst++) {
+                                Element docInst = (Element) docInstanceList.item(inst);
+                                if (docInst.getAttribute("part").equals(docPart.getAttribute("name"))) {
+                                    logger.debug("Instance doc: [" + inst + " / " + docInstanceList.getLength() + " ] "
+                                            + docInst.getAttribute("part"));
+                                    docInst.setAttribute("part", newName);
+                                }
+                            }
+
                             docPart.setAttribute("name", newName);
                         }
                     }
 
-                    // If the symbol does not exist in the merge
-                    // document's library, add it.
-                    if (!partExists) {
-                        mDocPartsNode.appendChild(mDoc.importNode(docPart, true));
-                    }
-
-                    // Reset 'symbolExists' flag
-                    partExists = false;
+                    // Merge the part from the original document to the new
+                    // merge document
+                    mDocPartsNode.appendChild(mDoc.importNode(docPart, true));
                 }
 
                 // Handle net renaming
@@ -433,7 +484,7 @@ public class EagleSchematic {
                 NodeList docNetList = doc.getElementsByTagName("net");
                 for (int p = 0; p < docNetList.getLength(); p++) {
                     Element docNet = (Element) docNetList.item(p);
-                    logger.debug("Net doc: " + docNet.getAttribute("name"));
+                    logger.debug("Net doc: [" + p + " / " + docNetList.getLength() + " ] " + docNet.getAttribute("name"));
                     String newNetName = sch.nets.get(docNet.getAttribute("name"));
                     if (newNetName != null) {
                         docNet.setAttribute("name", newNetName);
@@ -441,20 +492,34 @@ public class EagleSchematic {
                 }
 
                 // Handle merging of sheets
-                NodeList mDocSheetList = mDoc.getElementsByTagName("sheet");
-                if (mDocSheetList.getLength() > 0) {
-                    mDocSheetsNode = mDocSheetList.item(0).getParentNode();
+                NodeList mDocSheets = mDoc.getElementsByTagName("sheets");
+                if (mDocSheets.getLength() > 0) {
+                    mDocSheetsNode = mDocSheets.item(0);
                 }
                 else {
                     mDocSheetsNode = mDoc.createElement("sheets");
                 }
                 NodeList docSheetList = doc.getElementsByTagName("sheet");
                 for (int p = 0; p < docSheetList.getLength(); p++) {
-                    logger.debug("Sheet doc: " + ((Element) docSheetList.item(p)).getAttribute("name"));
-                    mDocSheetsNode.appendChild(mDoc.importNode(docSheetList.item(p), true));
+                    Element docSheet = (Element) docSheetList.item(p);
+                    logger.debug("Sheet doc: [" + p + " / " + docSheetList.getLength() + " ] " + docSheet.getAttribute("name"));
+                    mDocSheetsNode.appendChild(mDoc.importNode(docSheet, true));
                 }
             }
 
+            // TODO Test out removing 'constant' attribute from 'attribute' tags
+            // (Eagle shows a warning)
+            //
+            // NodeList mDocAttrList = mDoc.getElementsByTagName("attribute");
+            // for (int at = 0; at < mDocAttrList.getLength(); at++) {
+            // Element mDocAttr = (Element) mDocAttrList.item(at);
+            // logger.debug("Attribute mDoc: [" + at + " / " +
+            // mDocAttrList.getLength() + " ] " +
+            // mDocAttr.getAttribute("attribute"));
+            // mDocAttr.removeAttribute("constant");
+            // }
+
+            // Transform DOM back to Schematic file
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer();
             Properties outFormat = new Properties();
@@ -464,9 +529,8 @@ public class EagleSchematic {
             outFormat.setProperty(OutputKeys.VERSION, "1.0");
             outFormat.setProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperties(outFormat);
-
             DOMSource domSource = new DOMSource(mDoc.getDocumentElement());
-            StreamResult result = new StreamResult(new FileOutputStream("test.sch"));
+            StreamResult result = new StreamResult(new FileOutputStream(mergedSch));
             transformer.transform(domSource, result);
         }
         catch (Exception e) {
@@ -509,6 +573,15 @@ public class EagleSchematic {
         return name.substring(0, i).concat(String.valueOf(num));
     }
 
+    private static boolean isUniqueLayerNum(NodeList mDocList, int newNum) {
+        for (int m = 0; m < mDocList.getLength(); m++) {
+            if (((Element) mDocList.item(m)).getAttribute("number").equals(String.valueOf(newNum))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * @param schematicNetMap
      *            Map of schematics to the net (in that schematic) which is to
@@ -519,6 +592,17 @@ public class EagleSchematic {
     public static void connect(Map<EagleSchematic, String> schematicNetMap, String newName) {
         for (Entry<EagleSchematic, String> e : schematicNetMap.entrySet()) {
             e.getKey().setNet(e.getValue(), newName);
+        }
+    }
+
+    public static void connectWires(List<Link> links) {
+        for (Link wb : links) {
+            for (Wire w : ((WireBundle) wb).getWires()) {
+                Map<EagleSchematic, String> schematicNetMap = new HashMap<EagleSchematic, String>();
+                schematicNetMap.put(((Circuit) w.getSrc().getParent()).getSchematic(), w.getSrc().getNet());
+                schematicNetMap.put(((Circuit) w.getDest().getParent()).getSchematic(), w.getDest().getNet());
+                EagleSchematic.connect(schematicNetMap, w.getName());
+            }
         }
     }
 
@@ -541,6 +625,15 @@ public class EagleSchematic {
     @Override
     public EagleSchematic clone() {
         return new EagleSchematic(schematic);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "EagleSchematic [" + (schematic != null ? "schematic=" + schematic : "") + "]";
     }
 
 }

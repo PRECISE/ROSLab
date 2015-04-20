@@ -35,6 +35,13 @@ public class WireBundle extends Link {
         this.wires = wires;
     }
 
+    /**
+     * @return the wires
+     */
+    public List<Wire> getWires() {
+        return wires;
+    }
+
     public boolean addWire(Wire w) {
         return wires.add(w);
     }

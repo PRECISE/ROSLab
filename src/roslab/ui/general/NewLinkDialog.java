@@ -67,7 +67,13 @@ public class NewLinkDialog implements Initializable {
                     destEndpoints.add(e);
                 }
             }
-            destBox.setItems(destEndpoints);
+            if (destEndpoints.size() > 0) {
+                destBox.setItems(destEndpoints);
+                destBox.setDisable(false);
+            }
+            else {
+                destBox.setDisable(true);
+            }
         }
     }
 
@@ -138,7 +144,7 @@ public class NewLinkDialog implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO Auto-generated method stub
+        this.destBox.setDisable(true);
 
     }
 }

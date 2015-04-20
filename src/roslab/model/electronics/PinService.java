@@ -9,12 +9,21 @@ package roslab.model.electronics;
 public class PinService implements Cloneable {
 
     String name;
-    int number;
+    int number = -1;
     char one_to_many = '#';  // Default to 1-to-1 connection type
-    String io;
-    String superServiceName;
-    int superServiceNumber;
-    int af;
+    String io = "#";
+    String superServiceName = "#";
+    int superServiceNumber = -1;
+    int af = -1;
+
+    /**
+     * @param name
+     * @param number
+     * @param io
+     */
+    public PinService(String name) {
+        this.name = name;
+    }
 
     /**
      * @param name

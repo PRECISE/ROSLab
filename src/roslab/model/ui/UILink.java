@@ -30,9 +30,9 @@ public class UILink extends Line {
         super(link.getSrc().getUIEndpoint().getCenterX(), link.getSrc().getUIEndpoint().getCenterY(), link.getDest().getUIEndpoint().getCenterX(),
                 link.getDest().getUIEndpoint().getCenterY());
         this.link = link;
-        src = link.getSrc().getUIEndpoint();
-        dest = link.getDest().getUIEndpoint();
         this.link.setUILink(this);
+        src = this.link.getSrc().getUIEndpoint();
+        dest = this.link.getDest().getUIEndpoint();
         src.addUILink(this);
         dest.addUILink(this);
     }

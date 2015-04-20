@@ -20,6 +20,7 @@ public class Pin extends Feature {
     String portName = "";
     int pinIn = 0;
     boolean required = false;
+    int destinationSet = -1;
     String net = null;
 
     /**
@@ -175,17 +176,44 @@ public class Pin extends Feature {
             return false;
         }
 
+        boolean result = true;
+
         // Check if any of the input pin's services match this pin's assigned
         // service. If so, a connection can be made.
+        boolean serviceCheck = false;
         for (PinService ps : p.getServices()) {
             if (ps.name.equals(this.assignedService.name)) {
-                return true;
+                serviceCheck = true;
+                boolean ioCheck = false;
+                if (!this.assignedService.io.equals("#")
+                        && ((this.assignedService.io.equals("I") && !ps.io.equals("I"))
+                                || (this.assignedService.io.equals("O") && !ps.io.equals("O")) || this.assignedService.io.equals("IO"))) {
+                    ioCheck = true;
+                }
+                if (this.assignedService.io.equals("#")) {
+                    ioCheck = true;
+                }
+                serviceCheck = serviceCheck && ioCheck;
+
+                // TODO Modify this to make sure pins in the same SuperService
+                // will connect to the same SuperService on the destination
+                // circuit
+                /*
+                 * boolean superServiceCheck = false;
+                 * if
+                 * (ps.superServiceName.equals(this.assignedService.superServiceName
+                 * )) {
+                 * superServiceCheck = true;
+                 * }
+                 * serviceCheck = serviceCheck && superServiceCheck;
+                 */
             }
         }
+        result = result && serviceCheck;
 
         // If none of the input pin's services match this pin's assigned
         // service, no connection can be made.
-        return false;
+        return result;
     }
 
     /**
@@ -203,7 +231,23 @@ public class Pin extends Feature {
             for (PinService ps : p.getServices()) {
                 if (ps.name.equals(this.assignedService.name)) {
                     p.assignedService = ps;
-                    return new Wire(this.parent.getName() + "." + ps.name + "--" + p.parent.getName() + "." + p.assignedService.name, this, p);
+
+                    // Handle bussable service
+                    if (ps.one_to_many == '+' && this.assignedService.one_to_many != '-') {
+                        return new Wire(ps.name, this, p);
+                    }
+
+                    String wireString = "";
+                    wireString += this.parent.getName() + "." + this.assignedService.name;
+                    if (this.assignedService.number != -1) {
+                        wireString += "." + this.assignedService.number;
+                    }
+                    wireString += "--" + p.parent.getName() + "." + p.assignedService.name;
+                    if (p.assignedService.number != -1) {
+                        wireString += "." + p.assignedService.number;
+                    }
+
+                    return new Wire(wireString, this, p);
                 }
             }
         }
@@ -219,22 +263,27 @@ public class Pin extends Feature {
      */
     public static Pin getPinFromString(String pin, Circuit parent) {
         // Example:
-        // GPIO,#,+,IO/PWM,1,+,IO,TIMER,15,1/MISO,#,+,IO,SPI,2,5/PWM_N,2,+,O,TIMER,1,6.B,14
+        // GPIO,#,+,IO/PWM,1,+,IO,TIMER,15,1/MISO,#,+,IO,SPI,2,5/PWM_N,2,+,O,TIMER,1,6.B,14@1
         String[] pinArray = { pin };
+        int destSet = -1;
 
-        // Split on period character if the string contains them.
-        if (pin.contains(".")) {
-            pinArray = pin.split("\\.");
+        // Split on 'at' character to get the destination set value.
+        if (pinArray[0].contains("@")) {
+            pinArray = pin.split("\\@");
+            destSet = Integer.parseInt(pinArray[1]);
         }
 
-        // The input pin string should never have more than one period.
+        // Split on period character if the string contains them.
+        pinArray = pinArray[0].split("\\.");
+
+        // The input pin string should never have more than two periods.
         if (pinArray.length > 2) {
             throw new IllegalArgumentException("Bad input pin string - too many periods");
         }
 
         Pin result = null;
 
-        if (pinArray.length == 2) {
+        if (pinArray.length > 1) {
             if (pinArray[1].contains(",")) {
                 String[] portArray = pinArray[1].split("\\,");
                 result = new Pin(portArray[0] + portArray[1], parent);
@@ -250,49 +299,47 @@ public class Pin extends Feature {
             result = new Pin(pinArray[0], parent);
         }
 
+        result.destinationSet = destSet;
+
         for (String serviceStr : pinArray[0].split("/")) {
             StringTokenizer st = new StringTokenizer(serviceStr, ",");
 
-            String service = null;
-            int serviceNum = -1;
-            char oneToMany = '#';
-            String io = null;
-            String superService = null;
-            int superServiceNum = -1;
-            int af = -1;
+            PinService ps = null;
 
             if (st.hasMoreTokens()) {
-                service = st.nextToken();
+                ps = new PinService(st.nextToken());
             }
             if (st.hasMoreTokens()) {
                 String temp = st.nextToken();
                 if (!temp.equals("#")) {
-                    serviceNum = Integer.valueOf(temp);
+                    ps.number = Integer.valueOf(temp);
                 }
             }
             if (st.hasMoreTokens()) {
-                oneToMany = st.nextToken().charAt(0);
+                ps.one_to_many = st.nextToken().charAt(0);
             }
             if (st.hasMoreTokens()) {
-                io = st.nextToken();
+                ps.io = st.nextToken();
             }
             if (st.hasMoreTokens()) {
-                superService = st.nextToken();
+                ps.superServiceName = st.nextToken();
             }
             if (st.hasMoreTokens()) {
                 String temp = st.nextToken();
                 if (!temp.equals("#")) {
-                    superServiceNum = Integer.valueOf(temp);
+                    ps.superServiceNumber = Integer.valueOf(temp);
                 }
             }
             if (st.hasMoreTokens()) {
                 String temp = st.nextToken();
                 if (!temp.equals("#")) {
-                    af = Integer.valueOf(temp);
+                    ps.af = Integer.valueOf(temp);
                 }
             }
 
-            result.getServices().add(new PinService(service, serviceNum, oneToMany, io, superService, superServiceNum, af));
+            if (ps != null) {
+                result.getServices().add(ps);
+            }
         }
 
         // If the pin only has one service, make that the assigned service.
@@ -313,5 +360,24 @@ public class Pin extends Feature {
             copy.add(ps.clone());
         }
         return copy;
+    }
+
+    public PinService getServiceByName(String name) {
+        for (PinService p : services) {
+            if (p.name.equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public static Pin[] toPinArray(List<Pin> componentPins) {
+        Pin[] result = new Pin[componentPins.size()];
+
+        for (int i = 0; i < componentPins.size(); i++) {
+            result[i] = componentPins.get(i);
+        }
+
+        return result;
     }
 }
