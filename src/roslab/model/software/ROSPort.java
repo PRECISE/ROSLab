@@ -195,8 +195,8 @@ public class ROSPort extends Feature implements Endpoint {
                 passedFanCheck = false;
             }
 
-            // Valid connection if directions are opposite, but types match.
-            return (this.isSubscriber() != p.isSubscriber()) && (this.getType() == p.getType()) && passedFanCheck;
+            // Valid connection if directions are opposite, but types match.            
+            return (this.isSubscriber() != p.isSubscriber()) && (this.getType().toString().equals(p.getType().toString())) && passedFanCheck;
         }
         return false;
     }

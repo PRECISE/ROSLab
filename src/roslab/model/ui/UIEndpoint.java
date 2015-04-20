@@ -3,15 +3,27 @@
  */
 package roslab.model.ui;
 
+import java.awt.MouseInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Node;
+import roslab.model.software.ROSNode;
+import roslab.model.software.ROSPort;
 
 /**
  * @author Peter Gebhard
@@ -24,10 +36,13 @@ public class UIEndpoint extends Group {
     private static final double TEXT_Y_OFFSET = 3;
     Endpoint endpoint;
     Circle endpointCircle;
+    Line addPortLine;
     Text endpointText;
     UINode uiparent;
     List<UILink> uilinks = new ArrayList<UILink>();
-    boolean rightSideText;
+    boolean rightSideText;    
+    LineDraw drawTask;
+    Thread drawLineThread;
 
     // X AND Y position of mouse during actions
     double mousexCircle = 0;
@@ -53,12 +68,107 @@ public class UIEndpoint extends Group {
         }
         this.rightSideText = rightSideText;
         setupEndpointText(this.endpoint, this.rightSideText);
+        addPortLine = new Line(centerX, centerY, centerX, centerY);
+        addPortLine.setMouseTransparent(true);
         this.uiparent = uiparent;
-        this.getChildren().addAll(this.endpointCircle, this.endpointText);
+        this.getChildren().addAll(this.endpointCircle, this.endpointText, addPortLine);
         this.endpointCircle.setVisible(visible);
         this.endpointText.setVisible(visible);
+        addPortLine.setVisible(false);
+        
+        endpointCircle.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+            	setCursor(Cursor.CLOSED_HAND);
+            	setParentToFront();
+            }
+        });
+            
+        endpointCircle.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                setCursor(Cursor.OPEN_HAND);
+                addPortLine.setVisible(false);
+                if(getEndpoint() instanceof ROSPort && getParentNode() instanceof ROSNode) {
+                	drawTask.kill();
+                }
+            }
+        });
+        
+        endpointCircle.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    setCursor(Cursor.OPEN_HAND);
+                }
+            }
+        });
+        
+        endpointCircle.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    setCursor(Cursor.DEFAULT);
+                }
+            }
+        });
+                
+        endpointCircle.setOnDragDetected(new EventHandler<MouseEvent>(){
+        	@Override
+        	public void handle(MouseEvent event) {
+        		if(getEndpoint() instanceof ROSPort && getParentNode() instanceof ROSNode) {
+        			Dragboard db = startDragAndDrop(TransferMode.COPY);
+        			db.setDragView(new Image("/roslab/model/ui/Drag.png"));
+        			ClipboardContent content = new ClipboardContent();
+        			String endpointType = ((ROSPort)getEndpoint()).getType().toString();
+        			String endpointName = getEndpoint().getName();
+        			int isSub = 0;
+        			if(((ROSPort)getEndpoint()).isInput()) {
+        				isSub = 1;
+        			}
+        			content.putString(endpointName + " " + endpointType + " " + isSub);
+        			db.setContent(content);
+        			System.out.println(db.getString());
+        			drawLine();
+        		}
+        		event.consume();
+        	}    	
+        });
+        
     }
-
+    
+    private class LineDraw implements Runnable {
+    	
+	    private volatile boolean drawing = true;
+	    
+		@Override
+		public void run() {
+			addPortLine.setStartX(endpointCircle.getCenterX());
+			addPortLine.setStartY(endpointCircle.getCenterY());			
+	    	while(drawing) {
+	    			double x = MouseInfo.getPointerInfo().getLocation().getX();
+	    			double y = MouseInfo.getPointerInfo().getLocation().getY();
+	    			Point2D p = getParentNode().getUINode().getParent().screenToLocal(x, y);
+	    			addPortLine.setEndX(p.getX());
+	    			addPortLine.setEndY(p.getY());
+	    			addPortLine.setVisible(true); 	
+	    	}
+	    	addPortLine.setEndX(endpointCircle.getCenterX());
+	    	addPortLine.setEndY(endpointCircle.getCenterY());
+			addPortLine.setVisible(false);
+		}	
+		
+		public void kill() {
+			drawing = false;
+		}
+    }
+    
+    private void drawLine() {
+    	drawTask = new LineDraw();
+    	drawLineThread = new Thread(drawTask);
+    	drawLineThread.start();
+    }
+    
     /**
      * @param endpoint
      * @param rightSideText
@@ -181,5 +291,17 @@ public class UIEndpoint extends Group {
 
     public double getCenterY() {
         return this.endpointCircle.getCenterY();
+    }
+    
+    public void setCircleStyle(boolean isSubscriber) {
+    	if(isSubscriber) {
+    		endpointCircle.setStyle("-fx-fill:yellow");
+    	} else {
+    		endpointCircle.setStyle("-fx-fill:blue");   		
+    	}
+    }
+    
+    private void setParentToFront() {
+    	uiparent.toFront();
     }
 }
