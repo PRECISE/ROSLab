@@ -51,41 +51,55 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.3062360801781737, 0.7160356347438753" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.7683741648106904" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <TreeView fx:id="treeView" prefHeight="254.0" prefWidth="150.0" />
         <TabPane prefHeight="200.0" prefWidth="200.0" side="TOP" tabClosingPolicy="UNAVAILABLE">
           <tabs>
             <Tab fx:id="eeTab" closable="false" onSelectionChanged="#tabChanged" text="Electrical">
               <content>
-                <ScrollPane prefHeight="200.0" prefWidth="200.0">
-                  <content>
-                    <AnchorPane fx:id="eePane" prefHeight="200.0" prefWidth="200.0" />
-                  </content>
-                </ScrollPane>
+                <SplitPane dividerPositions="0.3343065693430657" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
+                  <items>
+                    <TreeView fx:id="eeTreeView" />
+                    <ScrollPane id="" fitToHeight="true" fitToWidth="true" prefHeight="-1.0" prefWidth="-1.0">
+                      <content>
+                        <AnchorPane fx:id="eePane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                      </content>
+                    </ScrollPane>
+                  </items>
+                </SplitPane>
               </content>
             </Tab>
-            <Tab fx:id="swTab" closable="false" onSelectionChanged="#tabChanged" text="Software">
+            <Tab id="swTab" fx:id="swTab" closable="false" onSelectionChanged="#tabChanged" text="Software">
               <content>
-                <ScrollPane prefHeight="200.0" prefWidth="200.0">
-                  <content>
-                    <AnchorPane fx:id="swPane" prefHeight="200.0" prefWidth="200.0" />
-                  </content>
-                </ScrollPane>
+                <SplitPane dividerPositions="0.3343065693430657" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
+                  <items>
+                    <TreeView fx:id="swTreeView" />
+                    <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="517.0" prefWidth="309.0">
+                      <content>
+                        <AnchorPane fx:id="swPane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                      </content>
+                    </ScrollPane>
+                  </items>
+                </SplitPane>
               </content>
             </Tab>
-            <Tab fx:id="hwTab" closable="false" onSelectionChanged="#tabChanged" text="Mechanical">
+            <Tab id="hwTab" fx:id="hwTab" closable="false" onSelectionChanged="#tabChanged" text="Mechanical">
               <content>
-                <ScrollPane prefHeight="200.0" prefWidth="200.0">
-                  <content>
-                    <AnchorPane fx:id="hwPane" prefHeight="200.0" prefWidth="200.0" />
-                  </content>
-                </ScrollPane>
+                <SplitPane dividerPositions="0.3343065693430657" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
+                  <items>
+                    <TreeView fx:id="hwTreeView" />
+                    <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="-1.0" prefWidth="-1.0">
+                      <content>
+                        <AnchorPane fx:id="hwPane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                      </content>
+                    </ScrollPane>
+                  </items>
+                </SplitPane>
               </content>
             </Tab>
           </tabs>
         </TabPane>
-        <Accordion>
+        <Accordion prefHeight="555.0" prefWidth="266.0">
           <panes>
             <TitledPane animated="false" text="Features">
               <content>

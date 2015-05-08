@@ -30,11 +30,14 @@ import javafx.util.Callback;
 
 import org.apache.log4j.BasicConfigurator;
 
+import roslab.model.electronics.Circuit;
 import roslab.model.general.Configuration;
 import roslab.model.general.Endpoint;
 import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
+import roslab.model.mechanics.HWBlock;
+import roslab.model.software.ROSNode;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
 import roslab.ui.general.NewLinkDialog;
@@ -46,9 +49,19 @@ import roslab.ui.software.NewUserDefinedDialog;
 public class ROSLabController implements Initializable {
 
     @FXML
-    TreeView<String> treeView;
+    TreeView<String> swTreeView;
 
-    ROSLabTree tree;
+    ROSLabTree swTree;
+
+    @FXML
+    TreeView<String> hwTreeView;
+
+    ROSLabTree hwTree;
+
+    @FXML
+    TreeView<String> eeTreeView;
+
+    ROSLabTree eeTree;
 
     @FXML
     AnchorPane swPane;
@@ -69,9 +82,17 @@ public class ROSLabController implements Initializable {
     Tab eeTab;
 
     Random r = new Random();
-    Library library = new Library(new ArrayList<Node>());
-    Configuration config;
-    Group eeUIObjects;
+
+    Library swLibrary = new Library(new ArrayList<Node>());
+    Library hwLibrary = new Library(new ArrayList<Node>());
+    Library eeLibrary = new Library(new ArrayList<Node>());
+    Configuration swConfig;
+    Configuration hwConfig;
+    Configuration eeConfig;
+    Group swUIObjects = new Group();
+    Group hwUIObjects = new Group();
+    Group eeUIObjects = new Group();
+
     Rectangle selectionRectangle;
     double selectionX;
     double selectionY;
@@ -80,7 +101,9 @@ public class ROSLabController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        assert treeView != null : "fx:id\"treeView\" was not injected";
+        assert swTreeView != null : "fx:id\"swTreeView\" was not injected";
+        assert hwTreeView != null : "fx:id\"hwTreeView\" was not injected";
+        assert eeTreeView != null : "fx:id\"eeTreeView\" was not injected";
 
         BasicConfigurator.configure();
 
@@ -90,21 +113,45 @@ public class ROSLabController implements Initializable {
         // enableSelectionRectangle(hwPane);
         // enableSelectionRectangle(eePane);
 
-        // library.loadPlatform("landshark");
-        library.loadElectronics();
         // PythonLibraryHelper p = new PythonLibraryHelper();
-        config = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
-        tree = new ROSLabTree(library, config, this);
-        eeUIObjects = new Group();
-        eePane.getChildren().add(eeUIObjects);
 
-        // Setup TreeView
-        treeView.setRoot(tree);
-        treeView.setShowRoot(false);
-        treeView.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>() {
+        // TODO: Extract these similar initialization steps into a separate
+        // method
+        swLibrary.loadPlatform("landshark");
+        swConfig = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
+        swTree = new ROSLabTree(swLibrary, swConfig, this);
+        swPane.getChildren().add(swUIObjects);
+        swTreeView.setRoot(swTree);
+        swTreeView.setShowRoot(false);
+        swTreeView.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>() {
             @Override
             public TreeCell<String> call(TreeView<String> p) {
-                return tree.new TreeCellImpl();
+                return swTree.new TreeCellImpl();
+            }
+        });
+
+        eeLibrary.loadElectronics();
+        eeConfig = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
+        eeTree = new ROSLabTree(eeLibrary, eeConfig, this);
+        eePane.getChildren().add(eeUIObjects);
+        eeTreeView.setRoot(eeTree);
+        eeTreeView.setShowRoot(false);
+        eeTreeView.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>() {
+            @Override
+            public TreeCell<String> call(TreeView<String> p) {
+                return eeTree.new TreeCellImpl();
+            }
+        });
+
+        hwConfig = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
+        hwTree = new ROSLabTree(hwLibrary, hwConfig, this);
+        hwPane.getChildren().add(hwUIObjects);
+        hwTreeView.setRoot(hwTree);
+        hwTreeView.setShowRoot(false);
+        hwTreeView.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>() {
+            @Override
+            public TreeCell<String> call(TreeView<String> p) {
+                return hwTree.new TreeCellImpl();
             }
         });
 
@@ -204,17 +251,47 @@ public class ROSLabController implements Initializable {
         });
     }
 
-    public void addLibraryNode(Node n) {
-        library.addNode(n);
-        tree.addLibraryNode(n);
+    public void addLibraryNode(ROSNode n) {
+        swLibrary.addNode(n);
+        swTree.addLibraryNode(n);
     }
 
-    public void removeLibraryNode(Node n) {
-        library.removeNode(n);
-        tree.removeLibraryNode(n);
+    public void removeLibraryNode(ROSNode n) {
+        swLibrary.removeNode(n);
+        swTree.removeLibraryNode(n);
     }
 
-    public void updateLibraryNode(Node n) {
+    public void updateLibraryNode(ROSNode n) {
+        removeLibraryNode(n);
+        addLibraryNode(n);
+    }
+
+    public void addLibraryNode(Circuit n) {
+        eeLibrary.addNode(n);
+        eeTree.addLibraryNode(n);
+    }
+
+    public void removeLibraryNode(Circuit n) {
+        eeLibrary.removeNode(n);
+        eeTree.removeLibraryNode(n);
+    }
+
+    public void updateLibraryNode(Circuit n) {
+        removeLibraryNode(n);
+        addLibraryNode(n);
+    }
+
+    public void addLibraryNode(HWBlock n) {
+        hwLibrary.addNode(n);
+        hwTree.addLibraryNode(n);
+    }
+
+    public void removeLibraryNode(HWBlock n) {
+        hwLibrary.removeNode(n);
+        hwTree.removeLibraryNode(n);
+    }
+
+    public void updateLibraryNode(HWBlock n) {
         removeLibraryNode(n);
         addLibraryNode(n);
     }
@@ -225,9 +302,13 @@ public class ROSLabController implements Initializable {
         switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
             case "ROSNode":
                 swPane.getChildren().add(uin);
+                swConfig.addNode(n);
+                swTree.addConfigNode(n);
                 break;
             case "HWBlock":
                 hwPane.getChildren().add(uin);
+                hwConfig.addNode(n);
+                hwTree.addConfigNode(n);
                 break;
             case "Circuit":
                 eeUIObjects.getChildren().add(uin);
@@ -244,11 +325,10 @@ public class ROSLabController implements Initializable {
                     }
                 }
 
-                // eePane.getChildren().add(uin);
+                eeConfig.addNode(n);
+                eeTree.addConfigNode(n);
                 break;
         }
-        config.addNode(n);
-        tree.addConfigNode(n);
     }
 
     public void addConfigLink(Link l) {
@@ -258,15 +338,22 @@ public class ROSLabController implements Initializable {
         Object[] objArray = null;
         switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
             case "ROSNode":
-                // swPane.getChildren().add(uin);
+                swConfig.addLink(l);
+                swTree.addConfigLink(l);
+                objArray = swUIObjects.getChildren().toArray();
                 break;
             case "HWBlock":
-                // hwPane.getChildren().add(uin);
+                hwConfig.addLink(l);
+                hwTree.addConfigLink(l);
+                objArray = hwUIObjects.getChildren().toArray();
                 break;
             case "Circuit":
+                eeConfig.addLink(l);
+                eeTree.addConfigLink(l);
                 objArray = eeUIObjects.getChildren().toArray();
                 break;
         }
+
         // Order all of the UI objects
         for (Object nn : objArray) {
             if (nn instanceof UINode) {
@@ -276,26 +363,27 @@ public class ROSLabController implements Initializable {
                 ((UILink) nn).toBack();
             }
         }
-
-        config.addLink(l);
-        tree.addConfigLink(l);
     }
 
     public void removeConfigNode(Node n) {
         String nodeClassName = n.getClass().getName();
         switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
             case "ROSNode":
+                swConfig.removeNode(n);
+                swTree.removeConfigNode(n);
                 swPane.getChildren().remove(n.getUINode());
                 break;
             case "HWBlock":
+                hwConfig.removeNode(n);
+                hwTree.removeConfigNode(n);
                 hwPane.getChildren().remove(n.getUINode());
                 break;
             case "Circuit":
+                eeConfig.removeNode(n);
+                eeTree.removeConfigNode(n);
                 eePane.getChildren().remove(n.getUINode());
                 break;
         }
-        config.removeNode(n);
-        tree.removeConfigNode(n);
 
         // Remove any links associated with this node
         for (Endpoint e : n.getEndpoints()) {
@@ -309,24 +397,65 @@ public class ROSLabController implements Initializable {
     }
 
     public void removeConfigLink(Link l) {
+        String linkSrcClassName = l.getSrc().getClass().getName();
+        switch (linkSrcClassName.substring(linkSrcClassName.lastIndexOf('.') + 1)) {
+            case "ROSPort":
+                swConfig.removeLink(l);
+                swTree.removeConfigLink(l);
+                break;
+            case "Joint":
+                hwConfig.removeLink(l);
+                hwTree.removeConfigLink(l);
+                break;
+            case "Circuit":
+                eeConfig.removeLink(l);
+                eeTree.removeConfigLink(l);
+                break;
+        }
         l.destroy();
-        config.removeLink(l);
-        tree.removeConfigLink(l);
         l = null;
     }
 
     /**
      * @return the library
      */
-    public Library getLibrary() {
-        return library;
+    public Library getSWLibrary() {
+        return swLibrary;
     }
 
     /**
      * @return the config
      */
-    public Configuration getConfig() {
-        return config;
+    public Configuration getSWConfig() {
+        return swConfig;
+    }
+
+    /**
+     * @return the library
+     */
+    public Library getHWLibrary() {
+        return hwLibrary;
+    }
+
+    /**
+     * @return the config
+     */
+    public Configuration getHWConfig() {
+        return hwConfig;
+    }
+
+    /**
+     * @return the library
+     */
+    public Library getEELibrary() {
+        return eeLibrary;
+    }
+
+    /**
+     * @return the config
+     */
+    public Configuration getEEConfig() {
+        return eeConfig;
     }
 
     @FXML
@@ -363,7 +492,7 @@ public class ROSLabController implements Initializable {
      *            the person object to be edited
      * @return true if the user clicked OK, false otherwise.
      */
-    public boolean showNewLinkDialog() {
+    public boolean showNewLinkDialog(Configuration config) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
@@ -405,7 +534,7 @@ public class ROSLabController implements Initializable {
      *            the person object to be edited
      * @return true if the user clicked OK, false otherwise.
      */
-    public boolean showNewNodeDialog() {
+    public boolean showNewNodeDialog(Library library) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
