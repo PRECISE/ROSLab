@@ -3513,7 +3513,7 @@ type 0309, grid 2.5 mm</description>
 <pinref part="GND1" gate="1" pin="GND"/>
 </segment>
 </net>
-<net name="GPIO,#,-,I/PWM,#,-,I,TIMER" class="0">
+<net name="PWM,#,-,I,TIMER" class="0">
 <segment>
 <pinref part="R_LIM_1" gate="G$1" pin="1"/>
 <wire x1="55.88" y1="58.42" x2="53.34" y2="58.42" width="0.1524" layer="91"/>

@@ -3657,6 +3657,7 @@ Source: AVX .. aphvc.pdf</description>
 <junction x="-10.16" y="10.16"/>
 <junction x="0" y="10.16"/>
 <pinref part="U$2" gate="G$1" pin="BLOCK_REQUIREMENT"/>
+<label x="-10.16" y="10.16" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="3V7,#,+,O" class="0">
@@ -3667,6 +3668,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="25.4" y1="10.16" x2="38.1" y2="10.16" width="0.1524" layer="91"/>
 <junction x="38.1" y="10.16"/>
 <pinref part="U$3" gate="G$1" pin="BLOCK_REQUIREMENT"/>
+<label x="38.1" y="10.16" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
