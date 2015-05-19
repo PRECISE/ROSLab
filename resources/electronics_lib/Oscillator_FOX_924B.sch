@@ -282,7 +282,7 @@
 <wire x1="215.9" y1="383.54" x2="213.36" y2="383.54" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="10MHZ_CMOS,#,+,O,OSCILLATOR/12MHZ_CMOS,#,+,O,OSCILLATOR,16MHZ_CMOS,#,+,O,OSCILLATOR/20MHZ_CMOS,#,+,O,OSCILLATOR/25MHZ_CMOS,#,+,O,OSCILLATOR/27MHZ_CMOS,#,+,O,OSCILLATOR" class="0">
+<net name="10MHZ_CMOS,#,+,O,OSCILLATOR/12MHZ_CMOS,#,+,O,OSCILLATOR/16MHZ_CMOS,#,+,O,OSCILLATOR/20MHZ_CMOS,#,+,O,OSCILLATOR/25MHZ_CMOS,#,+,O,OSCILLATOR/27MHZ_CMOS,#,+,O,OSCILLATOR" class="0">
 <segment>
 <pinref part="OSC1" gate="G$1" pin="OUTPUT"/>
 <wire x1="241.3" y1="386.08" x2="246.38" y2="386.08" width="0.1524" layer="91"/>
