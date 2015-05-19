@@ -85,7 +85,7 @@ public class UINode extends Rectangle {
             // Check if the UINode is high enough to show all endpoints
             if (this.getWidth() < (longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
                     + UINODE_WIDTH_PADDING) {
-                this.setWidth((longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
+                this.setNodeWidth((longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
                         + UINODE_WIDTH_PADDING);
             }
 
@@ -171,7 +171,7 @@ public class UINode extends Rectangle {
         this.nodeText.toFront();
     }
 
-    private void setWidth(int i) {
+    private void setNodeWidth(int i) {
         this.setWidth(i);
         this.nodeText.setX(this.getX() + (this.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
     }
