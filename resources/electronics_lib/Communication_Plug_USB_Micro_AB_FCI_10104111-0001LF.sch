@@ -5995,12 +5995,12 @@ We've spent an enormous amount of time creating and checking these footprints an
 <packages>
 </packages>
 <symbols>
-<symbol name="BLOCK_RECOMMENDED">
+<symbol name="BLOCK_OPTIONAL">
 <pin name="BLOCK_CONNECTOR" x="0" y="0" visible="pad" length="short" direction="sup"/>
-<wire x1="2.54" y1="0" x2="3.81" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="3.81" y1="-1.27" x2="5.08" y2="0" width="0.254" layer="94"/>
-<wire x1="5.08" y1="0" x2="3.81" y2="1.27" width="0.254" layer="94"/>
-<wire x1="3.81" y1="1.27" x2="2.54" y2="0" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-1.27" x2="5.08" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-1.27" x2="5.08" y2="1.27" width="0.254" layer="94"/>
+<wire x1="5.08" y1="1.27" x2="2.54" y2="1.27" width="0.254" layer="94"/>
+<wire x1="2.54" y1="1.27" x2="2.54" y2="-1.27" width="0.254" layer="94"/>
 </symbol>
 <symbol name="BLOCK_REQUIREMENT">
 <pin name="BLOCK_REQUIREMENT" x="0" y="0" visible="pad" length="short" direction="sup"/>
@@ -6015,9 +6015,9 @@ We've spent an enormous amount of time creating and checking these footprints an
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="BLOCK_RECOMMENDED">
+<deviceset name="BLOCK_OPTIONAL">
 <gates>
-<gate name="G$1" symbol="BLOCK_RECOMMENDED" x="0" y="0"/>
+<gate name="G$1" symbol="BLOCK_OPTIONAL" x="0" y="0"/>
 </gates>
 <devices>
 <device name="">
@@ -6057,7 +6057,7 @@ We've spent an enormous amount of time creating and checking these footprints an
 <part name="R1" library="resistor" deviceset="R-US_" device="R0603" value="22"/>
 <part name="R3" library="resistor" deviceset="R-US_" device="R0603" value="22"/>
 <part name="X1" library="SparkFun" deviceset="USB" device="-MICROB"/>
-<part name="U$1" library="block_parts" deviceset="BLOCK_RECOMMENDED" device=""/>
+<part name="U$1" library="block_parts" deviceset="BLOCK_OPTIONAL" device=""/>
 <part name="U$2" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 <part name="U$3" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 </parts>

@@ -5587,12 +5587,12 @@ type 0309, grid 2.5 mm</description>
 <packages>
 </packages>
 <symbols>
-<symbol name="BLOCK_RECOMMENDED">
+<symbol name="BLOCK_OPTIONAL">
 <pin name="BLOCK_CONNECTOR" x="0" y="0" visible="pad" length="short" direction="sup"/>
-<wire x1="2.54" y1="0" x2="3.81" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="3.81" y1="-1.27" x2="5.08" y2="0" width="0.254" layer="94"/>
-<wire x1="5.08" y1="0" x2="3.81" y2="1.27" width="0.254" layer="94"/>
-<wire x1="3.81" y1="1.27" x2="2.54" y2="0" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-1.27" x2="5.08" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-1.27" x2="5.08" y2="1.27" width="0.254" layer="94"/>
+<wire x1="5.08" y1="1.27" x2="2.54" y2="1.27" width="0.254" layer="94"/>
+<wire x1="2.54" y1="1.27" x2="2.54" y2="-1.27" width="0.254" layer="94"/>
 </symbol>
 <symbol name="BLOCK_REQUIREMENT">
 <pin name="BLOCK_REQUIREMENT" x="0" y="0" visible="pad" length="short" direction="sup"/>
@@ -5607,9 +5607,9 @@ type 0309, grid 2.5 mm</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="BLOCK_RECOMMENDED">
+<deviceset name="BLOCK_OPTIONAL">
 <gates>
-<gate name="G$1" symbol="BLOCK_RECOMMENDED" x="0" y="0"/>
+<gate name="G$1" symbol="BLOCK_OPTIONAL" x="0" y="0"/>
 </gates>
 <devices>
 <device name="">
@@ -5658,7 +5658,7 @@ type 0309, grid 2.5 mm</description>
 <part name="R2" library="resistor" deviceset="R-US_" device="R0603" value="1.5k"/>
 <part name="R1" library="resistor" deviceset="R-US_" device="R0603" value="22"/>
 <part name="R3" library="resistor" deviceset="R-US_" device="R0603" value="22"/>
-<part name="U$1" library="block_parts" deviceset="BLOCK_RECOMMENDED" device=""/>
+<part name="U$1" library="block_parts" deviceset="BLOCK_OPTIONAL" device=""/>
 <part name="U$2" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 <part name="U$3" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 </parts>
