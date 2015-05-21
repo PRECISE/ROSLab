@@ -15,7 +15,7 @@
 }
 
 .ROSNode {
-    -fx-stroke: black;
+    -fx-stroke: blue;
 }
 
 
@@ -30,7 +30,7 @@
 }
 
 .ROSPort {
-    -fx-fill: blue;
+    -fx-fill: red;
 }
 
 .ROSPortOut {

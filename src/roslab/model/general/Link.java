@@ -36,7 +36,8 @@ public class Link {
      * @return the name
      */
     public String getName() {
-        return this.src.getName() + " -- " + this.dest.getName();
+    	return src.getParent().getName() + " -> " + dest.getParent().getName() + ": " + src.getName();
+//        return this.src.getName() + " -- " + this.dest.getName();
     }
 
     /**

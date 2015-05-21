@@ -30,7 +30,7 @@ public class ROSDevice extends Device {
 
     public static ROSNode buildNodeFromDevice(ROSDevice dev) {
         ROSNode rn = new ROSNode(dev.name);
-        rn.addPort(new ROSPort(dev.topic, rn, new ROSTopic(dev.topic, dev.msg_type, dev.direction == "sub" ? true : false), false, false));
+        rn.addPort(new ROSPort(dev.topic, rn, new ROSTopic(dev.topic, dev.msg_type, "sub".equals(dev.direction) ? true : false), false, false));
         return rn;
     }
 

@@ -6,15 +6,13 @@ package roslab.model.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
-<<<<<<< HEAD
-import javafx.scene.Group;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.DragEvent;
-=======
->>>>>>> master
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
@@ -44,12 +42,13 @@ public class UINode extends Rectangle {
     private static final double ENDPOINT_Y_OFFSET = 20;
     private static final int UINODE_WIDTH_PADDING = 70;
     private static final double TEXT_X_OFFSET = 10;
-    private static final double TEXT_Y_OFFSET = 4;
+    private static final double TEXT_Y_OFFSET = 6;
 
     Node node;
     Text nodeText;
     List<UIEndpoint> endpoints = new ArrayList<UIEndpoint>();
     boolean inNode;
+    ContextMenu deleteMenu;
 
     // X AND Y position of mouse during selection
     double mousex = 0;
@@ -65,8 +64,11 @@ public class UINode extends Rectangle {
      */
     public UINode(Node node, double xx, double yy) {
         super(xx, yy, DEFAULT_WIDTH + node.getName().length() * CHARACTER_SIZE, DEFAULT_HEIGHT);
-        this.getStyleClass().add(getClass().getSimpleName());
-        this.nodeText = new Text(this.getX() + TEXT_X_OFFSET, this.getY() + (this.getHeight() / 2) + TEXT_Y_OFFSET, node.getName());
+        nodeText = new Text(getX(), getY() + (getHeight()) - TEXT_Y_OFFSET, node.getName());
+        setWidth(nodeText.getLayoutBounds().getWidth() + DEFAULT_WIDTH);
+        getStyleClass().add(getClass().getSimpleName());
+        this.nodeText.setX(this.getX() + (this.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
+
         this.nodeText.setFont(new Font(16)); // TODO: Change to monospaced font
         // to correct center spacing
         this.nodeText.setMouseTransparent(true);
@@ -82,58 +84,8 @@ public class UINode extends Rectangle {
                     false));
         }
         else {
-<<<<<<< HEAD
         	setEndpoints();
-=======
-            int endpointIndex = 0;
-            int endpointCount = node.getFeatures().values().size();
-            int longestEndpointNameLeft = 0;
-            int longestEndpointNameRight = 0;
-
-            // Find longest endpoint name (to adjust node width to fit endpoint
-            // names and the node's name)
-            for (String s : node.getFeatures().keySet()) {
-                if (endpointIndex < endpointCount / 2) {
-                    longestEndpointNameLeft = Math.max(longestEndpointNameLeft, s.length());
-                }
-                else {
-                    longestEndpointNameRight = Math.max(longestEndpointNameRight, s.length());
-                }
-                endpointIndex++;
-            }
-
-            // Check if the UINode is high enough to show all endpoints
-            if (this.getWidth() < (longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
-                    + UINODE_WIDTH_PADDING) {
-                this.setWidth((longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
-                        + UINODE_WIDTH_PADDING);
-            }
-
-            // Check if the UINode is high enough to show all endpoints
-            if (this.getHeight() < Math.ceil(endpointCount / 2.0) * ENDPOINT_SIZE + ENDPOINT_Y_OFFSET) {
-                this.setHeight(Math.ceil(endpointCount / 2.0) * ENDPOINT_SIZE + ENDPOINT_Y_OFFSET);
-            }
-
-            endpointIndex = 0;
-
-            // Create endpoint objects in the appropriate location on the edges
-            // of the node
-            for (Feature f : node.getFeatures().values()) {
-                // put half of the endpoints on the left side
-                if (endpointIndex < endpointCount / 2) {
-                    this.endpoints.add(new UIEndpoint((Endpoint) f, this, this.getX(), this.getY() + (ENDPOINT_SIZE * endpointIndex)
-                            + ENDPOINT_Y_OFFSET, true, true));
-                }
-                else {
-                    // put the other half on the right side
-                    this.endpoints.add(new UIEndpoint((Endpoint) f, this, this.getX() + this.getWidth(), this.getY()
-                            + (ENDPOINT_SIZE * (endpointIndex - endpointCount / 2)) + ENDPOINT_Y_OFFSET, false, true));
-                }
-                endpointIndex++;
-            }
->>>>>>> master
-        }
-
+		}
         this.node.setUINode(this);
 
         this.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -148,6 +100,7 @@ public class UINode extends Rectangle {
                     e.setMouse(mouseEvent);
                 }
                 setCursor(Cursor.CLOSED_HAND);
+                toTheFront();
             }
         });
 
@@ -169,29 +122,8 @@ public class UINode extends Rectangle {
                     e.updateXY(mouseEvent);
                 }
             }
-        });
-<<<<<<< HEAD
+        });    
         
-        this.toFront();
-    }
-    
-    public void addCustomPortListener(final Configuration config, final ROSLabController controller) {
-    	
-        setOnDragOver(new EventHandler<DragEvent>() {
-			@Override
-			public void handle(DragEvent event) {
-   			if(event.getDragboard().hasString()) {
-                String[] portInfo = event.getDragboard().getString().split(" "); //TODO spaces in names a problem
-                boolean isSub = !"1".equals(portInfo[2]);
-    			if (!endpoints.contains(event.getGestureSource()) 
-    					&& validPortAdd(portInfo[0], portInfo[1], isSub)) {
-              	 	event.acceptTransferModes(TransferMode.COPY);  	
-    			}
-   			}           
-   			event.consume();	
-			}  	 
-=======
-
         this.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -199,9 +131,37 @@ public class UINode extends Rectangle {
                     setCursor(Cursor.OPEN_HAND);
                 }
             }
->>>>>>> master
         });
-    	    	
+        
+        this.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    setCursor(Cursor.DEFAULT);
+                }
+            }
+        });
+        
+        this.nodeText.toFront();
+    }
+    
+    public void addCustomPortListener(final ROSLabController controller) {
+    	
+    	setOnDragOver(new EventHandler<DragEvent>() {
+    		@Override
+    		public void handle(DragEvent event) {
+    			if(event.getDragboard().hasString()) {
+    				String[] portInfo = event.getDragboard().getString().split(" "); //TODO spaces in names a problem
+    				boolean isSub = !"1".equals(portInfo[2]);
+    				if (!endpoints.contains(event.getGestureSource()) 
+    						&& validPortAdd(portInfo[0], portInfo[1], isSub)) {
+    					event.acceptTransferModes(TransferMode.COPY);  	
+    				}
+    			}           
+    			event.consume();	
+    		}
+    	});
+	    	
     	setOnDragEntered(new EventHandler<DragEvent>() {
     		public void handle(DragEvent event) {
     			if(event.getDragboard().hasString()) {
@@ -209,19 +169,18 @@ public class UINode extends Rectangle {
                     boolean isSub = !"1".equals(portInfo[2]);
         			if (!endpoints.contains(event.getGestureSource()) 
         					&& validPortAdd(portInfo[0], portInfo[1], isSub)) {
-        				nodeRect.setStyle("-fx-stroke: green");
+        				setStyle("-fx-stroke: green");
         			} else {
-        				nodeRect.setStyle("-fx-stroke: red");
+        				setStyle("-fx-stroke: red");
         			}    				
     			}           
     			event.consume();
     		}
     	});
 
-<<<<<<< HEAD
         setOnDragExited(new EventHandler<DragEvent>() {
         	public void handle(DragEvent event) {
-        		nodeRect.setStyle("-fx-stroke: black");
+        		setStyle("-fx-stroke: blue");
         		event.consume();
         	}
         });
@@ -233,29 +192,43 @@ public class UINode extends Rectangle {
                     System.out.println(event.getDragboard().getString());
                     String[] portInfo = event.getDragboard().getString().split(" "); //TODO spaces in names a problem
                     boolean isSub = !"1".equals(portInfo[2]);
-                    controller.updateConfigPorts(node, portInfo[0], portInfo[1], isSub);
+                    controller.addConfigPort(node, portInfo[0], portInfo[1], isSub);
                     event.setDropCompleted(true);
-                }           
+                }  
+                controller.killDrawTasks();
                 event.consume();
             }
         });
-=======
-        this.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+    }
+    
+    public void addRemoveNode(final ROSLabController controller) {
+    	deleteMenu = new ContextMenu();
+        MenuItem deleteItem = new MenuItem("Delete Node");
+        deleteItem.setOnAction(new EventHandler<ActionEvent>() {
+        	public void handle(ActionEvent event) {
+        		controller.removeConfigNode(getNode());
+        	}
+        });
+        deleteMenu.getItems().add(deleteItem);
+        setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                if (!mouseEvent.isPrimaryButtonDown()) {
-                    setCursor(Cursor.DEFAULT);
+                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+//                    ContextMenu deleteMenu = new ContextMenu();
+//                    MenuItem deleteItem = new MenuItem("Delete Node");
+//                    deleteItem.setOnAction(new EventHandler<ActionEvent>() {
+//                    	public void handle(ActionEvent event) {
+//                    		controller.removeConfigNode(getNode());
+//                    	}
+//                    });
+//                    deleteMenu.getItems().add(deleteItem);
+                    deleteMenu.show(getNode().getUINode() , mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                } else if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                    deleteMenu.hide();
                 }
             }
         });
-
-        this.nodeText.toFront();
->>>>>>> master
-    }
-
-    private void setWidth(int i) {
-        this.setWidth(i);
-        this.nodeText.setX(this.getX() + (this.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
     }
 
     /**
@@ -332,61 +305,60 @@ public class UINode extends Rectangle {
     public void setEndpoints() {
       int subCount = 0;
       int pubCount = 0;
-      int longestEndpointNameLeft = 0;
-      int longestEndpointNameRight = 0;
-
-      // Find longest endpoint name (to adjust node width to fit endpoint
-      // names and the node's name)
+      int longestNameLeft = 0;
+      int longestNameRight = 0;
+      // Find longest endpoint names to adjust node width to fit all text
       for (Feature f : node.getFeatures().values()) {
     	  if (((ROSPort)f).getTopic().isSubscriber()) {
-    		  longestEndpointNameLeft = Math.max(longestEndpointNameLeft, f.getName().length());
+    		  longestNameLeft = Math.max(longestNameLeft, f.getName().length());
     		  subCount++;
-    	  }
-          else {
-              longestEndpointNameRight = Math.max(longestEndpointNameRight, f.getName().length());
+    	  } else {
+              longestNameRight = Math.max(longestNameRight, f.getName().length());
               pubCount++;
           }
       }
       
       // Check if the UINode is wide enough to show all endpoints
-      if (this.nodeRect.getWidth() < (longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
-              + UINODE_WIDTH_PADDING) {
-          this.setWidth((longestEndpointNameLeft + longestEndpointNameRight + this.node.getName().length()) * CHARACTER_SIZE
-                  + UINODE_WIDTH_PADDING);
+      double requiredWidth = (longestNameLeft + longestNameRight) * CHARACTER_SIZE 
+    		  + nodeText.getLayoutBounds().getWidth() + UINODE_WIDTH_PADDING;
+      if (getWidth() < requiredWidth) {
+          setWidth(requiredWidth);
+          nodeText.setX(getX() + (getWidth() - nodeText.getLayoutBounds().getWidth()) / 2);        
       }
-
-      // Check if the UINode is high enough to show all endpoints
-      if (this.nodeRect.getHeight() < Math.ceil(Math.max(subCount, pubCount)) * ENDPOINT_SIZE + ENDPOINT_Y_OFFSET) {
-          this.nodeRect.setHeight(Math.ceil(Math.max(subCount, pubCount)) * ENDPOINT_SIZE + ENDPOINT_Y_OFFSET);
+      // Check if the UINode is high enough to show all endpoints //TODO 3+ endpoints messing up
+      double requiredHeight = Math.ceil(Math.max(subCount, pubCount)) * ENDPOINT_SIZE 
+    		  + ENDPOINT_Y_OFFSET + TEXT_Y_OFFSET;
+      if (getHeight() < requiredHeight) {
+    	  setHeight(requiredHeight);
+    	  nodeText.setY(getY() + getHeight() - TEXT_Y_OFFSET);
       }
-
-      // Create endpoint objects in the appropriate location on the edges
-      // of the node
+      
+      // Create endpoint objects in the appropriate location on this Node's edges
       subCount = 0;
       pubCount = 0;
       for (Feature f : node.getFeatures().values()) {
-          // put half of the endpoints on the left side
+          // Put subscribing nodes on left side
           if (((ROSPort)f).getTopic().isSubscriber()) {
-        	  UIEndpoint subUI = new UIEndpoint((Endpoint) f, this, this.nodeRect.getX(), this.nodeRect.getY()
+        	  UIEndpoint subUI = new UIEndpoint((Endpoint) f, this, getX(), getY()
                       + (ENDPOINT_SIZE * subCount) + ENDPOINT_Y_OFFSET, true, true);
         	  subUI.setCircleStyle(true);
               this.endpoints.add(subUI);
               subCount++;
-          }
-          else {
-              // put the other half on the right side
-              this.endpoints.add(new UIEndpoint((Endpoint) f, this, this.nodeRect.getX() + this.nodeRect.getWidth(), this.nodeRect.getY()
+          } else {
+              // Publishing nodes on right side
+              endpoints.add(new UIEndpoint((Endpoint) f, this, getX() + getWidth(), getY()
                       + (ENDPOINT_SIZE * (pubCount)) + ENDPOINT_Y_OFFSET, false, true));
               pubCount++;
           }
       }
     }
     
-    public void redrawEndpoints() {
-        getChildren().removeAll(endpoints);
+    public void resetEndpoints(final ROSLabController controller) {
         endpoints.clear();
         setEndpoints();
-        getChildren().addAll(endpoints);
+        for(UIEndpoint e: endpoints) {
+        	e.addRemoveCustomListener(controller);
+        }
     }
     
     private boolean validPortAdd(String pName, String pType, boolean isSub) {
@@ -409,6 +381,10 @@ public class UINode extends Rectangle {
     public void toTheFront() {
         this.toFront();
         this.nodeText.toFront();
+    	for(UIEndpoint e: endpoints) {
+    		e.toFront();
+    		e.getEndpointText().toFront();		
+    	}
     }
 
 }

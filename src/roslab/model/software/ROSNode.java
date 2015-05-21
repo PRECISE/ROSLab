@@ -71,6 +71,11 @@ public class ROSNode extends Node {
         ((Map<String, ROSPort>) features).put(p.getName(), p);
     }
 
+    @SuppressWarnings("unchecked")
+    public void removePort(String pName) {
+        ((Map<String, ROSPort>) features).remove(pName);    	
+    }
+
     public ROSPort getPort(String name) {
         return (ROSPort) features.get(name);
     }

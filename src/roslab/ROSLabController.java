@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,11 +16,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
@@ -86,6 +90,7 @@ public class ROSLabController implements Initializable {
     double selectionY;
     Line addPortLine;
     Point portLineStart = new Point();
+    ContextMenu addSWNodeMenu;
 
     private Stage primaryStage;
 
@@ -119,7 +124,30 @@ public class ROSLabController implements Initializable {
             }
         });
 
+        createAddNodeMenu();
         // addDragDrop(swPane);
+    }
+    
+    public void createAddNodeMenu() {
+    	addSWNodeMenu = new ContextMenu();
+        MenuItem addItem = new MenuItem("Add Node");
+        addItem.setOnAction(new EventHandler<ActionEvent>() {
+        	public void handle(ActionEvent event) {
+        		showNewNodeDialog();
+        	}
+        });
+        addSWNodeMenu.getItems().add(addItem);
+        swPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton() == MouseButton.SECONDARY &&
+                		!swPane.getChildren().contains(mouseEvent.getTarget())) {
+                    addSWNodeMenu.show(swPane, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                } else if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                    addSWNodeMenu.hide();
+                }
+            }
+        });
     }
     
     private void addDragDrop(final Pane p) {
@@ -218,35 +246,33 @@ public class ROSLabController implements Initializable {
     }
 
     public void addLibraryNode(Node n) {
-    	System.out.println("Add: " + n); //TODO delete
         library.addNode(n);
         tree.addLibraryNode(n);
     }
 
     public void removeLibraryNode(Node n) {
-    	System.out.println("in " + library.getNodes().size());
-    	System.out.println("Rm: " + n); //TODO delete
-        System.out.println(library.removeNode(n)); //TODO remove print
         tree.removeLibraryNode(n);
-    	System.out.println("in " + library.getNodes().size());
     }
 
     public void updateLibraryNode(Node n) {
-    	System.out.println("out " + library.getNodes().size());
         removeLibraryNode(n);
         addLibraryNode(n);
-    	System.out.println("out " + library.getNodes().size());
     }
 
     public void addConfigNode(Node n) {
         UINode uin = new UINode(n, r.nextInt(400), r.nextInt(400));
         String nodeClassName = uin.getNode().getClass().getName();
-        boolean refreshPorts = false;
+        boolean refreshLinks = false;
         switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
             case "ROSNode":
-                uin.addCustomPortListener(config, this);
-                swPane.getChildren().add(uin);
-                refreshPorts = true;
+                uin.addCustomPortListener(this);
+                uin.addRemoveNode(this);
+                swPane.getChildren().addAll(uin, uin.getNodeUIText());
+                for(UIEndpoint e: uin.getUIEndpoints()) {
+                	swPane.getChildren().addAll(e, e.getPortLine(), e.getEndpointText());
+                	e.addRemoveCustomListener(this);
+                }
+                refreshLinks = true;
                 break;
             case "HWBlock":
                 hwPane.getChildren().add(uin);
@@ -271,17 +297,19 @@ public class ROSLabController implements Initializable {
         }
         config.addNode(n);
         tree.addConfigNode(n);
-        if(refreshPorts) refreshConfigPorts();
+        if(refreshLinks) refreshConfigLinks();
     }
 
     public void addConfigLink(Link l) {
-        l.setUILink(new UILink(l));
+    	UILink uil = new UILink(l);
+        l.setUILink(uil);
 
         String nodeClassName = l.getSrc().getParent().getClass().getName();
         Object[] objArray = null;
         switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
             case "ROSNode":
-                // swPane.getChildren().add(uin);
+            	objArray = swPane.getChildren().toArray();
+                 swPane.getChildren().add(uil);
                 break;
             case "HWBlock":
                 // hwPane.getChildren().add(uin);
@@ -308,7 +336,21 @@ public class ROSLabController implements Initializable {
         String nodeClassName = n.getClass().getName();
         switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
             case "ROSNode":
-                swPane.getChildren().remove(n.getUINode());
+        		for(UIEndpoint e: n.getUINode().getUIEndpoints()) {
+        			for(UILink l: e.getUILinks()) {
+        				config.removeLink(l.getLink());
+        				tree.removeConfigLink(l.getLink());
+        				if(e.equals(l.getSrc())) l.getDest().removeUILink(l);
+        				else l.getSrc().removeUILink(l);
+        				swPane.getChildren().remove(l);		
+        			}
+        			e.getUILinks().clear();
+        			swPane.getChildren().remove(e.getEndpointText());
+        			swPane.getChildren().remove(e.getPortLine());
+        			swPane.getChildren().remove(e);
+        		}	
+            	swPane.getChildren().remove(n.getUINode().getNodeUIText());
+                swPane.getChildren().remove(n.getUINode());     
                 break;
             case "HWBlock":
                 hwPane.getChildren().remove(n.getUINode());
@@ -544,92 +586,79 @@ public class ROSLabController implements Initializable {
         }
     }
     
-    public void updateConfigPorts(Node node, String pName, String pType, boolean isSub) {
-//    	String portKey;
-//    	if(isSub) {
-//    		portKey = pName + "_sub";
-//    	} else {
-//    		portKey = pName + "_pub";
-//    	}
+    public void addConfigPort(Node node, String pName, String pType, boolean isSub) {
     	//Add to each matching node's features
+
+		//Add to library node's features
+		((ROSNode)node.getSpec()).addPort(new ROSPort(pName,((ROSNode)node),
+				new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
+		//Update library with library node
+		updateLibraryNode(node.getSpec());
         for(Node n: config.getNodes()) {
         	if(n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
         		((ROSNode)n).addPort(new ROSPort(pName,((ROSNode)node),
         				new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
         	}        	
         }
-		//Add to library node's features
-		((ROSNode)node.getSpec()).addPort(new ROSPort(pName,((ROSNode)node),
-				new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
-		//Update library with library node
-		updateLibraryNode(node.getSpec());
-		//TODO update all UIEndpoints and links?
-		for(javafx.scene.Node n: swPane.getChildren()) {
-			if(n instanceof UINode) {
-				((UINode)n).redrawEndpoints();
-			}
-		}
 		refreshConfigPorts();
+		refreshConfigLinks();
     }
     
+    public void removeConfigPort(Node node, String pName) {
+		//Add to library node's features
+    	((ROSNode)node.getSpec()).removePort(pName);
+		//Update library with library node
+		updateLibraryNode(node.getSpec());
+        for(Node n: config.getNodes()) {
+        	if(n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
+            	((ROSNode)n).removePort(pName);
+        	}        	
+        }
+		refreshConfigPorts();
+		refreshConfigLinks();    	
+    }
+        
     public void refreshConfigPorts() {
-//    	for(Link link: config.getLinks()) {
-//    		removeConfigLink(link);
-//    	}
+		for(Node n: config.getNodes()) {
+			UINode uin = n.getUINode();
+			for(UIEndpoint e: uin.getUIEndpoints()) {
+				swPane.getChildren().remove(e.getEndpointText());
+				swPane.getChildren().remove(e.getPortLine());
+				swPane.getChildren().remove(e);
+			}				
+			uin.resetEndpoints(this);
+			for(UIEndpoint e: uin.getUIEndpoints()) {
+				swPane.getChildren().add(e);
+				swPane.getChildren().add(e.getEndpointText());
+				swPane.getChildren().add(e.getPortLine());
+			}		
+		}
+    }
+    
+    public void refreshConfigLinks() {
+    	ArrayList<Link> linksToRemove = new ArrayList<Link>();
+    	for(Link link: config.getLinks()) {
+    		swPane.getChildren().remove(link.getUILink());
+    		linksToRemove.add(link);
+    	}
+    	for(Link link: linksToRemove) {
+    		System.out.println("Removing " + link.getName());
+    		removeConfigLink(link);
+    	}
     	config.getLinks().clear();
-//		for(javafx.scene.Node n: swPane.getChildren()) {
-//			if(n instanceof UINode) {
-//				for(UIEndpoint eUI: ((UINode)n).getUIEndpoints()) {
-//					for(UILink lUI: eUI.getUILinks()) {
-//						lUI.disconnect();
-//						lUI.getSrc().removeUILink(lUI);
-//						lUI.getDest().removeUILink(lUI);
-//						removeConfigLink(lUI.getLink());
-//						eUI.removeUILink(lUI);
-//						eUI.getEndpoint().disconnect(lUI.getLink());
-//						lUI.getLink().destroy();				
-//					}
-//				}
-//			}
-//		}
-    	for(Node srcNode: config.getNodes()) {
-    		for(Node destNode: config.getNodes()) {
-    			for(Endpoint srcEnd: srcNode.getEndpoints()) {
-    				for(Endpoint destEnd: destNode.getEndpoints()) {
-    					if(srcEnd.equals(destEnd)) continue;
-    					if(destEnd.canConnect(srcEnd)) {
-							 Link link = new Link(srcEnd, destEnd);
-							 addConfigLink(link);	   						
+    	for(Node nodeA: config.getNodes()) {
+    		for(Node nodeB: config.getNodes()) {
+    			for(Endpoint endA: nodeA.getEndpoints()) {
+    				for(Endpoint endB: nodeB.getEndpoints()) {
+    					if(endA.equals(endB)) continue;
+    					if(endA.canConnect(endB) && endA instanceof ROSPort && ((ROSPort)endA).isSubscriber()) {						
+    						Link link = new Link(endB, endA);
+    						addConfigLink(link);
     					}
     				}
     			}
     		}
     	}
-//		for(javafx.scene.Node src: swPane.getChildren()) {
-//			for(javafx.scene.Node dest: swPane.getChildren()) {
-//				if(src instanceof UINode && dest instanceof UINode) {
-//					for(javafx.scene.Node srcUI: ((UINode)src).getChildren()) {
-//						for(javafx.scene.Node destUI: ((UINode)dest).getChildren()) {
-//							if(srcUI instanceof UIEndpoint && destUI instanceof UIEndpoint) {
-//								 Endpoint srcEnd = ((UIEndpoint)srcUI).getEndpoint();
-//								 Endpoint destEnd = ((UIEndpoint)destUI).getEndpoint();
-//								 if(srcEnd instanceof ROSPort && destEnd instanceof ROSPort) {
-//									 ROSPort srcRos = (ROSPort)srcEnd;
-//									 ROSPort destRos = (ROSPort)destEnd;
-//									 System.out.println("trying " + srcRos + " " + destRos);
-//									 if(destRos.canConnect(srcRos)) {
-//										 System.out.println("cool");
-//										 Link link = new Link(srcEnd, destEnd);
-//										 addConfigLink(link);										 
-//									 }
-//								 }
-//							}
-//						}		
-//					}					
-//				}
-//
-//			}
-//		}
     }
 
     public void setStage(Stage primaryStage) {
@@ -638,5 +667,17 @@ public class ROSLabController implements Initializable {
 
     public Stage getStage() {
         return this.primaryStage;
+    }
+    
+    public void killDrawTasks() {
+    	for(Node n: config.getNodes()) {
+    		for(Endpoint e: n.getEndpoints()) {
+    			if(e.getUIEndpoint().killDrawTask()) {
+        			System.out.println("Killed " + e.getName());
+    			} else {
+    				System.out.println("Didn't kill " + e.getName());
+    			}
+    		}
+    	}
     }
 }

@@ -25,7 +25,7 @@ public class Main extends Application {
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("ui/general/main.css").toString());
             this.primaryStage.setScene(scene);
-            this.primaryStage.setTitle("EMLab Development Environment Prototype");
+            this.primaryStage.setTitle("ROSLab");
             this.primaryStage.show();
         }
         catch (Exception e) {
