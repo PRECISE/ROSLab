@@ -5836,12 +5836,12 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <wire x1="3.302" y1="-1.27" x2="2.54" y2="-0.508" width="0.254" layer="94"/>
 <wire x1="2.54" y1="-0.508" x2="2.54" y2="0.508" width="0.254" layer="94"/>
 </symbol>
-<symbol name="BLOCK_OPTIONAL">
+<symbol name="BLOCK_RECOMMENDED">
 <pin name="BLOCK_CONNECTOR" x="0" y="0" visible="pad" length="short" direction="sup"/>
-<wire x1="2.54" y1="-1.27" x2="5.08" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="5.08" y1="-1.27" x2="5.08" y2="1.27" width="0.254" layer="94"/>
-<wire x1="5.08" y1="1.27" x2="2.54" y2="1.27" width="0.254" layer="94"/>
-<wire x1="2.54" y1="1.27" x2="2.54" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="2.54" y1="0" x2="3.81" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="3.81" y1="-1.27" x2="5.08" y2="0" width="0.254" layer="94"/>
+<wire x1="5.08" y1="0" x2="3.81" y2="1.27" width="0.254" layer="94"/>
+<wire x1="3.81" y1="1.27" x2="2.54" y2="0" width="0.254" layer="94"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -5857,9 +5857,9 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="BLOCK_OPTIONAL">
+<deviceset name="BLOCK_RECOMMENDED">
 <gates>
-<gate name="G$1" symbol="BLOCK_OPTIONAL" x="0" y="0"/>
+<gate name="G$1" symbol="BLOCK_RECOMMENDED" x="0" y="0"/>
 </gates>
 <devices>
 <device name="">
@@ -5892,8 +5892,8 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <part name="U$4" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 <part name="U$5" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 <part name="U$6" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
-<part name="U$7" library="block_parts" deviceset="BLOCK_OPTIONAL" device=""/>
-<part name="U$8" library="block_parts" deviceset="BLOCK_OPTIONAL" device=""/>
+<part name="U$7" library="block_parts" deviceset="BLOCK_RECOMMENDED" device=""/>
+<part name="U$8" library="block_parts" deviceset="BLOCK_RECOMMENDED" device=""/>
 <part name="U$9" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 </parts>
 <sheets>
@@ -6022,7 +6022,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <junction x="50.8" y="10.16"/>
 </segment>
 </net>
-<net name="PWM,1,-,I,TIMER/GPIO,1,-,I" class="0">
+<net name="PWM,1,-,I,TIMER/GPIO,#,-,I.PWMA" class="0">
 <segment>
 <pinref part="U$3" gate="G$1" pin="INA"/>
 <wire x1="-7.62" y1="27.94" x2="-10.16" y2="27.94" width="0.1524" layer="91"/>
@@ -6030,7 +6030,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <label x="-15.24" y="27.94" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="PWM,2,-,I,TIMER/GPIO,2,-,I" class="0">
+<net name="PWM,2,-,I,TIMER/GPIO,#,-,I.PWMB" class="0">
 <segment>
 <pinref part="U$3" gate="G$1" pin="INB"/>
 <wire x1="-7.62" y1="22.86" x2="-10.16" y2="22.86" width="0.1524" layer="91"/>
@@ -6038,7 +6038,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <label x="-15.24" y="22.86" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="PWM,4,-,I,TIMER/GPIO,4,-,I" class="0">
+<net name="PWM,4,-,I,TIMER/GPIO,#,-,I.ENB" class="0">
 <segment>
 <pinref part="U$3" gate="G$1" pin="ENB"/>
 <pinref part="U$8" gate="G$1" pin="BLOCK_CONNECTOR"/>
@@ -6046,7 +6046,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <label x="-15.24" y="25.4" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="PWM,3,-,I,TIMER/GPIO,3,-,I" class="0">
+<net name="PWM,3,-,I,TIMER/GPIO,#,-,I.ENA" class="0">
 <segment>
 <pinref part="U$3" gate="G$1" pin="ENA"/>
 <pinref part="U$7" gate="G$1" pin="BLOCK_CONNECTOR"/>

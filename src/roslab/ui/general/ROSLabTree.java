@@ -45,19 +45,21 @@ public class ROSLabTree extends TreeItem<String> {
 
     public class LibraryTreeItem extends ContextMenuTreeItem {
         private ROSLabController controller;
+        private Library library;
 
-        public LibraryTreeItem(ROSLabController cont) {
-            super("Library (" + cont.getLibrary().getName() + ")");
+        public LibraryTreeItem(ROSLabController cont, Library lib) {
+            super("Library (" + lib.getName() + ")");
             controller = cont;
+            library = lib;
 
             // Add library nodes
-            for (Node n : controller.getLibrary().getNodes()) {
+            for (Node n : library.getNodes()) {
                 addNode(n);
             }
         }
 
         public void addNode(Node n) {
-            controller.getLibrary().addNode(n);
+            library.addNode(n);
             boolean nodeAdded = false;
             for (TreeItem<String> s : this.getChildren()) {
                 if (n.getClass().getSimpleName().equals(s.getValue())) {
@@ -82,7 +84,7 @@ public class ROSLabTree extends TreeItem<String> {
         }
 
         public void removeNode(Node n) {
-            controller.getLibrary().removeNode(n);
+            library.removeNode(n);
             int removeIndex2 = -1;
             for (TreeItem<String> s : this.getChildren()) {
                 if (n.getClass().getSimpleName().equals(s.getValue())) {
@@ -120,21 +122,25 @@ public class ROSLabTree extends TreeItem<String> {
 
     public class ConfigTreeItem extends ContextMenuTreeItem {
         private ROSLabController controller;
+        private Configuration configuration;
+        private Library library;
         private ContextMenuTreeItem configNodesTree = new ContextMenuTreeItem("Nodes");
         private ContextMenuTreeItem configLinksTree = new ContextMenuTreeItem("Links");
 
-        public ConfigTreeItem(ROSLabController cont) {
-            super("Configuration (" + cont.getConfig().getName() + ")");
+        public ConfigTreeItem(ROSLabController cont, Configuration config, Library lib) {
+            super("Configuration (" + config.getName() + ")");
             controller = cont;
+            configuration = config;
+            library = lib;
 
             // Add Configuration nodes
-            for (Node n : controller.getConfig().getNodes()) {
+            for (Node n : configuration.getNodes()) {
                 addNode(n);
             }
             this.getChildren().add(configNodesTree);
 
             // Add Configuration links
-            for (Link l : controller.getConfig().getLinks()) {
+            for (Link l : configuration.getLinks()) {
                 addLink(l);
             }
             this.getChildren().add(configLinksTree);
@@ -143,7 +149,7 @@ public class ROSLabTree extends TreeItem<String> {
             nItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    controller.showNewNodeDialog();
+                    controller.showNewNodeDialog(library);
                 }
             });
             configNodesTree.setMenu(new ContextMenu(nItem));
@@ -152,14 +158,14 @@ public class ROSLabTree extends TreeItem<String> {
             mItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    controller.showNewLinkDialog();
+                    controller.showNewLinkDialog(configuration);
                 }
             });
             configLinksTree.setMenu(new ContextMenu(mItem));
         }
 
         public void addNode(Node n) {
-            controller.getConfig().addNode(n);
+            configuration.addNode(n);
             boolean nodeAdded = false;
             for (TreeItem<String> s : configNodesTree.getChildren()) {
                 if (n.getClass().getSimpleName().equals(s.getValue())) {
@@ -176,7 +182,7 @@ public class ROSLabTree extends TreeItem<String> {
         }
 
         public void addLink(Link l) {
-            controller.getConfig().addLink(l);
+            configuration.addLink(l);
             boolean nodeAdded = false;
             for (TreeItem<String> s : configLinksTree.getChildren()) {
                 if (l.getClass().getSimpleName().equals(s.getValue())) {
@@ -193,7 +199,7 @@ public class ROSLabTree extends TreeItem<String> {
         }
 
         public void removeNode(Node n) {
-            controller.getConfig().removeNode(n);
+            configuration.removeNode(n);
             int removeIndex2 = -1;
             for (TreeItem<String> s : configNodesTree.getChildren()) {
                 if (n.getClass().getSimpleName().equals(s.getValue())) {
@@ -217,7 +223,7 @@ public class ROSLabTree extends TreeItem<String> {
         }
 
         public void removeLink(Link l) {
-            controller.getConfig().removeLink(l);
+            configuration.removeLink(l);
             int removeIndex2 = -1;
             for (TreeItem<String> s : configLinksTree.getChildren()) {
                 if (l.getClass().getSimpleName().equals(s.getValue())) {
@@ -248,7 +254,7 @@ public class ROSLabTree extends TreeItem<String> {
                 @Override
                 public void handle(ActionEvent event) {
                     // Handle ROSNode nodes
-                    for (Node n : controller.getConfig().getNodesOfType(ROSNode.class)) {
+                    for (Node n : configuration.getNodesOfType(ROSNode.class)) {
                         try {
                             if (n.getAnnotation("user-defined") != null && n.getAnnotation("user-defined").equals("true")) {
                                 ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
@@ -262,7 +268,7 @@ public class ROSLabTree extends TreeItem<String> {
                     // Handle Circuit nodes
                     List<EagleSchematic> schematics = new ArrayList<EagleSchematic>();
                     List<Circuit> circuitsWithUnconnectedRequireds = new ArrayList<Circuit>();
-                    for (Node n : controller.getConfig().getNodesOfType(Circuit.class)) {
+                    for (Node n : configuration.getNodesOfType(Circuit.class)) {
                         Circuit c = (Circuit) n;
                         if (c.getUnconnectedRequiredPins().size() > 0) {
                             circuitsWithUnconnectedRequireds.add(c);
@@ -279,10 +285,10 @@ public class ROSLabTree extends TreeItem<String> {
                             }
                         }
                         Dialogs.create().owner(controller.getStage()).title("Missing Required Links")
-                        .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
+                                .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
                     }
                     else if (schematics.size() > 1) {
-                        EagleSchematic.connectWires(controller.getConfig().getLinks());
+                        EagleSchematic.connectWires(configuration.getLinks());
                         EagleSchematic.merge(schematics, "Merged.sch");
                     }
                 }
@@ -409,8 +415,8 @@ public class ROSLabTree extends TreeItem<String> {
 
     @SuppressWarnings("unchecked")
     public ROSLabTree(Library lib, Configuration conf, ROSLabController controller) {
-        libraryTree = new LibraryTreeItem(controller);
-        configTree = new ConfigTreeItem(controller);
+        libraryTree = new LibraryTreeItem(controller, lib);
+        configTree = new ConfigTreeItem(controller, conf, lib);
 
         // Add to top-level tree
         getChildren().addAll(libraryTree, configTree);

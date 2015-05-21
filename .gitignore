@@ -10,3 +10,4 @@ user.settings
 *.pyc
 
 resources/merged_output/*
+lib/cachedir

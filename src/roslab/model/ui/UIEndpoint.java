@@ -361,4 +361,9 @@ public class UIEndpoint extends Circle {
     	return this;
     }
     
+    public void toTheFront() {
+    	this.toFront();
+    	this.endpointText.toFront();
+    }
+    
 }

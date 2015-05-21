@@ -86,6 +86,7 @@ public class UINode extends Rectangle {
         else {
         	setEndpoints();
 		}
+
         this.node.setUINode(this);
 
         this.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -229,6 +230,10 @@ public class UINode extends Rectangle {
                 }
             }
         });
+    }
+    private void setNodeWidth(int i) {
+        this.setWidth(i);
+        this.nodeText.setX(this.getX() + (this.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
     }
 
     /**
@@ -380,11 +385,10 @@ public class UINode extends Rectangle {
 
     public void toTheFront() {
         this.toFront();
-        this.nodeText.toFront();
     	for(UIEndpoint e: endpoints) {
-    		e.toFront();
-    		e.getEndpointText().toFront();		
+    		e.toTheFront();	
     	}
+        this.nodeText.toFront();
     }
 
 }
