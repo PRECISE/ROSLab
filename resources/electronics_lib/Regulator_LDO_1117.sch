@@ -3663,7 +3663,7 @@ Metric Code Size 5664</description>
 <label x="33.02" y="33.02" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="5V,#,+,I" class="0">
+<net name="3_7V,#,+,I" class="0">
 <segment>
 <pinref part="C_BYP_IN_1" gate="G$1" pin="1"/>
 <wire x1="7.62" y1="33.02" x2="7.62" y2="27.94" width="0.1524" layer="91"/>
