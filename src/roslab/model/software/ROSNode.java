@@ -30,6 +30,16 @@ public class ROSNode extends Node {
         super(name, new HashMap<String, ROSPort>(), new HashMap<String, String>());
         this.annotations.put("Rate", "50"); // Set default ROS rate to 50Hz
     }
+    
+    /**
+     * Construct a new ROSNode with user-specified rate
+     *
+     * @param name
+     */
+    public ROSNode(String name, String rate) {
+        super(name, new HashMap<String, ROSPort>(), new HashMap<String, String>());
+        this.annotations.put("Rate", rate); // Set default ROS rate to 50Hz
+    }
 
     /**
      * Construct a new ROSNode based on input spec ROSNode

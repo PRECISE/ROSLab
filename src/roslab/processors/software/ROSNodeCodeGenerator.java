@@ -59,12 +59,12 @@ public class ROSNodeCodeGenerator {
             StringTemplate publisherTemplate = group.getInstanceOf("ROSPublisher");
             StringTemplate publishCommandTemplate = group.getInstanceOf("ROSPublishCommand");
             String pName = port.getName().replace("/","");
-            publisherTemplate.setAttribute("port_name", port.getName());
+            publisherTemplate.setAttribute("port_name", pName);
             publisherTemplate.setAttribute("port_type", ROSMsgType.typeMap.get(port.getType()) + "::" + port.getType().toString());
             publisherTemplate.setAttribute("port_topic", port.getTopicName());
             publishers += publisherTemplate.toString() + "\n";
 
-            publishCommandTemplate.setAttribute("port_name", port.getName());
+            publishCommandTemplate.setAttribute("port_name", pName);
             publishCommands += publishCommandTemplate.toString() + "\n";
         }
         nodeTemplate.setAttribute("publishers", publishers);

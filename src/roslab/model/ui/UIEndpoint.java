@@ -182,7 +182,7 @@ public class UIEndpoint extends Circle {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.SECONDARY &&
-                	"true".equals(getParentNode().getAnnotation("user-defined"))) {
+                	"controller".equals(getParentNode().getAnnotation("custom-type"))) {
                     ContextMenu editDelete = new ContextMenu();
                     MenuItem deleteItem = new MenuItem("Delete Port");
                     deleteItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -364,6 +364,22 @@ public class UIEndpoint extends Circle {
     public void toTheFront() {
     	this.toFront();
     	this.endpointText.toFront();
+    }
+    
+    public void addToGroup(Group g) {
+		g.getChildren().add(this);
+		g.getChildren().add(endpointText);
+		if(uiparent.getNode() instanceof ROSNode) {
+			g.getChildren().add(addPortLine);  			
+		}
+    }
+    
+    public void removeFromGroup(Group g) {
+		g.getChildren().remove(this);
+		g.getChildren().remove(endpointText);
+		if(uiparent.getNode() instanceof ROSNode) {
+			g.getChildren().remove(addPortLine);
+		}
     }
     
 }

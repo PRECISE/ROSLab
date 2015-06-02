@@ -1,21 +1,11 @@
-/**
- *
- */
 package roslab.ui.software;
 
-/**
- * Dialog to edit details of a person.
- *
- * @author Peter Gebhard
- */
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 import org.controlsfx.dialog.Dialogs;
@@ -24,18 +14,13 @@ import roslab.ROSLabController;
 import roslab.model.software.ROSNode;
 
 @SuppressWarnings("deprecation")
-public class NewUserDefinedDialog implements Initializable {
-
-    @FXML
+public class NewCustomControllerDialog implements Initializable {
+	@FXML
     private TextField nameField;
     
     @FXML
-    private RadioButton controllerRadio;
-    
-    @FXML
-    private RadioButton topicRadio;
+    private TextField rateField;
 
-    private ToggleGroup typeRadios;
     private Stage dialogStage;
     private boolean addClicked = false;
 
@@ -65,10 +50,9 @@ public class NewUserDefinedDialog implements Initializable {
     @FXML
     private void handleAdd() {
         if (isInputValid() && controller != null) {
-            ROSNode n = new ROSNode(nameField.getText());
+            ROSNode n = new ROSNode(nameField.getText(), rateField.getText());
             n.addAnnotation("user-defined", "true");
-        	String nodeType = typeRadios.getSelectedToggle().getUserData().toString();
-        	n.addAnnotation("custom-type", nodeType);
+        	n.addAnnotation("custom-type", "controller");
             controller.addLibraryNode(n);
             addClicked = true;
             dialogStage.close();
@@ -90,11 +74,17 @@ public class NewUserDefinedDialog implements Initializable {
      */
     private boolean isInputValid() {
         String errorMessage = "";
-
         if (nameField.getText() == null || nameField.getText().equals("")) {
             errorMessage += "No name given!\n";
         }
-
+        if (rateField.getText() == null || rateField.getText().equals("")) {
+        	errorMessage += "No rate given!\n";
+        }
+        try {
+        	Integer.parseInt(rateField.getText());
+        } catch(NumberFormatException e) {
+        	errorMessage += "Rate must be an integer!\n";
+        }
         if (errorMessage.length() == 0) {
             return true;
         }
@@ -111,11 +101,5 @@ public class NewUserDefinedDialog implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    	controllerRadio.setUserData("custom controller");
-    	topicRadio.setUserData("custom topic");
-    	typeRadios = new ToggleGroup();
-    	controllerRadio.setToggleGroup(typeRadios);
-    	topicRadio.setToggleGroup(typeRadios);
-    	controllerRadio.setSelected(true);
     }
 }

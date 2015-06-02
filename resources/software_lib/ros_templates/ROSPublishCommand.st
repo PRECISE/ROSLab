@@ -1,1 +1,1 @@
-$port_name$_pub.publish($port_name$);
+$port_name$_pub.publish($port_name$_out);
