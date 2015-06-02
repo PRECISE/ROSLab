@@ -14,22 +14,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
+//import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
@@ -50,14 +45,14 @@ import roslab.model.software.ROSPort;
 import roslab.model.software.ROSTopic;
 import roslab.model.ui.UIEndpoint;
 import roslab.model.mechanics.HWBlock;
-import roslab.model.software.ROSNode;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
 import roslab.ui.general.NewLinkDialog;
 import roslab.ui.general.NewNodeDialog;
 import roslab.ui.general.ROSLabTree;
+import roslab.ui.software.NewCustomControllerDialog;
+import roslab.ui.software.NewCustomTopicDialog;
 import roslab.ui.software.NewPortDialog;
-import roslab.ui.software.NewUserDefinedDialog;
 
 public class ROSLabController implements Initializable {
 
@@ -188,7 +183,7 @@ public class ROSLabController implements Initializable {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.SECONDARY &&
-                		!swPane.getChildren().contains(mouseEvent.getTarget())) { //TODO test
+                		!swUIObjects.getChildren().contains(mouseEvent.getTarget())) { //TODO test
                     addSWNodeMenu.show(swPane, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 } else if (mouseEvent.getButton() == MouseButton.PRIMARY) {
                     addSWNodeMenu.hide();
@@ -197,100 +192,46 @@ public class ROSLabController implements Initializable {
         });
     }
     
-    private void addDragDrop(final Pane p) {
-    	
-        p.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                /* data is dragged over the target */
-                /*
-                 * accept it only if it is not dragged from the same node
-                 * and if it has a string data
-                 */
-                if (event.getGestureSource() != p && event.getDragboard().hasString()) {
-                    /* allow for both copying and moving, whatever user chooses */
-                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                }
-
-                event.consume();
-            }
-        });
-
-        p.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                /* data dropped */
-                /* if there is a string data on dragboard, read it and use it */
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasString()) {
-                    // TODO: Add node here! swPane.setText(db.getString());
-                    success = true;
-                }
-                /*
-                 * let the source know whether the string was successfully
-                 * transferred and used
-                 */
-                event.setDropCompleted(success);
-
-                event.consume();
-            }
-        });
-
-        p.setOnDragEntered(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                /* the drag-and-drop gesture entered the target */
-                /* show to the user that it is an actual gesture target */
-                if (event.getGestureSource() != p && event.getDragboard().hasString()) {
-                    System.out.println("ENTERED!");
-                }
-
-                event.consume();
-            }
-        });
-    }
-
-    private void enableSelectionRectangle(final Pane p) {
-        p.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                selectionX = mouseEvent.getX();
-                selectionY = mouseEvent.getY();
-                selectionRectangle = new Rectangle(selectionX, selectionY, 0, 0);
-                selectionRectangle.getStyleClass().add("SelectionRectangle");
-                p.getChildren().add(selectionRectangle);
-            }
-        });
-        p.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                p.getChildren().remove(selectionRectangle);
-            }
-        });
-        
-        p.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                double x = mouseEvent.getX();
-                double y = mouseEvent.getY();
-                if (x < selectionX) {
-                    selectionRectangle.setX(x);
-                    selectionRectangle.setWidth(selectionX - x);
-                }
-                else {
-                    selectionRectangle.setWidth(x - selectionRectangle.getX());
-                }
-                if (y < selectionY) {
-                    selectionRectangle.setY(y);
-                    selectionRectangle.setHeight(selectionY - y);
-                }
-                else {
-                    selectionRectangle.setHeight(y - selectionRectangle.getY());
-                }
-            }
-        });
-    }
+//    private void enableSelectionRectangle(final Pane p) {
+//        p.setOnMousePressed(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                selectionX = mouseEvent.getX();
+//                selectionY = mouseEvent.getY();
+//                selectionRectangle = new Rectangle(selectionX, selectionY, 0, 0);
+//                selectionRectangle.getStyleClass().add("SelectionRectangle");
+//                p.getChildren().add(selectionRectangle);
+//            }
+//        });
+//        p.setOnMouseReleased(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                p.getChildren().remove(selectionRectangle);
+//            }
+//        });
+//        
+//        p.setOnMouseDragged(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                double x = mouseEvent.getX();
+//                double y = mouseEvent.getY();
+//                if (x < selectionX) {
+//                    selectionRectangle.setX(x);
+//                    selectionRectangle.setWidth(selectionX - x);
+//                }
+//                else {
+//                    selectionRectangle.setWidth(x - selectionRectangle.getX());
+//                }
+//                if (y < selectionY) {
+//                    selectionRectangle.setY(y);
+//                    selectionRectangle.setHeight(selectionY - y);
+//                }
+//                else {
+//                    selectionRectangle.setHeight(y - selectionRectangle.getY());
+//                }
+//            }
+//        });
+//    }
 
     public void addLibraryNode(ROSNode n) {
         swLibrary.addNode(n);
@@ -343,13 +284,6 @@ public class ROSLabController implements Initializable {
         Group grp = null;
         switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
             case "ROSNode":
-                uin.addCustomPortListener(this);
-                uin.addRemoveNode(this);
-//                swPane.getChildren().addAll(uin, uin.getNodeUIText());
-                for(UIEndpoint e: uin.getUIEndpoints()) {
-                	swUIObjects.getChildren().addAll(e.getPortLine(), e.getEndpointText());
-                	e.addRemoveCustomListener(this);
-                }
                 grp = swUIObjects;
                 swConfig.addNode(n);
                 swTree.addConfigNode(n);
@@ -366,9 +300,7 @@ public class ROSLabController implements Initializable {
                 grp = eeUIObjects;
                 break;
         }
-        grp.getChildren().add(uin);
-        grp.getChildren().add(uin.getNodeUIText());
-        grp.getChildren().addAll(uin.getUIEndpoints());
+        uin.addToGroup(grp, this);
 
         // Order all of the UI objects
         for (Object nn : grp.getChildren().toArray()) {
@@ -427,16 +359,17 @@ public class ROSLabController implements Initializable {
         				swTree.removeConfigLink(l.getLink());
         				if(e.equals(l.getSrc())) l.getDest().removeUILink(l);
         				else l.getSrc().removeUILink(l);
-        				swUIObjects.getChildren().remove(l);
-//        				swPane.getChildren().remove(l);		
+        				swUIObjects.getChildren().remove(l);	
         			}
         			e.getUILinks().clear();
-        			swUIObjects.getChildren().remove(e.getEndpointText());
-        			swUIObjects.getChildren().remove(e.getPortLine());
-        			swUIObjects.getChildren().remove(e);
+//        			e.removeFromGroup(swUIObjects);
+//        			swUIObjects.getChildren().remove(e.getEndpointText());
+//        			swUIObjects.getChildren().remove(e.getPortLine());
+//        			swUIObjects.getChildren().remove(e);
         		}	
-            	swUIObjects.getChildren().remove(n.getUINode().getNodeUIText());
-                swUIObjects.getChildren().remove(n.getUINode());     
+        		n.getUINode().removeFromGroup(swUIObjects);
+//            	swUIObjects.getChildren().remove(n.getUINode().getNodeUIText());
+//                swUIObjects.getChildren().remove(n.getUINode());     
                 swConfig.removeNode(n);
                 swTree.removeConfigNode(n);
                 break;
@@ -632,7 +565,7 @@ public class ROSLabController implements Initializable {
             return false;
         }
     }
-
+    
     /**
      * Opens a dialog to edit details for the specified person. If the user
      * clicks OK, the changes are saved into the provided person object and
@@ -643,30 +576,38 @@ public class ROSLabController implements Initializable {
      *            the person object to be edited
      * @return true if the user clicked OK, false otherwise.
      */
-    public boolean showNewUserDefinedDialog() {
+    public boolean showCustomNodeDialog(String nodeType) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("ui/software/NewUserDefinedDialog.fxml"));
+            loader.setLocation(getClass().getResource("ui/software/NewCustom" + nodeType + "Dialog.fxml"));
             GridPane page = (GridPane) loader.load();
 
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("New User-Defined Node");
+            dialogStage.setTitle("New Custom " + nodeType + " Node");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
-            NewUserDefinedDialog controller = loader.getController();
-            controller.setDialogStage(dialogStage);
-            controller.setRLController(this);
+            if("Controller".equals(nodeType)) {
+                NewCustomControllerDialog controller = loader.getController();
+                controller.setDialogStage(dialogStage);
+                controller.setRLController(this);
+                // Show the dialog and wait until the user closes it
+                dialogStage.showAndWait();
+                return controller.isAddClicked();            	
+            } else {
+                NewCustomTopicDialog controller = loader.getController();
+                controller.setDialogStage(dialogStage);
+                controller.setRLController(this);
+                // Show the dialog and wait until the user closes it
+                dialogStage.showAndWait();
+                return controller.isAddClicked();            	
+            }
 
-            // Show the dialog and wait until the user closes it
-            dialogStage.showAndWait();
-
-            return controller.isAddClicked();
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -753,15 +694,17 @@ public class ROSLabController implements Initializable {
 		for(Node n: swConfig.getNodes()) {
 			UINode uin = n.getUINode();
 			for(UIEndpoint e: uin.getUIEndpoints()) {
-				swUIObjects.getChildren().remove(e.getEndpointText());
-				swUIObjects.getChildren().remove(e.getPortLine());
-				swUIObjects.getChildren().remove(e);
+				e.removeFromGroup(swUIObjects);
+//				swUIObjects.getChildren().remove(e.getEndpointText());
+//				swUIObjects.getChildren().remove(e.getPortLine());
+//				swUIObjects.getChildren().remove(e);
 			}				
 			uin.resetEndpoints(this);
 			for(UIEndpoint e: uin.getUIEndpoints()) {
-				swUIObjects.getChildren().add(e);
-				swUIObjects.getChildren().add(e.getEndpointText());
-				swUIObjects.getChildren().add(e.getPortLine());
+				e.addToGroup(swUIObjects);
+//				swUIObjects.getChildren().add(e);
+//				swUIObjects.getChildren().add(e.getEndpointText());
+//				swUIObjects.getChildren().add(e.getPortLine());
 			}		
 		}
     }

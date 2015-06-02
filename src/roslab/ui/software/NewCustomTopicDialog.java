@@ -1,41 +1,36 @@
-/**
- *
- */
 package roslab.ui.software;
 
-/**
- * Dialog to edit details of a person.
- *
- * @author Peter Gebhard
- */
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 import org.controlsfx.dialog.Dialogs;
 
 import roslab.ROSLabController;
+import roslab.model.software.ROSMsgType;
 import roslab.model.software.ROSNode;
+import roslab.model.software.ROSPort;
+import roslab.model.software.ROSTopic;
 
 @SuppressWarnings("deprecation")
-public class NewUserDefinedDialog implements Initializable {
+public class NewCustomTopicDialog implements Initializable {
 
     @FXML
-    private TextField nameField;
-    
+    private TextField nodeField;
     @FXML
-    private RadioButton controllerRadio;
-    
+    private TextField topicField;
     @FXML
-    private RadioButton topicRadio;
+    private ComboBox<ROSMsgType> typeBox;
+    @FXML
+    private ComboBox<String> directionBox;
 
-    private ToggleGroup typeRadios;
     private Stage dialogStage;
     private boolean addClicked = false;
 
@@ -65,10 +60,12 @@ public class NewUserDefinedDialog implements Initializable {
     @FXML
     private void handleAdd() {
         if (isInputValid() && controller != null) {
-            ROSNode n = new ROSNode(nameField.getText());
+            ROSNode n = new ROSNode(nodeField.getText()); //TODO custom rate here?
             n.addAnnotation("user-defined", "true");
-        	String nodeType = typeRadios.getSelectedToggle().getUserData().toString();
-        	n.addAnnotation("custom-type", nodeType);
+        	n.addAnnotation("custom-type", "topic");    
+        	String topic = "/" + topicField.getText();
+            n.addPort(new ROSPort(topic, n, new ROSTopic(topic, typeBox.getValue(),
+                    directionBox.getValue() == "Subscribe"), false, false));
             controller.addLibraryNode(n);
             addClicked = true;
             dialogStage.close();
@@ -91,8 +88,17 @@ public class NewUserDefinedDialog implements Initializable {
     private boolean isInputValid() {
         String errorMessage = "";
 
-        if (nameField.getText() == null || nameField.getText().equals("")) {
-            errorMessage += "No name given!\n";
+        if (nodeField.getText() == null || nodeField.getText().equals("")) {
+            errorMessage += "No node name given!\n";
+        }
+        if (topicField.getText() == null || topicField.getText().equals("")) {
+            errorMessage += "No topic name given!\n";
+        }
+        if (typeBox.getValue() == null) {
+            errorMessage += "No type selected!\n";
+        }
+        if (directionBox.getValue() == null) {
+            errorMessage += "No direction selected!\n";
         }
 
         if (errorMessage.length() == 0) {
@@ -111,11 +117,9 @@ public class NewUserDefinedDialog implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    	controllerRadio.setUserData("custom controller");
-    	topicRadio.setUserData("custom topic");
-    	typeRadios = new ToggleGroup();
-    	controllerRadio.setToggleGroup(typeRadios);
-    	topicRadio.setToggleGroup(typeRadios);
-    	controllerRadio.setSelected(true);
+        ObservableList<ROSMsgType> types = FXCollections.observableArrayList(ROSMsgType.typeMap.keySet());
+        FXCollections.sort(types);
+        typeBox.setItems(types);
+        directionBox.setItems(FXCollections.observableArrayList("Publish", "Subscribe"));
     }
 }

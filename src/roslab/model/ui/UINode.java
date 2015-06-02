@@ -9,6 +9,7 @@ import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.DragEvent;
@@ -46,6 +47,7 @@ public class UINode extends Rectangle {
 
     Node node;
     Text nodeText;
+    Text rateText = null;
     List<UIEndpoint> endpoints = new ArrayList<UIEndpoint>();
     boolean inNode;
     ContextMenu deleteMenu;
@@ -142,7 +144,7 @@ public class UINode extends Rectangle {
                 }
             }
         });
-        
+        setDefaultColors();
         this.nodeText.toFront();
     }
     
@@ -181,7 +183,7 @@ public class UINode extends Rectangle {
 
         setOnDragExited(new EventHandler<DragEvent>() {
         	public void handle(DragEvent event) {
-        		setStyle("-fx-stroke: blue");
+        		setDefaultColors();
         		event.consume();
         	}
         });
@@ -216,14 +218,6 @@ public class UINode extends Rectangle {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-//                    ContextMenu deleteMenu = new ContextMenu();
-//                    MenuItem deleteItem = new MenuItem("Delete Node");
-//                    deleteItem.setOnAction(new EventHandler<ActionEvent>() {
-//                    	public void handle(ActionEvent event) {
-//                    		controller.removeConfigNode(getNode());
-//                    	}
-//                    });
-//                    deleteMenu.getItems().add(deleteItem);
                     deleteMenu.show(getNode().getUINode() , mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 } else if (mouseEvent.getButton() == MouseButton.PRIMARY) {
                     deleteMenu.hide();
@@ -231,6 +225,7 @@ public class UINode extends Rectangle {
             }
         });
     }
+    
     private void setNodeWidth(int i) {
         this.setWidth(i);
         this.nodeText.setX(this.getX() + (this.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
@@ -367,7 +362,7 @@ public class UINode extends Rectangle {
     }
     
     private boolean validPortAdd(String pName, String pType, boolean isSub) {
-    	if("true".equals(node.getAnnotation("user-defined"))) {
+    	if("controller".equals(node.getAnnotation("custom-type"))) {
         	for(Feature f: node.getFeatures().values()) {
         		if(f instanceof ROSPort) {
         			ROSPort existing = (ROSPort)f;
@@ -389,6 +384,40 @@ public class UINode extends Rectangle {
     		e.toTheFront();	
     	}
         this.nodeText.toFront();
+    }
+    
+    public void setDefaultColors() {
+    	if(!(node instanceof ROSNode)) return;
+    	String type = node.getAnnotation("custom-type");
+    	if(type == null) {
+    		setStyle("-fx-stroke: blue;");
+    	} else if(type.equals("controller")) {
+    		setStyle("-fx-stroke: lightskyblue; -fx-fill: paleturquoise;"); 
+    	} else if(type.equals("topic")) {
+    		setStyle("-fx-stroke: lightskyblue;"); 		
+    	}
+    }
+    
+    public void addToGroup(Group g, ROSLabController r) {
+    	boolean isRos = node instanceof ROSNode;
+    	if(isRos) {
+            addCustomPortListener(r);
+            addRemoveNode(r);		
+    	}  	
+        g.getChildren().add(this);
+        g.getChildren().add(nodeText);
+    	for(UIEndpoint e: endpoints) {
+    		e.addToGroup(g);
+    		if(isRos) e.addRemoveCustomListener(r);
+    	}
+    }
+    
+    public void removeFromGroup(Group g) {
+        g.getChildren().remove(this); 
+    	g.getChildren().remove(nodeText);
+    	for(UIEndpoint e: endpoints) {
+    		e.removeFromGroup(g);
+    	}
     }
 
 }

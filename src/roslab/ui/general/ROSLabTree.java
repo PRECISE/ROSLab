@@ -109,14 +109,21 @@ public class ROSLabTree extends TreeItem<String> {
 
         @Override
         public ContextMenu getMenu() {
-            MenuItem mItem = new MenuItem("Add User-Defined Node...");
-            mItem.setOnAction(new EventHandler<ActionEvent>() {
+            MenuItem controllerItem = new MenuItem("Add Custom Controller Node...");
+            controllerItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    controller.showNewUserDefinedDialog();
+                    controller.showCustomNodeDialog("Controller");
                 }
             });
-            return new ContextMenu(mItem);
+            MenuItem topicItem = new MenuItem("Add Custom Topic Node...");
+            topicItem.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    controller.showCustomNodeDialog("Topic");
+                }
+            });
+            return new ContextMenu(controllerItem, topicItem);
         }
     }
 

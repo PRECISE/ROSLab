@@ -10,11 +10,11 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane id="newNodeDialog" fx:id="newUDNodeDialog" hgap="14.0" maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="169.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ui.software.NewUserDefinedDialog">
+<GridPane id="newNodeDialog" hgap="14.0" maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="169.99997792968497" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ui.software.NewCustomControllerDialog">
   <children>
-    <VBox maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <VBox maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" prefHeight="33.0" prefWidth="345.0" spacing="7.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <children>
-        <Label fx:id="messageLabel" prefWidth="279.0" text="New User-Defined Node" textAlignment="LEFT" wrapText="true">
+        <Label fx:id="messageLabel" prefWidth="279.0" text="New Custom Controller Node" textAlignment="LEFT" wrapText="true">
           <font>
             <Font name="System Bold" size="13.0" />
           </font>
@@ -45,7 +45,20 @@
         </HBox>
       </children>
     </HBox>
-    <GridPane prefHeight="116.0" prefWidth="296.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+    <GridPane hgap="10.0" prefHeight="116.0" prefWidth="296.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+      <children>
+        <TextField id="nameField" fx:id="rateField" prefWidth="94.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="Rate" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" maxWidth="266.0" minWidth="10.0" prefWidth="264.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="81.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+    <GridPane hgap="10.0" prefHeight="116.0" prefWidth="296.0" vgap="0.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
       <children>
         <TextField fx:id="nameField" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
         <Label text="Name " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
@@ -58,14 +71,6 @@
         <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
       </rowConstraints>
     </GridPane>
-    <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-      <left>
-        <RadioButton fx:id="controllerRadio" mnemonicParsing="false" prefWidth="157.0" text="Controller Node" />
-      </left>
-      <right>
-        <RadioButton fx:id="topicRadio" mnemonicParsing="false" prefWidth="157.0" text="Topic Node" />
-      </right>
-    </BorderPane>
   </children>
   <columnConstraints>
     <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="+Infinity" minWidth="-Infinity" prefWidth="345.0" />
@@ -74,9 +79,9 @@
     <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
   </padding>
   <rowConstraints>
-    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="16.0" valignment="CENTER" vgrow="ALWAYS" />
-    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="16.0" valignment="CENTER" vgrow="ALWAYS" />
-    <RowConstraints maxHeight="287.0" minHeight="-Infinity" prefHeight="27.0" vgrow="NEVER" />
-    <RowConstraints maxHeight="-1.0" minHeight="-Infinity" prefHeight="-1.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="28.0" valignment="CENTER" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="287.0" minHeight="-Infinity" prefHeight="26.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="98.0" minHeight="-Infinity" prefHeight="40.0" vgrow="NEVER" />
   </rowConstraints>
 </GridPane>
