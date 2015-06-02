@@ -44,19 +44,22 @@ public class UINode extends Rectangle {
     private static final int UINODE_WIDTH_PADDING = 70;
     private static final double TEXT_X_OFFSET = 10;
     private static final double TEXT_Y_OFFSET = 6;
+    private static final double RATE_Y_OFFSET = 18;
 
     Node node;
     Text nodeText;
     Text rateText = null;
     List<UIEndpoint> endpoints = new ArrayList<UIEndpoint>();
     boolean inNode;
-    ContextMenu deleteMenu;
+    ContextMenu rightClickMenu;
 
     // X AND Y position of mouse during selection
     double mousex = 0;
     double mousey = 0;
-    double mousexText = 0;
-    double mouseyText = 0;
+    double mousexName = 0;
+    double mouseyName = 0;
+    double mousexRate = 0;
+    double mouseyRate = 0;
 
     /**
      * @param node
@@ -67,9 +70,12 @@ public class UINode extends Rectangle {
     public UINode(Node node, double xx, double yy) {
         super(xx, yy, DEFAULT_WIDTH + node.getName().length() * CHARACTER_SIZE, DEFAULT_HEIGHT);
         nodeText = new Text(getX(), getY() + (getHeight()) - TEXT_Y_OFFSET, node.getName());
-        setWidth(nodeText.getLayoutBounds().getWidth() + DEFAULT_WIDTH);
+        if(node instanceof ROSNode && "controller".equals(node.getAnnotation("custom-type"))) {
+        	String rate = node.getAnnotation("Rate");
+        	rateText = new Text(getX(), getY() + (getHeight()) + RATE_Y_OFFSET, "Rate:" + rate);
+        }
+        setNodeWidth(nodeText.getLayoutBounds().getWidth() + DEFAULT_WIDTH);
         getStyleClass().add(getClass().getSimpleName());
-        this.nodeText.setX(this.getX() + (this.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
 
         this.nodeText.setFont(new Font(16)); // TODO: Change to monospaced font
         // to correct center spacing
@@ -97,8 +103,12 @@ public class UINode extends Rectangle {
                 // record a delta distance for the drag and drop operation.
                 mousex = getX() - mouseEvent.getX();
                 mousey = getY() - mouseEvent.getY();
-                mousexText = nodeText.getX() - mouseEvent.getX();
-                mouseyText = nodeText.getY() - mouseEvent.getY();
+                mousexName = nodeText.getX() - mouseEvent.getX();
+                mouseyName = nodeText.getY() - mouseEvent.getY();
+                if(rateText != null) {
+                    mousexRate = rateText.getX() - mouseEvent.getX();
+                    mouseyRate = rateText.getY() - mouseEvent.getY();                	
+                }
                 for (UIEndpoint e : endpoints) {
                     e.setMouse(mouseEvent);
                 }
@@ -119,8 +129,12 @@ public class UINode extends Rectangle {
             public void handle(MouseEvent mouseEvent) {
                 setX(mouseEvent.getX() + mousex);
                 setY(mouseEvent.getY() + mousey);
-                nodeText.setX(mouseEvent.getX() + mousexText);
-                nodeText.setY(mouseEvent.getY() + mouseyText);
+                nodeText.setX(mouseEvent.getX() + mousexName);
+                nodeText.setY(mouseEvent.getY() + mouseyName);
+                if(rateText != null) {
+                    rateText.setX(mouseEvent.getX() + mousexRate);
+                    rateText.setY(mouseEvent.getY() + mouseyRate);               	
+                }
                 for (UIEndpoint e : endpoints) {
                     e.updateXY(mouseEvent);
                 }
@@ -205,30 +219,63 @@ public class UINode extends Rectangle {
 
     }
     
-    public void addRemoveNode(final ROSLabController controller) {
-    	deleteMenu = new ContextMenu();
+    public void addRightClickMenu(final ROSLabController controller) {
+    	rightClickMenu = new ContextMenu();
+        if(node instanceof ROSNode && "controller".equals(node.getAnnotation("custom-type"))) {
+        	MenuItem rateItem = new MenuItem("Edit Rate");
+        	rateItem.setOnAction(new EventHandler<ActionEvent>() {
+            	public void handle(ActionEvent event) {
+            		System.out.println("change rate");
+            		controller.showEditRateDialog(node);
+            		updateRateText();         		
+            	}
+            });
+        	rightClickMenu.getItems().add(rateItem);
+        }
         MenuItem deleteItem = new MenuItem("Delete Node");
         deleteItem.setOnAction(new EventHandler<ActionEvent>() {
         	public void handle(ActionEvent event) {
         		controller.removeConfigNode(getNode());
         	}
         });
-        deleteMenu.getItems().add(deleteItem);
+        rightClickMenu.getItems().add(deleteItem);
+
         setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                    deleteMenu.show(getNode().getUINode() , mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                    rightClickMenu.show(getNode().getUINode() , mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 } else if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                    deleteMenu.hide();
+                    rightClickMenu.hide();
                 }
             }
         });
     }
     
-    private void setNodeWidth(int i) {
-        this.setWidth(i);
-        this.nodeText.setX(this.getX() + (this.getWidth() - this.nodeText.getText().length() * CHARACTER_SIZE) / 2);
+    private void setNodeWidth(double d) {
+        setWidth(d);
+        centerText();
+    }
+    
+    private void centerText() {
+    	nodeText.setX(getX() + (getWidth() - nodeText.getLayoutBounds().getWidth()) / 2); 
+    	if(rateText != null) {
+    		rateText.setX(getX() + (getWidth() - rateText.getLayoutBounds().getWidth()) / 2); 
+    	}
+    }
+    
+    private void setNodeHeight(double d) {
+    	setHeight(d);
+    	nodeText.setY(getY() + getHeight() - TEXT_Y_OFFSET);
+    	if(rateText != null) {
+    		rateText.setY(getY() + getHeight() + RATE_Y_OFFSET);
+  	  	}
+    }
+    
+    private void updateRateText() {
+    	String rate = node.getAnnotation("Rate");
+    	rateText.setText("Rate:" + rate);
+    	centerText();
     }
 
     /**
@@ -321,16 +368,13 @@ public class UINode extends Rectangle {
       // Check if the UINode is wide enough to show all endpoints
       double requiredWidth = (longestNameLeft + longestNameRight) * CHARACTER_SIZE 
     		  + nodeText.getLayoutBounds().getWidth() + UINODE_WIDTH_PADDING;
-      if (getWidth() < requiredWidth) {
-          setWidth(requiredWidth);
-          nodeText.setX(getX() + (getWidth() - nodeText.getLayoutBounds().getWidth()) / 2);        
-      }
+      if (getWidth() < requiredWidth) setNodeWidth(requiredWidth);
+      
       // Check if the UINode is high enough to show all endpoints //TODO 3+ endpoints messing up
       double requiredHeight = Math.ceil(Math.max(subCount, pubCount)) * ENDPOINT_SIZE 
     		  + ENDPOINT_Y_OFFSET + TEXT_Y_OFFSET;
       if (getHeight() < requiredHeight) {
-    	  setHeight(requiredHeight);
-    	  nodeText.setY(getY() + getHeight() - TEXT_Y_OFFSET);
+    	  setNodeHeight(requiredHeight);
       }
       
       // Create endpoint objects in the appropriate location on this Node's edges
@@ -402,10 +446,11 @@ public class UINode extends Rectangle {
     	boolean isRos = node instanceof ROSNode;
     	if(isRos) {
             addCustomPortListener(r);
-            addRemoveNode(r);		
+            addRightClickMenu(r);		
     	}  	
         g.getChildren().add(this);
         g.getChildren().add(nodeText);
+        if(rateText != null) g.getChildren().add(rateText);
     	for(UIEndpoint e: endpoints) {
     		e.addToGroup(g);
     		if(isRos) e.addRemoveCustomListener(r);
@@ -415,6 +460,7 @@ public class UINode extends Rectangle {
     public void removeFromGroup(Group g) {
         g.getChildren().remove(this); 
     	g.getChildren().remove(nodeText);
+        if(rateText != null) g.getChildren().remove(rateText);
     	for(UIEndpoint e: endpoints) {
     		e.removeFromGroup(g);
     	}

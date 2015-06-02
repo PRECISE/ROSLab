@@ -50,6 +50,7 @@ import roslab.model.ui.UINode;
 import roslab.ui.general.NewLinkDialog;
 import roslab.ui.general.NewNodeDialog;
 import roslab.ui.general.ROSLabTree;
+import roslab.ui.software.EditRateDialog;
 import roslab.ui.software.NewCustomControllerDialog;
 import roslab.ui.software.NewCustomTopicDialog;
 import roslab.ui.software.NewPortDialog;
@@ -615,6 +616,40 @@ public class ROSLabController implements Initializable {
         }
     }
 
+    public boolean showEditRateDialog(Node node) {
+    	if(!(node instanceof ROSNode && "controller".equals(node.getAnnotation("custom-type")))) {
+    		return false;
+    	}
+    	ROSNode rosNode = (ROSNode)node;
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("ui/software/EditRateDialog.fxml"));
+            GridPane page = (GridPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Edit Rate");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            EditRateDialog controller = loader.getController();
+            controller.setNode(rosNode);
+            controller.setDialogStage(dialogStage);
+            controller.setRLController(this);
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+            return controller.isAddClicked();            	
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     /**
      * Opens a dialog to edit details for the specified person. If the user
      * clicks OK, the changes are saved into the provided person object and
