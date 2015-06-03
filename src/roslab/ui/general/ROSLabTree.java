@@ -27,15 +27,52 @@ import roslab.processors.electronics.EagleSchematic;
 import roslab.processors.software.ROSNodeCodeGenerator;
 
 public class ROSLabTree extends TreeItem<String> {
+	
+    LibraryTreeItem libraryTree;
+    ConfigTreeItem configTree;
+
+    @SuppressWarnings("unchecked")
+    public ROSLabTree(Library lib, Configuration conf, ROSLabController controller) {
+        libraryTree = new LibraryTreeItem(controller, lib);
+        configTree = new ConfigTreeItem(controller, conf, lib);
+
+        // Add to top-level tree
+        getChildren().addAll(libraryTree, configTree);
+    }
+    
     public class ContextMenuTreeItem extends TreeItem<String> {
         public ContextMenu menu = new ContextMenu();
+        private ROSLabController controller;
 
         public ContextMenuTreeItem(String title) {
             super(title);
         }
+        
+        public ContextMenuTreeItem(String title, ROSLabController controller) {
+            super(title);
+            this.controller = controller;
+        }
 
         public ContextMenu getMenu() {
-            return this.menu;
+        	if("ROSNode".equals(getValue()) && controller != null) {
+                MenuItem controllerItem = new MenuItem("Add Custom Controller Node...");
+                controllerItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        controller.showCustomNodeDialog("Controller");
+                    }
+                });
+                MenuItem topicItem = new MenuItem("Add Custom Topic Node...");
+                topicItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        controller.showCustomNodeDialog("Topic");
+                    }
+                });
+                return new ContextMenu(controllerItem, topicItem);        		
+        	} else {
+        		return new ContextMenu();
+        	}
         }
 
         public void setMenu(ContextMenu menu) {
@@ -56,6 +93,11 @@ public class ROSLabTree extends TreeItem<String> {
             for (Node n : library.getNodes()) {
                 addNode(n);
             }
+            setExpanded(true);
+        }
+        
+        public LibraryTreeItem() {
+        	super("Library");
         }
 
         public void addNode(Node n) {
@@ -72,7 +114,7 @@ public class ROSLabTree extends TreeItem<String> {
                 }
             }
             if (!nodeAdded) {
-                ContextMenuTreeItem newItem = new ContextMenuTreeItem(n.getClass().getSimpleName());
+            	ContextMenuTreeItem newItem = new ContextMenuTreeItem(n.getClass().getSimpleName(), controller);
                 NodeTreeItem newNode = new NodeTreeItem(n, this.controller);
                 for (String f : n.getFeatures().keySet()) {
                     newNode.getChildren().add(new ContextMenuTreeItem(f));
@@ -109,21 +151,30 @@ public class ROSLabTree extends TreeItem<String> {
 
         @Override
         public ContextMenu getMenu() {
-            MenuItem controllerItem = new MenuItem("Add Custom Controller Node...");
-            controllerItem.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    controller.showCustomNodeDialog("Controller");
-                }
-            });
-            MenuItem topicItem = new MenuItem("Add Custom Topic Node...");
-            topicItem.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    controller.showCustomNodeDialog("Topic");
-                }
-            });
-            return new ContextMenu(controllerItem, topicItem);
+        	MenuItem libraryItem = new MenuItem("Load Library");
+        	libraryItem.setOnAction(new EventHandler<ActionEvent>() {
+        		@Override
+        		public void handle(ActionEvent event) {
+        			controller.showLoadLibraryDialog();
+        		}
+        	});
+        	return new ContextMenu(libraryItem);
+        	//            MenuItem controllerItem = new MenuItem("Add Custom Controller Node...");
+        	//            controllerItem.setOnAction(new EventHandler<ActionEvent>() {
+        	//                @Override
+        	//                public void handle(ActionEvent event) {
+        	//                    controller.showCustomNodeDialog("Controller");
+        	//                }
+        	//            });
+        	//            MenuItem topicItem = new MenuItem("Add Custom Topic Node...");
+        	//            topicItem.setOnAction(new EventHandler<ActionEvent>() {
+        	//                @Override
+        	//                public void handle(ActionEvent event) {
+        	//                    controller.showCustomNodeDialog("Topic");
+        	//                }
+        	//            });
+        	//            return new ContextMenu(controllerItem, topicItem);
+        	//        }
         }
     }
 
@@ -169,6 +220,7 @@ public class ROSLabTree extends TreeItem<String> {
                 }
             });
             configLinksTree.setMenu(new ContextMenu(mItem));
+            setExpanded(true);
         }
 
         public void addNode(Node n) {
@@ -329,19 +381,18 @@ public class ROSLabTree extends TreeItem<String> {
             // Return empty menu if node is under Library tree and not a
             // user-defined node
             if (this.getParent().getParent() instanceof LibraryTreeItem) {
-                if (node.getAnnotation("user-defined") == "true") {
-                    MenuItem mItem = null;
-
-                    if (this.node instanceof ROSNode) {
-                        mItem = new MenuItem("Add New Port...");
-                        mItem.setOnAction(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                controller.showNewPortDialog(node);
-                            }
-                        });
-                    }
-                    return new ContextMenu(mItem);
+                if ("controller".equals(node.getAnnotation("custom-type"))) {
+//                    MenuItem mItem = null;
+//                    if (this.node instanceof ROSNode) {
+//                        mItem = new MenuItem("Add New Port...");
+//                        mItem.setOnAction(new EventHandler<ActionEvent>() {
+//                            @Override
+//                            public void handle(ActionEvent event) {
+//                                controller.showNewPortDialog(node);
+//                            }
+//                        });
+//                    }
+                    return new ContextMenu();
                 }
 
                 return new ContextMenu();
@@ -415,18 +466,6 @@ public class ROSLabTree extends TreeItem<String> {
                 setContextMenu(((ContextMenuTreeItem) getTreeItem()).getMenu());
             }
         }
-    }
-
-    LibraryTreeItem libraryTree;
-    ConfigTreeItem configTree;
-
-    @SuppressWarnings("unchecked")
-    public ROSLabTree(Library lib, Configuration conf, ROSLabController controller) {
-        libraryTree = new LibraryTreeItem(controller, lib);
-        configTree = new ConfigTreeItem(controller, conf, lib);
-
-        // Add to top-level tree
-        getChildren().addAll(libraryTree, configTree);
     }
 
     public void addLibraryNode(Node n) {
