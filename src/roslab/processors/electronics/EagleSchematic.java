@@ -69,7 +69,7 @@ public class EagleSchematic {
             // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             doc.getDocumentElement().normalize();
 
-            System.out.println("Schematic : " + this.schematic.getName());
+            logger.debug("Schematic : " + this.schematic.getName());
 
             NodeList nList = doc.getElementsByTagName("net");
 

@@ -237,12 +237,34 @@ public class Pin extends Feature {
                         return new Wire(ps.name, this, p);
                     }
 
-                    String wireString = "";
-                    wireString += this.parent.getName() + "." + this.assignedService.name;
+                    String wireString = this.parent.getName();
+
+                    // Add SuperService details if available
+                    if (!this.assignedService.superServiceName.equals("#")) {
+                        wireString += "." + this.assignedService.superServiceName;
+                        if (this.assignedService.superServiceNumber != -1) {
+                            wireString += "." + this.assignedService.superServiceNumber;
+                        }
+                    }
+
+                    wireString += "." + this.assignedService.name;
+
                     if (this.assignedService.number != -1) {
                         wireString += "." + this.assignedService.number;
                     }
-                    wireString += "--" + p.parent.getName() + "." + p.assignedService.name;
+
+                    wireString += "--" + p.parent.getName();
+
+                    // Add SuperService details if available
+                    if (!p.assignedService.superServiceName.equals("#")) {
+                        wireString += "." + p.assignedService.superServiceName;
+                        if (p.assignedService.superServiceNumber != -1) {
+                            wireString += "." + p.assignedService.superServiceNumber;
+                        }
+                    }
+
+                    wireString += "." + p.assignedService.name;
+
                     if (p.assignedService.number != -1) {
                         wireString += "." + p.assignedService.number;
                     }
