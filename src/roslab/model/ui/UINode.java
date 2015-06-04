@@ -72,7 +72,7 @@ public class UINode extends Rectangle {
         nodeText = new Text(getX(), getY() + (getHeight()) - TEXT_Y_OFFSET, node.getName());
         if(node instanceof ROSNode && "controller".equals(node.getAnnotation("custom-type"))) {
         	String rate = node.getAnnotation("Rate");
-        	rateText = new Text(getX(), getY() + (getHeight()) + RATE_Y_OFFSET, "Rate:" + rate);
+        	rateText = new Text(getX(), getY() + (getHeight()) + RATE_Y_OFFSET, "Rate:" + rate + "hz");
         }
         setNodeWidth(nodeText.getLayoutBounds().getWidth() + DEFAULT_WIDTH);
         getStyleClass().add(getClass().getSimpleName());
@@ -225,7 +225,6 @@ public class UINode extends Rectangle {
         	MenuItem rateItem = new MenuItem("Edit Rate");
         	rateItem.setOnAction(new EventHandler<ActionEvent>() {
             	public void handle(ActionEvent event) {
-            		System.out.println("change rate");
             		controller.showEditRateDialog(node);
             		updateRateText();         		
             	}
@@ -274,7 +273,7 @@ public class UINode extends Rectangle {
     
     private void updateRateText() {
     	String rate = node.getAnnotation("Rate");
-    	rateText.setText("Rate:" + rate);
+    	rateText.setText("Rate:" + rate + "hz");
     	centerText();
     }
 

@@ -60,6 +60,7 @@ import roslab.ui.general.NewLinkDialog;
 import roslab.ui.general.NewNodeDialog;
 import roslab.ui.general.ROSLabTree;
 import roslab.ui.software.EditRateDialog;
+import roslab.ui.software.LoadLibraryDialog;
 import roslab.ui.software.NewCustomControllerDialog;
 import roslab.ui.software.NewCustomTopicDialog;
 import roslab.ui.software.NewPortDialog;
@@ -130,21 +131,9 @@ public class ROSLabController implements Initializable {
 
         // PythonLibraryHelper p = new PythonLibraryHelper();
 
-        // TODO: Extract these similar initialization steps into a separate
-        // method
-        swLibrary.loadPlatform("landshark");
-        swConfig = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
-        swTree = new ROSLabTree(swLibrary, swConfig, this);
-        swPane.getChildren().add(swUIObjects);
-        swTreeView.setRoot(swTree);
-        swTreeView.setShowRoot(false);
-        swTreeView.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>() {
-            @Override
-            public TreeCell<String> call(TreeView<String> p) {
-                return swTree.new TreeCellImpl();
-            }
-        });
+        loadSWComponents("");
 
+        // TODO refactor all three to one helper method
         eeLibrary.loadElectronics();
         eeConfig = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
         eeTree = new ROSLabTree(eeLibrary, eeConfig, this);
@@ -172,6 +161,25 @@ public class ROSLabController implements Initializable {
 
         createAddNodeMenu();
         // addDragDrop(swPane);
+    }
+
+    public void loadSWComponents(String library) {
+        swPane.getChildren().clear();
+        swUIObjects.getChildren().clear();
+        if (!"".equals(library)) {
+            swLibrary.loadPlatform(library);
+        }
+        swConfig = new Configuration("Demo", new ArrayList<Node>(), new ArrayList<Link>());
+        swTree = new ROSLabTree(swLibrary, swConfig, this);
+        swPane.getChildren().add(swUIObjects);
+        swTreeView.setRoot(swTree);
+        swTreeView.setShowRoot(false);
+        swTreeView.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>() {
+            @Override
+            public TreeCell<String> call(TreeView<String> p) {
+                return swTree.new TreeCellImpl();
+            }
+        });
     }
 
     public void createAddNodeMenu() {
@@ -728,6 +736,34 @@ public class ROSLabController implements Initializable {
             dialogStage.showAndWait();
             return controller.isAddClicked();
 
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean showLoadLibraryDialog() {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("ui/software/LoadLibraryDialog.fxml"));
+            GridPane page = (GridPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Load Library");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            LoadLibraryDialog controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setRLController(this);
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+            return controller.isAddClicked();
         }
         catch (IOException e) {
             e.printStackTrace();
