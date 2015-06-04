@@ -1,12 +1,20 @@
 package roslab;
 
 import java.awt.Point;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,21 +25,22 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-//import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import org.apache.log4j.BasicConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import roslab.model.electronics.Circuit;
 import roslab.model.general.Configuration;
@@ -39,12 +48,12 @@ import roslab.model.general.Endpoint;
 import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
+import roslab.model.mechanics.HWBlock;
 import roslab.model.software.ROSMsgType;
 import roslab.model.software.ROSNode;
 import roslab.model.software.ROSPort;
 import roslab.model.software.ROSTopic;
 import roslab.model.ui.UIEndpoint;
-import roslab.model.mechanics.HWBlock;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
 import roslab.ui.general.NewLinkDialog;
@@ -55,7 +64,10 @@ import roslab.ui.software.NewCustomControllerDialog;
 import roslab.ui.software.NewCustomTopicDialog;
 import roslab.ui.software.NewPortDialog;
 
+import com.thoughtworks.xstream.XStream;
+
 public class ROSLabController implements Initializable {
+    static Logger logger = LoggerFactory.getLogger(ROSLabController.class);
 
     @FXML
     TreeView<String> swTreeView;
@@ -80,15 +92,6 @@ public class ROSLabController implements Initializable {
 
     @FXML
     AnchorPane eePane;
-
-    @FXML
-    Tab swTab;
-
-    @FXML
-    Tab hwTab;
-
-    @FXML
-    Tab eeTab;
 
     Random r = new Random();
 
@@ -170,69 +173,71 @@ public class ROSLabController implements Initializable {
         createAddNodeMenu();
         // addDragDrop(swPane);
     }
-    
+
     public void createAddNodeMenu() {
-    	addSWNodeMenu = new ContextMenu();
+        addSWNodeMenu = new ContextMenu();
         MenuItem addItem = new MenuItem("Add Node");
         addItem.setOnAction(new EventHandler<ActionEvent>() {
-        	public void handle(ActionEvent event) {
-        		showNewNodeDialog(swLibrary);
-        	}
+            @Override
+            public void handle(ActionEvent event) {
+                showNewNodeDialog(swLibrary);
+            }
         });
         addSWNodeMenu.getItems().add(addItem);
         swPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.SECONDARY &&
-                		!swUIObjects.getChildren().contains(mouseEvent.getTarget())) { //TODO test
+                if (mouseEvent.getButton() == MouseButton.SECONDARY && !swUIObjects.getChildren().contains(mouseEvent.getTarget())) { // TODO
+                    // test
                     addSWNodeMenu.show(swPane, mouseEvent.getScreenX(), mouseEvent.getScreenY());
-                } else if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                }
+                else if (mouseEvent.getButton() == MouseButton.PRIMARY) {
                     addSWNodeMenu.hide();
                 }
             }
         });
     }
-    
-//    private void enableSelectionRectangle(final Pane p) {
-//        p.setOnMousePressed(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                selectionX = mouseEvent.getX();
-//                selectionY = mouseEvent.getY();
-//                selectionRectangle = new Rectangle(selectionX, selectionY, 0, 0);
-//                selectionRectangle.getStyleClass().add("SelectionRectangle");
-//                p.getChildren().add(selectionRectangle);
-//            }
-//        });
-//        p.setOnMouseReleased(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                p.getChildren().remove(selectionRectangle);
-//            }
-//        });
-//        
-//        p.setOnMouseDragged(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                double x = mouseEvent.getX();
-//                double y = mouseEvent.getY();
-//                if (x < selectionX) {
-//                    selectionRectangle.setX(x);
-//                    selectionRectangle.setWidth(selectionX - x);
-//                }
-//                else {
-//                    selectionRectangle.setWidth(x - selectionRectangle.getX());
-//                }
-//                if (y < selectionY) {
-//                    selectionRectangle.setY(y);
-//                    selectionRectangle.setHeight(selectionY - y);
-//                }
-//                else {
-//                    selectionRectangle.setHeight(y - selectionRectangle.getY());
-//                }
-//            }
-//        });
-//    }
+
+    // private void enableSelectionRectangle(final Pane p) {
+    // p.setOnMousePressed(new EventHandler<MouseEvent>() {
+    // @Override
+    // public void handle(MouseEvent mouseEvent) {
+    // selectionX = mouseEvent.getX();
+    // selectionY = mouseEvent.getY();
+    // selectionRectangle = new Rectangle(selectionX, selectionY, 0, 0);
+    // selectionRectangle.getStyleClass().add("SelectionRectangle");
+    // p.getChildren().add(selectionRectangle);
+    // }
+    // });
+    // p.setOnMouseReleased(new EventHandler<MouseEvent>() {
+    // @Override
+    // public void handle(MouseEvent mouseEvent) {
+    // p.getChildren().remove(selectionRectangle);
+    // }
+    // });
+    //
+    // p.setOnMouseDragged(new EventHandler<MouseEvent>() {
+    // @Override
+    // public void handle(MouseEvent mouseEvent) {
+    // double x = mouseEvent.getX();
+    // double y = mouseEvent.getY();
+    // if (x < selectionX) {
+    // selectionRectangle.setX(x);
+    // selectionRectangle.setWidth(selectionX - x);
+    // }
+    // else {
+    // selectionRectangle.setWidth(x - selectionRectangle.getX());
+    // }
+    // if (y < selectionY) {
+    // selectionRectangle.setY(y);
+    // selectionRectangle.setHeight(selectionY - y);
+    // }
+    // else {
+    // selectionRectangle.setHeight(y - selectionRectangle.getY());
+    // }
+    // }
+    // });
+    // }
 
     public void addLibraryNode(ROSNode n) {
         swLibrary.addNode(n);
@@ -315,7 +320,7 @@ public class ROSLabController implements Initializable {
     }
 
     public void addConfigLink(Link l) {
-    	UILink uil = new UILink(l);
+        UILink uil = new UILink(l);
         l.setUILink(uil);
 
         String nodeClassName = l.getSrc().getParent().getClass().getName();
@@ -354,23 +359,27 @@ public class ROSLabController implements Initializable {
         String nodeClassName = n.getClass().getName();
         switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
             case "ROSNode":
-        		for(UIEndpoint e: n.getUINode().getUIEndpoints()) {
-        			for(UILink l: e.getUILinks()) {
-        				swConfig.removeLink(l.getLink());
-        				swTree.removeConfigLink(l.getLink());
-        				if(e.equals(l.getSrc())) l.getDest().removeUILink(l);
-        				else l.getSrc().removeUILink(l);
-        				swUIObjects.getChildren().remove(l);	
-        			}
-        			e.getUILinks().clear();
-//        			e.removeFromGroup(swUIObjects);
-//        			swUIObjects.getChildren().remove(e.getEndpointText());
-//        			swUIObjects.getChildren().remove(e.getPortLine());
-//        			swUIObjects.getChildren().remove(e);
-        		}	
-        		n.getUINode().removeFromGroup(swUIObjects);
-//            	swUIObjects.getChildren().remove(n.getUINode().getNodeUIText());
-//                swUIObjects.getChildren().remove(n.getUINode());     
+                for (UIEndpoint e : n.getUINode().getUIEndpoints()) {
+                    for (UILink l : e.getUILinks()) {
+                        swConfig.removeLink(l.getLink());
+                        swTree.removeConfigLink(l.getLink());
+                        if (e.equals(l.getSrc())) {
+                            l.getDest().removeUILink(l);
+                        }
+                        else {
+                            l.getSrc().removeUILink(l);
+                        }
+                        swUIObjects.getChildren().remove(l);
+                    }
+                    e.getUILinks().clear();
+                    // e.removeFromGroup(swUIObjects);
+                    // swUIObjects.getChildren().remove(e.getEndpointText());
+                    // swUIObjects.getChildren().remove(e.getPortLine());
+                    // swUIObjects.getChildren().remove(e);
+                }
+                n.getUINode().removeFromGroup(swUIObjects);
+                // swUIObjects.getChildren().remove(n.getUINode().getNodeUIText());
+                // swUIObjects.getChildren().remove(n.getUINode());
                 swConfig.removeNode(n);
                 swTree.removeConfigNode(n);
                 break;
@@ -471,12 +480,87 @@ public class ROSLabController implements Initializable {
 
     @FXML
     private void openConfiguration() {
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("LAB files (*.lab)", "*.lab");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show save file dialog
+        File openFile = fileChooser.showOpenDialog(primaryStage);
+
         // TODO Use XStream here!
+        // Unzip package and load all xml files
     }
 
     @FXML
     private void saveConfiguration() {
-        // TODO Use XStream here!
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("LAB files (*.lab)", "*.lab");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show save file dialog
+        File saveFile = fileChooser.showSaveDialog(primaryStage);
+
+        if (saveFile != null) {
+            FileOutputStream fos = null;
+            ZipOutputStream zipOut = null;
+            XStream xstream = new XStream();
+            try {
+                fos = new FileOutputStream(saveFile);
+                zipOut = new ZipOutputStream(new BufferedOutputStream(fos));
+
+                InputStream is = new ByteArrayInputStream(xstream.toXML(swConfig).getBytes());
+                ZipEntry ze = new ZipEntry("swConfig.xml");
+                zipOut.putNextEntry(ze);
+                byte[] tmp = new byte[4 * 1024];
+                int size = 0;
+                while ((size = is.read(tmp)) != -1) {
+                    zipOut.write(tmp, 0, size);
+                }
+                zipOut.flush();
+
+                is = new ByteArrayInputStream(xstream.toXML(eeConfig).getBytes());
+                ze = new ZipEntry("eeConfig.xml");
+                zipOut.putNextEntry(ze);
+                tmp = new byte[4 * 1024];
+                while ((size = is.read(tmp)) != -1) {
+                    zipOut.write(tmp, 0, size);
+                }
+                zipOut.flush();
+
+                is = new ByteArrayInputStream(xstream.toXML(hwConfig).getBytes());
+                ze = new ZipEntry("hwConfig.xml");
+                zipOut.putNextEntry(ze);
+                tmp = new byte[4 * 1024];
+                while ((size = is.read(tmp)) != -1) {
+                    zipOut.write(tmp, 0, size);
+                }
+                zipOut.flush();
+
+                zipOut.close();
+            }
+            catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    if (fos != null) {
+                        fos.close();
+                    }
+                }
+                catch (Exception ex) {
+
+                }
+            }
+        }
     }
 
     @FXML
@@ -566,7 +650,7 @@ public class ROSLabController implements Initializable {
             return false;
         }
     }
-    
+
     /**
      * Opens a dialog to edit details for the specified person. If the user
      * clicks OK, the changes are saved into the provided person object and
@@ -593,20 +677,21 @@ public class ROSLabController implements Initializable {
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
-            if("Controller".equals(nodeType)) {
+            if ("Controller".equals(nodeType)) {
                 NewCustomControllerDialog controller = loader.getController();
                 controller.setDialogStage(dialogStage);
                 controller.setRLController(this);
                 // Show the dialog and wait until the user closes it
                 dialogStage.showAndWait();
-                return controller.isAddClicked();            	
-            } else {
+                return controller.isAddClicked();
+            }
+            else {
                 NewCustomTopicDialog controller = loader.getController();
                 controller.setDialogStage(dialogStage);
                 controller.setRLController(this);
                 // Show the dialog and wait until the user closes it
                 dialogStage.showAndWait();
-                return controller.isAddClicked();            	
+                return controller.isAddClicked();
             }
 
         }
@@ -617,10 +702,10 @@ public class ROSLabController implements Initializable {
     }
 
     public boolean showEditRateDialog(Node node) {
-    	if(!(node instanceof ROSNode && "controller".equals(node.getAnnotation("custom-type")))) {
-    		return false;
-    	}
-    	ROSNode rosNode = (ROSNode)node;
+        if (!(node instanceof ROSNode && "controller".equals(node.getAnnotation("custom-type")))) {
+            return false;
+        }
+        ROSNode rosNode = (ROSNode) node;
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
@@ -641,7 +726,7 @@ public class ROSLabController implements Initializable {
             controller.setRLController(this);
             // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
-            return controller.isAddClicked();            	
+            return controller.isAddClicked();
 
         }
         catch (IOException e) {
@@ -649,7 +734,7 @@ public class ROSLabController implements Initializable {
             return false;
         }
     }
-    
+
     /**
      * Opens a dialog to edit details for the specified person. If the user
      * clicks OK, the changes are saved into the provided person object and
@@ -692,82 +777,82 @@ public class ROSLabController implements Initializable {
             return false;
         }
     }
-    
-    public void addConfigPort(Node node, String pName, String pType, boolean isSub) {
-    	//Add to each matching node's features
 
-		//Add to library node's features
-		((ROSNode)node.getSpec()).addPort(new ROSPort(pName,((ROSNode)node),
-				new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
-		//Update library with library node
-		updateLibraryNode((ROSNode)node.getSpec());
-        for(Node n: swConfig.getNodes()) {
-        	if(n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
-        		((ROSNode)n).addPort(new ROSPort(pName,((ROSNode)node),
-        				new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
-        	}        	
+    public void addConfigPort(Node node, String pName, String pType, boolean isSub) {
+        // Add to each matching node's features
+
+        // Add to library node's features
+        ((ROSNode) node.getSpec()).addPort(new ROSPort(pName, ((ROSNode) node), new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
+        // Update library with library node
+        updateLibraryNode((ROSNode) node.getSpec());
+        for (Node n : swConfig.getNodes()) {
+            if (n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
+                ((ROSNode) n).addPort(new ROSPort(pName, ((ROSNode) node), new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
+            }
         }
-		refreshConfigPorts();
-		refreshConfigLinks(swConfig);
+        refreshConfigPorts();
+        refreshConfigLinks(swConfig);
     }
-    
+
     public void removeConfigPort(Node node, String pName) {
-		//Add to library node's features
-    	((ROSNode)node.getSpec()).removePort(pName);
-		//Update library with library node
-		updateLibraryNode((ROSNode)node.getSpec());
-        for(Node n: swConfig.getNodes()) {
-        	if(n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
-            	((ROSNode)n).removePort(pName);
-        	}        	
+        // Add to library node's features
+        ((ROSNode) node.getSpec()).removePort(pName);
+        // Update library with library node
+        updateLibraryNode((ROSNode) node.getSpec());
+        for (Node n : swConfig.getNodes()) {
+            if (n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
+                ((ROSNode) n).removePort(pName);
+            }
         }
-		refreshConfigPorts();
-		refreshConfigLinks(swConfig);    	
+        refreshConfigPorts();
+        refreshConfigLinks(swConfig);
     }
-        
+
     public void refreshConfigPorts() {
-		for(Node n: swConfig.getNodes()) {
-			UINode uin = n.getUINode();
-			for(UIEndpoint e: uin.getUIEndpoints()) {
-				e.removeFromGroup(swUIObjects);
-//				swUIObjects.getChildren().remove(e.getEndpointText());
-//				swUIObjects.getChildren().remove(e.getPortLine());
-//				swUIObjects.getChildren().remove(e);
-			}				
-			uin.resetEndpoints(this);
-			for(UIEndpoint e: uin.getUIEndpoints()) {
-				e.addToGroup(swUIObjects);
-//				swUIObjects.getChildren().add(e);
-//				swUIObjects.getChildren().add(e.getEndpointText());
-//				swUIObjects.getChildren().add(e.getPortLine());
-			}		
-		}
+        for (Node n : swConfig.getNodes()) {
+            UINode uin = n.getUINode();
+            for (UIEndpoint e : uin.getUIEndpoints()) {
+                e.removeFromGroup(swUIObjects);
+                // swUIObjects.getChildren().remove(e.getEndpointText());
+                // swUIObjects.getChildren().remove(e.getPortLine());
+                // swUIObjects.getChildren().remove(e);
+            }
+            uin.resetEndpoints(this);
+            for (UIEndpoint e : uin.getUIEndpoints()) {
+                e.addToGroup(swUIObjects);
+                // swUIObjects.getChildren().add(e);
+                // swUIObjects.getChildren().add(e.getEndpointText());
+                // swUIObjects.getChildren().add(e.getPortLine());
+            }
+        }
     }
-    
+
     public void refreshConfigLinks(Configuration config) {
-    	ArrayList<Link> linksToRemove = new ArrayList<Link>();
-    	for(Link link: config.getLinks()) {
-    		swUIObjects.getChildren().remove(link.getUILink());
-    		linksToRemove.add(link);
-    	}
-    	for(Link link: linksToRemove) {
-    		System.out.println("Removing " + link.getName());
-    		removeConfigLink(link);
-    	}
-    	config.getLinks().clear();
-    	for(Node nodeA: config.getNodes()) {
-    		for(Node nodeB: config.getNodes()) {
-    			for(Endpoint endA: nodeA.getEndpoints()) {
-    				for(Endpoint endB: nodeB.getEndpoints()) {
-    					if(endA.equals(endB)) continue;
-    					if(endA.canConnect(endB) && endA instanceof ROSPort && ((ROSPort)endA).isSubscriber()) {						
-    						Link link = new Link(endB, endA);
-    						addConfigLink(link);
-    					}
-    				}
-    			}
-    		}
-    	}
+        ArrayList<Link> linksToRemove = new ArrayList<Link>();
+        for (Link link : config.getLinks()) {
+            swUIObjects.getChildren().remove(link.getUILink());
+            linksToRemove.add(link);
+        }
+        for (Link link : linksToRemove) {
+            System.out.println("Removing " + link.getName());
+            removeConfigLink(link);
+        }
+        config.getLinks().clear();
+        for (Node nodeA : config.getNodes()) {
+            for (Node nodeB : config.getNodes()) {
+                for (Endpoint endA : nodeA.getEndpoints()) {
+                    for (Endpoint endB : nodeB.getEndpoints()) {
+                        if (endA.equals(endB)) {
+                            continue;
+                        }
+                        if (endA.canConnect(endB) && endA instanceof ROSPort && ((ROSPort) endA).isSubscriber()) {
+                            Link link = new Link(endB, endA);
+                            addConfigLink(link);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void setStage(Stage primaryStage) {
@@ -777,16 +862,17 @@ public class ROSLabController implements Initializable {
     public Stage getStage() {
         return this.primaryStage;
     }
-    
+
     public void killDrawTasks() {
-    	for(Node n: swConfig.getNodes()) {
-    		for(Endpoint e: n.getEndpoints()) {
-    			if(e.getUIEndpoint().killDrawTask()) {
-        			System.out.println("Killed " + e.getName());
-    			} else {
-    				System.out.println("Didn't kill " + e.getName());
-    			}
-    		}
-    	}
+        for (Node n : swConfig.getNodes()) {
+            for (Endpoint e : n.getEndpoints()) {
+                if (e.getUIEndpoint().killDrawTask()) {
+                    System.out.println("Killed " + e.getName());
+                }
+                else {
+                    System.out.println("Didn't kill " + e.getName());
+                }
+            }
+        }
     }
 }
