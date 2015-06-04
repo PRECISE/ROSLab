@@ -262,7 +262,7 @@
 <label x="-5.08" y="5.08" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="LOAD,#,+,I" class="0">
+<net name="LOAD,#,-,I" class="0">
 <segment>
 <pinref part="JP1" gate="G$1" pin="1"/>
 <wire x1="5.08" y1="7.62" x2="0" y2="7.62" width="0.1524" layer="91"/>
