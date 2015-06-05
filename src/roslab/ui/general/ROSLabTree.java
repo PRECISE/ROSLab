@@ -315,7 +315,7 @@ public class ROSLabTree extends TreeItem<String> {
                     // Handle ROSNode nodes
                     for (Node n : configuration.getNodesOfType(ROSNode.class)) {
                         try {
-                            if (n.getAnnotation("user-defined") != null && n.getAnnotation("user-defined").equals("true")) {
+                            if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
                                 ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
                             }
                         }

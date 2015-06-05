@@ -21,6 +21,30 @@
         </Label>
       </children>
     </VBox>
+    <GridPane prefHeight="116.0" prefWidth="296.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+      <children>
+        <Label text="Node Type " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <TextField fx:id="nameField" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <ComboBox id="typeDropdown" fx:id="nodeBox" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:value="Item 1" />
+              <String fx:value="Item 2" />
+              <String fx:value="Item 3" />
+            </FXCollections>
+          </items>
+        </ComboBox>
+        <Label text="Name " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" maxWidth="96.0" minWidth="10.0" prefWidth="76.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="269.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
     <HBox maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="0" GridPane.rowIndex="2">
       <children>
         <HBox id="HBox" fx:id="actionParent" alignment="CENTER">
@@ -45,30 +69,6 @@
         </HBox>
       </children>
     </HBox>
-    <GridPane prefHeight="116.0" prefWidth="296.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-      <children>
-        <Label text="Node Type " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <ComboBox id="typeDropdown" fx:id="nodeBox" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-          <items>
-            <FXCollections fx:factory="observableArrayList">
-              <String fx:value="Item 1" />
-              <String fx:value="Item 2" />
-              <String fx:value="Item 3" />
-            </FXCollections>
-          </items>
-        </ComboBox>
-        <TextField fx:id="nameField" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Label text="Name " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-      </children>
-      <columnConstraints>
-        <ColumnConstraints hgrow="NEVER" maxWidth="96.0" minWidth="10.0" prefWidth="76.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="269.0" />
-      </columnConstraints>
-      <rowConstraints>
-        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-      </rowConstraints>
-    </GridPane>
   </children>
   <columnConstraints>
     <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="+Infinity" minWidth="-Infinity" prefWidth="345.0" />
