@@ -109,6 +109,8 @@ public class ROSLabController implements Initializable {
     Line addPortLine;
     Point portLineStart = new Point();
     ContextMenu addSWNodeMenu;
+    ContextMenu addHWNodeMenu;
+    ContextMenu addEENodeMenu;
 
     private Stage primaryStage;
 
@@ -156,7 +158,9 @@ public class ROSLabController implements Initializable {
             }
         });
 
-        createAddNodeMenu();
+        createAddNodeMenu(swLibrary);
+        createAddNodeMenu(eeLibrary);
+        createAddNodeMenu(hwLibrary);
         // addDragDrop(swPane);
     }
     
@@ -177,23 +181,41 @@ public class ROSLabController implements Initializable {
         });
     }
         
-    public void createAddNodeMenu() {
-    	addSWNodeMenu = new ContextMenu();
+    public void createAddNodeMenu(final Library lib) {
+    	final AnchorPane pane;
+    	final Group uiObjects;
+    	final ContextMenu menu;
+    	if(swLibrary.equals(lib)) {
+    		pane = swPane;
+    		uiObjects = swUIObjects;
+    		addSWNodeMenu = new ContextMenu();
+    		menu = addSWNodeMenu;	
+    	} else if(hwLibrary.equals(lib)) {
+    		pane = hwPane;
+    		uiObjects = hwUIObjects;
+    		addHWNodeMenu = new ContextMenu();
+    		menu = addHWNodeMenu;
+    	} else if(eeLibrary.equals(lib)) {
+    		pane = eePane;
+    		uiObjects = eeUIObjects;
+    		addEENodeMenu = new ContextMenu();
+    		menu = addEENodeMenu;
+    	} else return;
         MenuItem addItem = new MenuItem("Add Node");
         addItem.setOnAction(new EventHandler<ActionEvent>() {
         	public void handle(ActionEvent event) {
-        		showNewNodeDialog(swLibrary);
+        		showNewNodeDialog(lib);
         	}
         });
-        addSWNodeMenu.getItems().add(addItem);
-        swPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        menu.getItems().add(addItem);
+        pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getButton() == MouseButton.SECONDARY &&
-                		!swUIObjects.getChildren().contains(mouseEvent.getTarget())) { //TODO test
-                    addSWNodeMenu.show(swPane, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                		!uiObjects.getChildren().contains(mouseEvent.getTarget())) { //TODO test
+                	menu.show(swPane, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 } else if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                    addSWNodeMenu.hide();
+                	menu.hide();
                 }
             }
         });

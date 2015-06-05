@@ -21,6 +21,32 @@
         </Label>
       </children>
     </VBox>
+    <GridPane hgap="10.0" prefHeight="116.0" prefWidth="296.0" vgap="0.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+      <children>
+        <TextField fx:id="nameField" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="Name " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" maxWidth="96.0" minWidth="10.0" prefWidth="76.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="269.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+    <GridPane hgap="10.0" prefHeight="116.0" prefWidth="296.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+      <children>
+        <TextField id="nameField" fx:id="rateField" prefWidth="94.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="Rate" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" maxWidth="266.0" minWidth="10.0" prefWidth="264.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="81.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
     <HBox maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="0" GridPane.rowIndex="3">
       <children>
         <HBox id="HBox" fx:id="actionParent" alignment="CENTER">
@@ -45,32 +71,6 @@
         </HBox>
       </children>
     </HBox>
-    <GridPane hgap="10.0" prefHeight="116.0" prefWidth="296.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
-      <children>
-        <TextField id="nameField" fx:id="rateField" prefWidth="94.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Label text="Rate" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-      </children>
-      <columnConstraints>
-        <ColumnConstraints hgrow="NEVER" maxWidth="266.0" minWidth="10.0" prefWidth="264.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="81.0" />
-      </columnConstraints>
-      <rowConstraints>
-        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-      </rowConstraints>
-    </GridPane>
-    <GridPane hgap="10.0" prefHeight="116.0" prefWidth="296.0" vgap="0.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-      <children>
-        <TextField fx:id="nameField" prefWidth="269.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Label text="Name " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-      </children>
-      <columnConstraints>
-        <ColumnConstraints hgrow="NEVER" maxWidth="96.0" minWidth="10.0" prefWidth="76.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="269.0" />
-      </columnConstraints>
-      <rowConstraints>
-        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-      </rowConstraints>
-    </GridPane>
   </children>
   <columnConstraints>
     <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="+Infinity" minWidth="-Infinity" prefWidth="345.0" />
