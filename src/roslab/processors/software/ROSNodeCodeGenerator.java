@@ -38,6 +38,11 @@ public class ROSNodeCodeGenerator {
         String includes = "#include <stdlib.h>\n#include <signal.h>\n#include <ros/ros.h>\n";
         List<String> includesList = new ArrayList<String>();
         for (ROSPort port : node.getPorts().values()) {
+        	if (port.getLinks().size() == 0) {
+        		System.out.println("Warning: " + node.getName() +  "_node. No link on port \"" 
+        				+ port.getName() + "\". Code for this port not generated.");
+        		continue;
+        	}
             StringTemplate includeTemplate = group.getInstanceOf("ROSInclude");
             includeTemplate.setAttribute("include_file", ROSMsgType.typeMap.get(port.getType()) + "/" + port.getType().toString());
             if (!includes.contains(includeTemplate.toString())) {
@@ -57,6 +62,7 @@ public class ROSNodeCodeGenerator {
         String publishers = "";
         String publishCommands = "";
         for (ROSPort port : node.getPublisherPorts().values()) {
+        	if (port.getLinks().size() == 0) continue;
             StringTemplate publisherTemplate = group.getInstanceOf("ROSPublisher");
             StringTemplate publishCommandTemplate = group.getInstanceOf("ROSPublishCommand");
             String pName = port.getName().replace("/","");
@@ -75,6 +81,7 @@ public class ROSNodeCodeGenerator {
         String subscribers = "";
         String subscriberCallbacks = "";
         for (ROSPort port : node.getSubscriberPorts().values()) {
+        	if (port.getLinks().size() == 0) continue;
             StringTemplate subscriberTemplate = group.getInstanceOf("ROSSubscriber");
             StringTemplate subscriberCallbackTemplate = group.getInstanceOf("ROSCallback");
             String pName = port.getName().replace("/","");

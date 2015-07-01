@@ -27,6 +27,7 @@ import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
 import roslab.model.software.ROSNode;
+import roslab.model.software.ROSPort;
 import roslab.processors.electronics.EagleSchematic;
 import roslab.processors.software.ROSNodeCodeGenerator;
 
@@ -304,7 +305,7 @@ public class ROSLabTree extends TreeItem<String> {
         				for (Node n : configuration.getNodesOfType(ROSNode.class)) {
         					try {
         						if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
-        							ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
+        							ROSNodeCodeGenerator.buildNode((ROSNode)n, new File(n.getName() + ".cpp"));
         						}
         					}
         					catch (IOException e) {

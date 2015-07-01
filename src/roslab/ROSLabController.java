@@ -351,7 +351,6 @@ public class ROSLabController implements Initializable {
     public void addConfigLink(Link l) {
         UILink uil = new UILink(l);
         l.setUILink(uil);
-
         String nodeClassName = l.getSrc().getParent().getClass().getName();
         Group grp = null;
         switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
@@ -937,11 +936,9 @@ public class ROSLabController implements Initializable {
                         if (endA.equals(endB)) {
                             continue;
                         }
-                        if (endA.canConnect(endB) && endA instanceof ROSPort && ((ROSPort) endA).isSubscriber()) {
-                        	System.out.println("Connecting Node B: " + nodeB.getName() + " Node A: " + nodeA.getName());
-                        	Link link = new Link(endB, endA);
-                        	System.out.println("Connected parents B: " + endB.getParent().getName() + " A:" + endA.getParent().getName());
-                            addConfigLink(link);
+                        if (endA.canConnect(endB) && endA instanceof ROSPort 
+                        		&& ((ROSPort) endA).isSubscriber()) {
+                        	addConfigLink(endB.connect(endA));
                         }
                     }
                 }

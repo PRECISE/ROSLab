@@ -174,5 +174,14 @@ public class Configuration {
     public boolean contains(Link l) {
         return this.links.contains(l);
     }
+    
+    public Node getNodeByName(String name) {
+    	for(Node n: nodes) {
+    		if(name.equals(n.getName())) {
+    			return n;
+    		}
+    	}
+    	return null;
+    }
 
 }
