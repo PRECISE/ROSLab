@@ -21,10 +21,8 @@ import roslab.model.software.ROSPort;
 import roslab.model.software.ROSTopic;
 
 @SuppressWarnings("deprecation")
-public class NewCustomTopicDialog implements Initializable {
-
-    @FXML
-    private TextField nodeField;
+public class NewCustomPortDialog implements Initializable {
+	
     @FXML
     private TextField topicField;
     @FXML
@@ -36,6 +34,7 @@ public class NewCustomTopicDialog implements Initializable {
     private boolean addClicked = false;
 
     private ROSLabController controller;
+    private ROSNode node;
 
     /**
      * Sets the stage of this dialog.
@@ -60,14 +59,10 @@ public class NewCustomTopicDialog implements Initializable {
      */
     @FXML
     private void handleAdd() {
-        if (isInputValid() && controller != null) {
-            ROSNode n = new ROSNode(nodeField.getText()); //TODO custom rate here?
-            n.addAnnotation("user-defined", "true");
-        	n.addAnnotation("custom-type", "topic");    
+        if (isInputValid() && controller != null) {  
         	String topic = "/" + topicField.getText();
-            n.addPort(new ROSPort(topic, n, new ROSTopic(topic, typeBox.getValue(),
-                    directionBox.getValue() == "Subscribe"), false, false));
-            controller.addLibraryNode(n);
+        	//TODO add port to spec?
+        	controller.addConfigPort(node, topicField.getText(), typeBox.getValue().toString(), "Subscribe".equals(directionBox.getValue()));
             addClicked = true;
             dialogStage.close();
         }
@@ -88,17 +83,12 @@ public class NewCustomTopicDialog implements Initializable {
      */
     private boolean isInputValid() {
         String errorMessage = "";
-    	for(Node n: controller.getSWLibrary().getNodes()) {
-    		if(n.getName().toLowerCase().equals(nodeField.getText().toLowerCase())) {
-                errorMessage += "Node name already exists in library!\n";    			
-    		}
-    	}
-    	if (nodeField.getText().matches("^.*\\s+.*$")) {
-    		errorMessage += "Node name must not contain whitespace!\n";
-    	}
-        if (nodeField.getText() == null || nodeField.getText().equals("")) {
-            errorMessage += "No node name given!\n";
-        }
+        //Check for taken topic names?
+//    	for(Node n: controller.getSWLibrary().getNodes()) {
+//    		if(n.getName().toLowerCase().equals(nodeField.getText().toLowerCase())) {
+//                errorMessage += "Node name already exists in library!\n";    			
+//    		}
+//    	}
     	if (topicField.getText().matches("^.*\\s+.*$")) {
     		errorMessage += "Topic name must not contain whitespace!\n";
     	}
@@ -111,7 +101,6 @@ public class NewCustomTopicDialog implements Initializable {
         if (directionBox.getValue() == null) {
             errorMessage += "No direction selected!\n";
         }
-
         if (errorMessage.length() == 0) {
             return true;
         }
@@ -123,7 +112,11 @@ public class NewCustomTopicDialog implements Initializable {
     }
 
     public void setRLController(ROSLabController rosLabController) {
-        this.controller = rosLabController;
+        controller = rosLabController;
+    }
+    
+    public void setNode(Node node) {
+        this.node = (ROSNode) node;
     }
 
     @Override
@@ -133,4 +126,5 @@ public class NewCustomTopicDialog implements Initializable {
         typeBox.setItems(types);
         directionBox.setItems(FXCollections.observableArrayList("Publish", "Subscribe"));
     }
+
 }

@@ -12,6 +12,7 @@ import org.controlsfx.dialog.Dialogs;
 
 import roslab.ROSLabController;
 import roslab.model.software.ROSNode;
+import roslab.model.general.Node;
 
 @SuppressWarnings("deprecation")
 public class NewCustomControllerDialog implements Initializable {
@@ -74,16 +75,25 @@ public class NewCustomControllerDialog implements Initializable {
      */
     private boolean isInputValid() {
         String errorMessage = "";
+    	for(Node n: controller.getSWLibrary().getNodes()) {
+    		if(n.getName().toLowerCase().equals(nameField.getText().toLowerCase())) {
+                errorMessage += "Node name already exists in library!\n";    			
+    		}
+    	}
+    	if (nameField.getText().matches("^.*\\s+.*$")) {
+    		errorMessage += "Name must not contain whitespace!\n";
+    	}
         if (nameField.getText() == null || nameField.getText().equals("")) {
             errorMessage += "No name given!\n";
         }
         if (rateField.getText() == null || rateField.getText().equals("")) {
         	errorMessage += "No rate given!\n";
-        }
-        try {
-        	Integer.parseInt(rateField.getText());
-        } catch(NumberFormatException e) {
-        	errorMessage += "Rate must be an integer!\n";
+        } else {
+            try {
+            	Integer.parseInt(rateField.getText());
+            } catch(NumberFormatException e) {
+            	errorMessage += "Rate must be an integer!\n";
+            }        	
         }
         if (errorMessage.length() == 0) {
             return true;

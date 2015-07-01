@@ -206,7 +206,6 @@ public class UINode extends Rectangle {
             public void handle(DragEvent event) {
                 if (!endpoints.contains(event.getGestureSource()) &&
                         event.getDragboard().hasString()) {
-                    System.out.println(event.getDragboard().getString());
                     String[] portInfo = event.getDragboard().getString().split(" "); //TODO spaces in names a problem
                     boolean isSub = !"1".equals(portInfo[2]);
                     controller.addConfigPort(node, portInfo[0], portInfo[1], isSub);
@@ -229,7 +228,13 @@ public class UINode extends Rectangle {
             		updateRateText();         		
             	}
             });
-        	rightClickMenu.getItems().add(rateItem);
+        	MenuItem portItem = new MenuItem("Add Custom Port");
+        	portItem.setOnAction(new EventHandler<ActionEvent>() {
+            	public void handle(ActionEvent event) {
+            		controller.showNewCustomPortDialog(node);      		
+            	}
+            });
+        	rightClickMenu.getItems().addAll(rateItem, portItem);
         }
         MenuItem deleteItem = new MenuItem("Delete Node");
         deleteItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -326,9 +331,10 @@ public class UINode extends Rectangle {
      */
     public UIEndpoint getUIEndpoint(Endpoint e) {
         for (UIEndpoint u : endpoints) {
-            if (u.endpoint == e) {
-                return u;
-            }
+        	if (u.endpoint.toString().equals(e.toString()) 
+        			&& u.endpoint.getParent().getName().equals(e.getParent().toString())) {
+        		return u;
+        	}
         }
         return null;
     }
@@ -385,7 +391,7 @@ public class UINode extends Rectangle {
         	  UIEndpoint subUI = new UIEndpoint((Endpoint) f, this, getX(), getY()
                       + (ENDPOINT_SIZE * subCount) + ENDPOINT_Y_OFFSET, true, true);
         	  subUI.setCircleStyle(true);
-              this.endpoints.add(subUI);
+              endpoints.add(subUI);
               subCount++;
           } else {
               // Publishing nodes on right side

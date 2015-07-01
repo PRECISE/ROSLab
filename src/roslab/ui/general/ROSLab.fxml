@@ -70,7 +70,7 @@
             </Tab>
             <Tab id="swTab" fx:id="swTab" closable="false" onSelectionChanged="#tabChanged" text="Software">
               <content>
-                <SplitPane dividerPositions="0.11363636363636363" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
+                <SplitPane dividerPositions="0.3343065693430657" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
                   <items>
                     <TreeView fx:id="swTreeView" />
                     <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="517.0" prefWidth="309.0">
@@ -84,7 +84,7 @@
             </Tab>
             <Tab id="hwTab" fx:id="hwTab" closable="false" onSelectionChanged="#tabChanged" text="Mechanical">
               <content>
-                <SplitPane dividerPositions="0.11363636363636363" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
+                <SplitPane dividerPositions="0.3343065693430657" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
                   <items>
                     <TreeView fx:id="hwTreeView" />
                     <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="-1.0" prefWidth="-1.0">

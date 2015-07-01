@@ -10,27 +10,25 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane id="newPortDialog" hgap="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ui.software.NewCustomTopicDialog">
+<GridPane id="newPortDialog" hgap="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="roslab.ui.software.NewCustomPortDialog">
   <children>
     <VBox maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <children>
-        <Label fx:id="messageLabel" prefHeight="31.0" prefWidth="345.0" text="New Custom Topic Node" textAlignment="LEFT" wrapText="true">
+        <Label fx:id="messageLabel" prefHeight="31.0" prefWidth="345.0" text="New Custom Port" textAlignment="LEFT" wrapText="true">
           <font>
             <Font name="System Bold" size="13.0" />
           </font>
         </Label>
       </children>
     </VBox>
-    <GridPane hgap="5.0" prefHeight="116.0" prefWidth="296.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+    <GridPane hgap="5.0" prefHeight="100.0" prefWidth="296.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
       <children>
-        <Label text="Node Name" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-        <Label text="Message Type" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-        <Label text="Direction " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-        <Label contentDisplay="LEFT" text="Topic Name" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <Label contentDisplay="LEFT" text="/" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <TextField fx:id="nodeField" prefWidth="268.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="0" />
-        <TextField fx:id="topicField" prefWidth="171.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <ComboBox fx:id="typeBox" prefWidth="254.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+        <Label text="Message Type" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <Label text="Direction " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <Label contentDisplay="LEFT" text="Topic Name" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+        <Label contentDisplay="LEFT" text="/" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+        <TextField fx:id="topicField" prefWidth="171.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <ComboBox fx:id="typeBox" prefWidth="254.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:value="Item 1" />
@@ -39,7 +37,7 @@
             </FXCollections>
           </items>
         </ComboBox>
-        <ComboBox fx:id="directionBox" prefWidth="254.0" promptText="" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+        <ComboBox fx:id="directionBox" prefWidth="254.0" promptText="" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:value="Item 1" />
@@ -55,7 +53,6 @@
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="282.0" minWidth="10.0" prefWidth="191.0" />
       </columnConstraints>
       <rowConstraints>
-        <RowConstraints maxHeight="29.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="29.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="29.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="29.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
@@ -94,7 +91,7 @@
   </padding>
   <rowConstraints>
     <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="16.0" valignment="CENTER" vgrow="ALWAYS" />
-    <RowConstraints maxHeight="287.0" minHeight="-Infinity" prefHeight="116.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="287.0" minHeight="-Infinity" prefHeight="90.0" vgrow="NEVER" />
     <RowConstraints maxHeight="262.0" minHeight="-Infinity" prefHeight="21.0" vgrow="NEVER" />
   </rowConstraints>
 </GridPane>

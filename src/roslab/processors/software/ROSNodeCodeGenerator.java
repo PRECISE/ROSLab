@@ -51,6 +51,7 @@ public class ROSNodeCodeGenerator {
             includes += i + "\n";
         }
         nodeTemplate.setAttribute("includes", includes);
+        nodeTemplate.setAttribute("node_name", node.getName() + "_node");
 
         // Generate publishers (and publish commands)
         String publishers = "";

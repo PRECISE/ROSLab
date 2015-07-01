@@ -232,7 +232,7 @@ public class ROSPort extends Feature implements Endpoint {
 
     @Override
     public UIEndpoint getUIEndpoint() {
-        return this.getParent().getUINode().getUIEndpoint(this);
+        return parent.getUINode().getUIEndpoint(this);
     }
 
     @Override

@@ -7,10 +7,14 @@ import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 import org.controlsfx.dialog.Dialogs;
 
@@ -116,8 +120,8 @@ public class ROSLabTree extends TreeItem<String> {
             if (!nodeAdded) {
             	ContextMenuTreeItem newItem = new ContextMenuTreeItem(n.getClass().getSimpleName(), controller);
                 NodeTreeItem newNode = new NodeTreeItem(n, this.controller);
-                for (String f : n.getFeatures().keySet()) {
-                    newNode.getChildren().add(new ContextMenuTreeItem(f));
+                for (Feature f : n.getFeatures().values()) {
+                    newNode.getChildren().add(new ContextMenuTreeItem(f.toString()));
                 }
                 newItem.getChildren().add(newNode);
                 this.getChildren().add(newItem);
@@ -159,22 +163,6 @@ public class ROSLabTree extends TreeItem<String> {
         		}
         	});
         	return new ContextMenu(libraryItem);
-        	//            MenuItem controllerItem = new MenuItem("Add Custom Controller Node...");
-        	//            controllerItem.setOnAction(new EventHandler<ActionEvent>() {
-        	//                @Override
-        	//                public void handle(ActionEvent event) {
-        	//                    controller.showCustomNodeDialog("Controller");
-        	//                }
-        	//            });
-        	//            MenuItem topicItem = new MenuItem("Add Custom Topic Node...");
-        	//            topicItem.setOnAction(new EventHandler<ActionEvent>() {
-        	//                @Override
-        	//                public void handle(ActionEvent event) {
-        	//                    controller.showCustomNodeDialog("Topic");
-        	//                }
-        	//            });
-        	//            return new ContextMenu(controllerItem, topicItem);
-        	//        }
         }
     }
 
@@ -307,23 +295,62 @@ public class ROSLabTree extends TreeItem<String> {
 
         @Override
         public ContextMenu getMenu() {
-            // MenuItem mItem = new MenuItem("Generate single-system code");
-            MenuItem mItem = new MenuItem("Generate merged circuit");
-            mItem.setOnAction(new EventHandler<ActionEvent>() {
+        	if(controller.getSWConfig() == configuration) {
+        		MenuItem sourceItem = new MenuItem("Generate source code only");
+        		sourceItem.setOnAction(new EventHandler<ActionEvent>() {
+        			@Override
+        			public void handle(ActionEvent event) {
+        				// Handle ROSNode nodes
+        				for (Node n : configuration.getNodesOfType(ROSNode.class)) {
+        					try {
+        						if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
+        							ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
+        						}
+        					}
+        					catch (IOException e) {
+        						e.printStackTrace();
+        					}
+        				}
+        			}
+        		});
+        		MenuItem packageItem = new MenuItem("Generate ROS package");
+        		packageItem.setOnAction(new EventHandler<ActionEvent>() {
+        			@Override
+        			public void handle(ActionEvent event) {
+        				Alert alert = new Alert(AlertType.INFORMATION);
+        				alert.setTitle("ROSLab");
+        				alert.setHeaderText("Select Workspace");
+        				alert.setContentText("Please select your initialized ROS workspace directory.");
+        				alert.showAndWait();
+        				DirectoryChooser directoryChooser = new DirectoryChooser();
+        				directoryChooser.setTitle("Select ROS Workspace directory");
+        				File file = directoryChooser.showDialog(controller.getStage());
+        				if(file != null) {
+            				System.out.println(file.getPath());        					
+        				}
+        				//prompt for workspace location
+        				//catkin_create_pkg [package_name] [dependency messages]* roscpp rospy std_msgs
+        				for (Node n : configuration.getNodesOfType(ROSNode.class)) {
+        					try {
+        						if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
+        							ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
+        						}
+        					}
+        					catch (IOException e) {
+        						e.printStackTrace();
+        					}
+        				}
+        				//put cpp in package's src folder
+        				//modify CMakeLists.txt (in the package, not the workspace)->
+        			}
+        		});
+        		
+    			return new ContextMenu(sourceItem, packageItem);
+        	}
+        	MenuItem circuitItem = new MenuItem("Generate merged circuit");
+            circuitItem.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    // Handle ROSNode nodes
-                    for (Node n : configuration.getNodesOfType(ROSNode.class)) {
-                        try {
-                            if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
-                                ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
-                            }
-                        }
-                        catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
                     // Handle Circuit nodes
                     List<EagleSchematic> schematics = new ArrayList<EagleSchematic>();
                     List<Circuit> circuitsWithUnconnectedRequireds = new ArrayList<Circuit>();
@@ -362,7 +389,7 @@ public class ROSLabTree extends TreeItem<String> {
                 }
             });
 
-            return new ContextMenu(mItem);
+            return new ContextMenu(circuitItem);
         }
     }
 
@@ -378,35 +405,21 @@ public class ROSLabTree extends TreeItem<String> {
 
         @Override
         public ContextMenu getMenu() {
-            // Return empty menu if node is under Library tree and not a
-            // user-defined node
-            if (this.getParent().getParent() instanceof LibraryTreeItem) {
-                if ("controller".equals(node.getAnnotation("custom-type"))) {
-//                    MenuItem mItem = null;
-//                    if (this.node instanceof ROSNode) {
-//                        mItem = new MenuItem("Add New Port...");
-//                        mItem.setOnAction(new EventHandler<ActionEvent>() {
-//                            @Override
-//                            public void handle(ActionEvent event) {
-//                                controller.showNewPortDialog(node);
-//                            }
-//                        });
-//                    }
-                    return new ContextMenu();
+            // No menu if node is under Library tree and not a user-defined node
+            if (this.getParent().getParent() instanceof LibraryTreeItem && node instanceof ROSNode) {
+                if ("true".equals(node.getAnnotation("user-defined"))) {
+                    MenuItem m2Item = new MenuItem("Delete");
+                    m2Item.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                        	controller.removeMatchingConfigNodes(node, controller.getSWConfig());
+                            controller.removeLibraryNode((ROSNode)node);
+                        }
+                    });
+                    return new ContextMenu(m2Item);
                 }
-
-                return new ContextMenu();
             }
-
-            MenuItem m2Item = new MenuItem("Delete");
-            m2Item.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    controller.removeConfigNode(node);
-                }
-            });
-
-            return new ContextMenu(m2Item);
+            return new ContextMenu();
         }
     }
 

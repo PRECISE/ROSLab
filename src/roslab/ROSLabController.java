@@ -62,6 +62,7 @@ import roslab.ui.general.ROSLabTree;
 import roslab.ui.software.EditRateDialog;
 import roslab.ui.software.LoadLibraryDialog;
 import roslab.ui.software.NewCustomControllerDialog;
+import roslab.ui.software.NewCustomPortDialog;
 import roslab.ui.software.NewCustomTopicDialog;
 import roslab.ui.software.NewPortDialog;
 
@@ -393,9 +394,17 @@ public class ROSLabController implements Initializable {
                         swTree.removeConfigLink(l.getLink());
                         if (e.equals(l.getSrc())) {
                             l.getDest().removeUILink(l);
+                          	if("controller".equals(l.getDest().getParentNode().getAnnotation("custom-type")) &&
+                        			l.getDest().getUILinks().size() == 0) {
+                        		removeConfigPort(l.getDest().getParentNode(), l.getDest().getName());
+                        	}
                         }
                         else {
                             l.getSrc().removeUILink(l);
+                        	if("controller".equals(l.getSrc().getParentNode().getAnnotation("custom-type")) &&
+                        			l.getSrc().getUILinks().size() == 0) {
+                        		removeConfigPort(l.getSrc().getParentNode(), l.getSrc().getName());
+                        	}
                         }
                         swUIObjects.getChildren().remove(l);
                     }
@@ -430,8 +439,24 @@ public class ROSLabController implements Initializable {
                 removeConfigLink(l);
             }
         }
-
         n = null;
+    }
+    
+    public void removeMatchingConfigNodes(Node node, Configuration config) {
+		ArrayList<Node> toRemove = new ArrayList<Node>();
+		boolean isCustomTopic = "topic".equals(node.getAnnotation("custom-type"));
+    	for(Node n: config.getNodes()) {
+    		if(node.getName().equals(n.getSpec().getName())) {
+    			toRemove.add(n);
+    		}
+    		if(isCustomTopic && "controller".equals(n.getSpec().getAnnotation("custom-type"))) {
+    			String topicName = ((ROSNode)node).getPorts().keySet().iterator().next();
+    			removeConfigPort(n, topicName);
+    		}
+    	}
+    	for(Node n: toRemove) {
+    		removeConfigNode(n);
+    	}
     }
 
     public void removeConfigLink(Link l) {
@@ -665,7 +690,19 @@ public class ROSLabController implements Initializable {
             // Set the person into the controller.
             NewNodeDialog controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            controller.setNodes(library.getNodes());
+            ArrayList<Node> nodeTypes = new ArrayList<Node>(library.getNodes());
+            if(library == swLibrary) {
+            	for(Node configNode: swConfig.getNodes()) {
+            		if("controller".equals(configNode.getAnnotation("custom-type"))) {
+            			Node toRemove = null;
+            			for(Node n: nodeTypes) {
+            				if(configNode.getSpec().getName().equals(n.getName())) toRemove = n;
+            			}
+            			nodeTypes.remove(toRemove);
+            		}
+            	}
+            }
+            controller.setNodes(nodeTypes);
             controller.setRLController(this);
 
             // Show the dialog and wait until the user closes it
@@ -802,11 +839,11 @@ public class ROSLabController implements Initializable {
      *            the person object to be edited
      * @return true if the user clicked OK, false otherwise.
      */
-    public boolean showNewPortDialog(Node node) {
+    public boolean showNewCustomPortDialog(Node node) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("ui/software/NewPortDialog.fxml"));
+            loader.setLocation(getClass().getResource("ui/software/NewCustomPortDialog.fxml"));
             GridPane page = (GridPane) loader.load();
 
             // Create the dialog Stage.
@@ -818,7 +855,7 @@ public class ROSLabController implements Initializable {
             dialogStage.setScene(scene);
 
             // Set the person into the controller.
-            NewPortDialog controller = loader.getController();
+            NewCustomPortDialog controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setNode(node);
             controller.setRLController(this);
@@ -890,7 +927,6 @@ public class ROSLabController implements Initializable {
             linksToRemove.add(link);
         }
         for (Link link : linksToRemove) {
-            System.out.println("Removing " + link.getName());
             removeConfigLink(link);
         }
         config.getLinks().clear();
@@ -902,12 +938,18 @@ public class ROSLabController implements Initializable {
                             continue;
                         }
                         if (endA.canConnect(endB) && endA instanceof ROSPort && ((ROSPort) endA).isSubscriber()) {
-                            Link link = new Link(endB, endA);
+                        	System.out.println("Connecting Node B: " + nodeB.getName() + " Node A: " + nodeA.getName());
+                        	Link link = new Link(endB, endA);
+                        	System.out.println("Connected parents B: " + endB.getParent().getName() + " A:" + endA.getParent().getName());
                             addConfigLink(link);
                         }
                     }
                 }
             }
+        }
+        System.out.println("Config link count: " + config.getLinks().size());
+        for(Link l: config.getLinks()) {
+        	System.out.println(l.getSrc().getParent().getName() + " -> " + l.getDest().getParent().getName());
         }
     }
 
@@ -922,12 +964,7 @@ public class ROSLabController implements Initializable {
     public void killDrawTasks() {
         for (Node n : swConfig.getNodes()) {
             for (Endpoint e : n.getEndpoints()) {
-                if (e.getUIEndpoint().killDrawTask()) {
-                    System.out.println("Killed " + e.getName());
-                }
-                else {
-                    System.out.println("Didn't kill " + e.getName());
-                }
+            	e.getUIEndpoint().killDrawTask();
             }
         }
     }

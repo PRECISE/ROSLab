@@ -95,7 +95,6 @@ public class UIEndpoint extends Circle {
                 addPortLine.setVisible(false);
                 if(getEndpoint() instanceof ROSPort && getParentNode() instanceof ROSNode && drawTask != null) {
                 	drawTask.kill();
-                	System.out.println("Draw released");
                 }
             }
         });
@@ -133,7 +132,6 @@ public class UIEndpoint extends Circle {
         			}
         			content.putString(endpointName + " " + endpointType + " " + isSub);
         			db.setContent(content);
-        			System.out.println(db.getString());
         			drawLine();
         		}
         		event.consume();
@@ -162,14 +160,11 @@ public class UIEndpoint extends Circle {
 		    			addPortLine.setVisible(true); 
 	    			} catch (NullPointerException e) {
 	    				kill();
-	    				System.out.println("Killed by deleting");
 	    			}
-//	    			System.out.println("Drawing " + getEndpoint().getName()); //TODO kill this task
 	    	}
 	    	addPortLine.setEndX(getCenterX());
 	    	addPortLine.setEndY(getCenterY());
 			addPortLine.setVisible(false);
-			System.out.println("Done drawing " + getEndpoint().getName());
 		}	
 		
 		public void kill() {
@@ -332,12 +327,6 @@ public class UIEndpoint extends Circle {
     
     private void setParentToFront() {
     	uiparent.toTheFront();
-//    	uiparent.toFront();
-//    	uiparent.getNodeUIText().toFront();
-//    	for(UIEndpoint e: uiparent.getUIEndpoints()) {
-//    		e.toFront();
-//    		e.getEndpointText().toFront();		
-//    	}
     }
     
     public Line getPortLine() {
@@ -349,7 +338,6 @@ public class UIEndpoint extends Circle {
     }
     
     public boolean killDrawTask() {
-//        if(getEndpoint() instanceof ROSPort && getParentNode() instanceof ROSNode && drawTask != null) {
     	if(drawLineThread != null && drawLineThread.isAlive()) {
         	drawTask.kill();
         	return true;
