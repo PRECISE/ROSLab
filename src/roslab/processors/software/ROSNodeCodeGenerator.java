@@ -45,7 +45,7 @@ public class ROSNodeCodeGenerator {
         	}
             StringTemplate includeTemplate = group.getInstanceOf("ROSInclude");
             includeTemplate.setAttribute("include_file", ROSMsgType.typeMap.get(port.getType()) + "/" + port.getType().toString());
-            if (!includes.contains(includeTemplate.toString())) {
+            if (!includesList.contains(includeTemplate.toString())) {
                 includesList.add(includeTemplate.toString());
             }
         }

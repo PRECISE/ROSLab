@@ -99,6 +99,15 @@ public class NewCustomTopicDialog implements Initializable {
         if (nodeField.getText() == null || nodeField.getText().equals("")) {
             errorMessage += "No node name given!\n";
         }
+        //Check for topic name / message type mismatch
+    	for(Node n: controller.getSWLibrary().getNodes()) {
+    		for(ROSPort p: ((ROSNode)n).getPorts().values()) {
+    			if(p.getTopicName().equals("/" + topicField.getText()) && !p.getType().equals(typeBox.getValue())) {
+    				errorMessage += "Topic name \"" + p.getTopicName() + "\" already exists in this library"
+    						+ " with message type \"" + p.getType() + "\".\n";
+    			}
+    		}
+    	}
     	if (topicField.getText().matches("^.*\\s+.*$")) {
     		errorMessage += "Topic name must not contain whitespace!\n";
     	}

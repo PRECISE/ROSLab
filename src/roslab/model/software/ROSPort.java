@@ -189,14 +189,8 @@ public class ROSPort extends Feature implements Endpoint {
         if (e instanceof ROSPort) {
             ROSPort p = (ROSPort) e;
 
-            // fanIn/fanOut checks
-            boolean passedFanCheck = true;
-            if ((!isFanIn() && !p.isSubscriber() && links.size() > 0) || (!isFanOut() && p.isSubscriber() && links.size() > 0)) {
-                passedFanCheck = false;
-            }
-
             // Valid connection if directions are opposite, but topics match.            
-            return (this.isSubscriber() != p.isSubscriber()) && (topic.getTopic().equals(p.getTopic().getTopic())) && passedFanCheck;
+            return (this.isSubscriber() != p.isSubscriber()) && (topic.getTopic().equals(p.getTopic().getTopic()));
         }
         return false;
     }

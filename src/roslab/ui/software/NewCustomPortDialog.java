@@ -62,7 +62,7 @@ public class NewCustomPortDialog implements Initializable {
         if (isInputValid() && controller != null) {  
         	String topic = "/" + topicField.getText();
         	//TODO add port to spec?
-        	controller.addConfigPort(node, topicField.getText(), typeBox.getValue().toString(), "Subscribe".equals(directionBox.getValue()));
+        	controller.addConfigPort(node, topic, typeBox.getValue().toString(), "Subscribe".equals(directionBox.getValue()));
             addClicked = true;
             dialogStage.close();
         }
@@ -83,12 +83,21 @@ public class NewCustomPortDialog implements Initializable {
      */
     private boolean isInputValid() {
         String errorMessage = "";
-        //Check for taken topic names?
-//    	for(Node n: controller.getSWLibrary().getNodes()) {
-//    		if(n.getName().toLowerCase().equals(nodeField.getText().toLowerCase())) {
-//                errorMessage += "Node name already exists in library!\n";    			
-//    		}
-//    	}
+        //Check if topic name already exists on this node
+    	for(ROSPort p: node.getPorts().values()) {
+    		if(p.getTopicName().equals("/" + topicField.getText())) {
+    			errorMessage += "This node already contains port with topic name \"" + p.getTopicName() +"\"\n";
+    		}
+    	}
+        //Check for topic name / message type mismatch
+    	for(Node n: controller.getSWLibrary().getNodes()) {
+    		for(ROSPort p: ((ROSNode)n).getPorts().values()) {
+    			if(p.getTopicName().equals("/" + topicField.getText()) && !p.getType().equals(typeBox.getValue())) {
+    				errorMessage += "Topic name \"" + p.getTopicName() + "\" already exists in this library"
+    						+ " with message type \"" + p.getType() + "\".\n";
+    			}
+    		}
+    	}
     	if (topicField.getText().matches("^.*\\s+.*$")) {
     		errorMessage += "Topic name must not contain whitespace!\n";
     	}

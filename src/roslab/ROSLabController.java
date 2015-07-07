@@ -871,31 +871,30 @@ public class ROSLabController implements Initializable {
     }
 
     public void addConfigPort(Node node, String pName, String pType, boolean isSub) {
-        // Add to each matching node's features
-
-        // Add to library node's features
-        ((ROSNode) node.getSpec()).addPort(new ROSPort(pName, ((ROSNode) node), new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
-        // Update library with library node
-        updateLibraryNode((ROSNode) node.getSpec());
-        for (Node n : swConfig.getNodes()) {
-            if (n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
-                ((ROSNode) n).addPort(new ROSPort(pName, ((ROSNode) node), new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
-            }
-        }
+    	ROSPort toAdd = new ROSPort(pName, ((ROSNode) node), new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false);
+    	((ROSNode)node).addPort(toAdd); // Add to this node's features
+        ((ROSNode)node.getSpec()).addPort(toAdd); // Add to library node's features
+        updateLibraryNode((ROSNode) node.getSpec()); // Update library with library node
+//        for (Node n : swConfig.getNodes()) {
+//            if (n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
+//                ((ROSNode) n).addPort(new ROSPort(pName, ((ROSNode) node), new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false));
+//            }
+//        }
         refreshConfigPorts();
         refreshConfigLinks(swConfig);
     }
 
     public void removeConfigPort(Node node, String pName) {
+    	((ROSNode)node).removePort(pName);
         // Add to library node's features
         ((ROSNode) node.getSpec()).removePort(pName);
         // Update library with library node
         updateLibraryNode((ROSNode) node.getSpec());
-        for (Node n : swConfig.getNodes()) {
-            if (n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
-                ((ROSNode) n).removePort(pName);
-            }
-        }
+//        for (Node n : swConfig.getNodes()) {
+//            if (n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
+//                ((ROSNode) n).removePort(pName);
+//            }
+//        }
         refreshConfigPorts();
         refreshConfigLinks(swConfig);
     }
@@ -905,16 +904,10 @@ public class ROSLabController implements Initializable {
             UINode uin = n.getUINode();
             for (UIEndpoint e : uin.getUIEndpoints()) {
                 e.removeFromGroup(swUIObjects);
-                // swUIObjects.getChildren().remove(e.getEndpointText());
-                // swUIObjects.getChildren().remove(e.getPortLine());
-                // swUIObjects.getChildren().remove(e);
             }
             uin.resetEndpoints(this);
             for (UIEndpoint e : uin.getUIEndpoints()) {
                 e.addToGroup(swUIObjects);
-                // swUIObjects.getChildren().add(e);
-                // swUIObjects.getChildren().add(e.getEndpointText());
-                // swUIObjects.getChildren().add(e.getPortLine());
             }
         }
     }
@@ -933,12 +926,14 @@ public class ROSLabController implements Initializable {
             for (Node nodeB : config.getNodes()) {
                 for (Endpoint endA : nodeA.getEndpoints()) {
                     for (Endpoint endB : nodeB.getEndpoints()) {
+                    	System.out.println("Matching " + endB.getParent().getName() + " " + endA.getParent().getName());
                         if (endA.equals(endB)) {
                             continue;
                         }
                         if (endA.canConnect(endB) && endA instanceof ROSPort 
                         		&& ((ROSPort) endA).isSubscriber()) {
                         	addConfigLink(endB.connect(endA));
+                        	System.out.println("Adding");
                         }
                     }
                 }
