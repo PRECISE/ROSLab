@@ -4585,7 +4585,7 @@ package type OT</description>
 <pinref part="GND3" gate="1" pin="GND"/>
 </segment>
 </net>
-<net name="GPIO,#,#,I" class="0">
+<net name="GPIO,#,#,I.EN" class="0">
 <segment>
 <pinref part="R_REG_EN_PU_1" gate="G$1" pin="1"/>
 <pinref part="IC2" gate="G$1" pin="EN"/>

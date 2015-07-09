@@ -716,7 +716,7 @@ and temperature signal.&lt;/p&gt;
 <pinref part="U$12" gate="G$1" pin="GND"/>
 </segment>
 </net>
-<net name="SCK,#,+,I,SPI,1/SCL,#,+,O,I2C,1" class="0">
+<net name="SCK,#,+,I,SPI,1" class="0">
 <segment>
 <wire x1="383.54" y1="284.48" x2="386.08" y2="284.48" width="0.1524" layer="91"/>
 <pinref part="U$12" gate="G$1" pin="SCLK"/>
@@ -724,7 +724,7 @@ and temperature signal.&lt;/p&gt;
 <pinref part="U$5" gate="G$1" pin="BLOCK_REQUIREMENT"/>
 </segment>
 </net>
-<net name="MOSI,#,+,I,SPI,1/SDA,#,+,I,I2C,1" class="0">
+<net name="MOSI,#,+,I,SPI,1" class="0">
 <segment>
 <wire x1="383.54" y1="289.56" x2="386.08" y2="289.56" width="0.1524" layer="91"/>
 <pinref part="U$12" gate="G$1" pin="SDI/SDA"/>
@@ -740,7 +740,7 @@ and temperature signal.&lt;/p&gt;
 <label x="391.16" y="287.02" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="GPIO,#,-,I" class="0">
+<net name="GPIO,#,-,I.CS" class="0">
 <segment>
 <wire x1="383.54" y1="292.1" x2="386.08" y2="292.1" width="0.1524" layer="91"/>
 <pinref part="U$12" gate="G$1" pin="CSB2"/>

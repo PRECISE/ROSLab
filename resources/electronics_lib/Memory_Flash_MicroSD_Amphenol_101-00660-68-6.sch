@@ -3293,12 +3293,12 @@ type 0309, grid 2.5 mm</description>
 <wire x1="3.302" y1="-1.27" x2="2.54" y2="-0.508" width="0.254" layer="94"/>
 <wire x1="2.54" y1="-0.508" x2="2.54" y2="0.508" width="0.254" layer="94"/>
 </symbol>
-<symbol name="BLOCK_OPTIONAL">
+<symbol name="BLOCK_RECOMMENDED">
 <pin name="BLOCK_CONNECTOR" x="0" y="0" visible="pad" length="short" direction="sup"/>
-<wire x1="2.54" y1="-1.27" x2="5.08" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="5.08" y1="-1.27" x2="5.08" y2="1.27" width="0.254" layer="94"/>
-<wire x1="5.08" y1="1.27" x2="2.54" y2="1.27" width="0.254" layer="94"/>
-<wire x1="2.54" y1="1.27" x2="2.54" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="2.54" y1="0" x2="3.81" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="3.81" y1="-1.27" x2="5.08" y2="0" width="0.254" layer="94"/>
+<wire x1="5.08" y1="0" x2="3.81" y2="1.27" width="0.254" layer="94"/>
+<wire x1="3.81" y1="1.27" x2="2.54" y2="0" width="0.254" layer="94"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -3314,9 +3314,9 @@ type 0309, grid 2.5 mm</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="BLOCK_OPTIONAL">
+<deviceset name="BLOCK_RECOMMENDED">
 <gates>
-<gate name="G$1" symbol="BLOCK_OPTIONAL" x="0" y="0"/>
+<gate name="G$1" symbol="BLOCK_RECOMMENDED" x="0" y="0"/>
 </gates>
 <devices>
 <device name="">
@@ -3344,7 +3344,7 @@ type 0309, grid 2.5 mm</description>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
 <part name="R_SD_PU1" library="resistor" deviceset="R-US_" device="R0603" value="10kΩ"/>
 <part name="U$1" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
-<part name="U$2" library="block_parts" deviceset="BLOCK_OPTIONAL" device=""/>
+<part name="U$2" library="block_parts" deviceset="BLOCK_RECOMMENDED" device=""/>
 <part name="U$3" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 <part name="U$4" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
 <part name="U$5" library="block_parts" deviceset="BLOCK_REQUIREMENT" device=""/>
@@ -3389,7 +3389,7 @@ type 0309, grid 2.5 mm</description>
 <junction x="-2.54" y="10.16"/>
 </segment>
 </net>
-<net name="GPIO,#,+,O" class="0">
+<net name="GPIO,#,+,O.CD" class="0">
 <segment>
 <pinref part="R_SD_PU1" gate="G$1" pin="1"/>
 <pinref part="SD_SOCKET1" gate="G$1" pin="CD_DCT"/>
@@ -3397,9 +3397,10 @@ type 0309, grid 2.5 mm</description>
 <pinref part="U$2" gate="G$1" pin="BLOCK_CONNECTOR"/>
 <wire x1="-33.02" y1="17.78" x2="-38.1" y2="17.78" width="0.1524" layer="91"/>
 <junction x="-33.02" y="17.78"/>
+<label x="-38.1" y="17.78" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="GPIO,#,-,I" class="0">
+<net name="GPIO,#,-,I.CS" class="0">
 <segment>
 <pinref part="SD_SOCKET1" gate="G$1" pin="P2_/CS"/>
 <wire x1="30.48" y1="35.56" x2="27.94" y2="35.56" width="0.1524" layer="91"/>

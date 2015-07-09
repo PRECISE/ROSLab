@@ -5595,13 +5595,7 @@ type 0309, grid 2.5 mm</description>
 
 &lt;p&gt;&lt;a href="http://www.invensense.com/mems/gyro/documents/PS-MPU-6000A.pdf"&gt;MPU-6050&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Connect IMU_SCL_x to the SCL pin on the microcontroller&lt;/p&gt;
-
-&lt;p&gt;Connect IMU_SDA_x to the SDA pin on the microcontroller&lt;/p&gt;
-
-&lt;p&gt;Connect IMU_IRQ_x to an interruptable pin on the microcontroller&lt;/p&gt;
-
-&lt;p&gt;This block includes all supply bypass capacitors.&lt;/p&gt;</description>
+&lt;p&gt;I2C address: 0b1101000&lt;/p&gt;</description>
 <plain>
 </plain>
 <instances>
@@ -5731,7 +5725,7 @@ type 0309, grid 2.5 mm</description>
 <wire x1="17.78" y1="-10.16" x2="20.32" y2="-10.16" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="3_3V,#,+,I" class="0">
+<net name="2_4V,#,+,I/2_5V,#,+,I/2_85V,#,+,I/3V,#,+,I/3_3V,#,+,I" class="0">
 <segment>
 <pinref part="VLOGIC_BYPASS_1" gate="G$1" pin="1"/>
 <pinref part="U$3" gate="G$1" pin="BLOCK_REQUIREMENT"/>

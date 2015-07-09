@@ -5586,15 +5586,9 @@ type 0309, grid 2.5 mm</description>
 <sheet>
 <description>&lt;b&gt;Inertial Measurement Unit via I2C&lt;/b&gt;
 
-&lt;p&gt;&lt;a href="http://www.invensense.com/mems/gyro/documents/PS-MPU-6000A.pdf"&gt;MPU-6050&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://store.invensense.com/ProductDetail/MPU6500-InvenSense-Inc/474995/"&gt;MPU-6500&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Connect IMU_SCL_x to the SCL pin on the microcontroller&lt;/p&gt;
-
-&lt;p&gt;Connect IMU_SDA_x to the SDA pin on the microcontroller&lt;/p&gt;
-
-&lt;p&gt;Connect IMU_IRQ_x to an interruptable pin on the microcontroller&lt;/p&gt;
-
-&lt;p&gt;This block includes all supply bypass capacitors.&lt;/p&gt;</description>
+&lt;p&gt;I2C address: 0b110100&lt;/p&gt;</description>
 <plain>
 </plain>
 <instances>
@@ -5686,7 +5680,7 @@ type 0309, grid 2.5 mm</description>
 <label x="-38.1" y="5.08" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="GPIO,#,+,O" class="0">
+<net name="GPIO,#,+,O.INT" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="INT"/>
 <wire x1="12.7" y1="0" x2="20.32" y2="0" width="0.1524" layer="91"/>
