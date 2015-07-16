@@ -3,6 +3,7 @@
  */
 package roslab.model.general;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -11,9 +12,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import roslab.model.software.ROSDevice;
 import roslab.processors.electronics.EagleSchematic;
-import roslab.processors.general.PlatformParser;
+import roslab.processors.general.LibraryParser;
 
 /**
  * @author Peter Gebhard
@@ -139,13 +139,26 @@ public class Library {
      *            the name of the platform to load
      */
     public void loadPlatform(String platformName) {
-        PlatformParser pp = new PlatformParser(Paths.get("resources", "platforms", platformName + ".yaml").toFile());
-        this.name = pp.platform.name;
+        Library lib = LibraryParser.parseLibraryYAML(Paths.get("resources", "platforms", platformName + ".yaml").toFile());
+        this.name = lib.name;
         this.nodes.clear();
-        for (Device dev : pp.platform.devices) {
-            if (dev instanceof ROSDevice) {
-                addNode(ROSDevice.buildNodeFromDevice((ROSDevice) dev));
-            }
+        for (Node n : lib.nodes) {
+            addNode(n);
+        }
+    }
+
+    /**
+     * Clear the library contents and load nodes from input Library file.
+     *
+     * @param libraryFile
+     *            the name of the Library file to load
+     */
+    public void loadLibrary(File libraryFile) {
+        Library lib = LibraryParser.parseLibraryYAML(libraryFile);
+        this.name = lib.name;
+        this.nodes.clear();
+        for (Node n : lib.nodes) {
+            addNode(n);
         }
     }
 }

@@ -7,21 +7,21 @@ package roslab.model.software;
  * @author Peter Gebhard
  */
 public class ROSTopic implements Cloneable {
-    private String topic;
+    private String topicName;
     private ROSMsgType type;
     private boolean direction; // true is in/subscribe, false is out/publish
 
     /**
-     * @param topic
+     * @param topicName
      * @param type
      * @param direction
      */
-    public ROSTopic(String topic, ROSMsgType type, boolean direction) {
-        if (topic == null) {
-            throw new IllegalArgumentException("Bad topic.");
+    public ROSTopic(String topicName, ROSMsgType type, boolean direction) {
+        if (topicName == null) {
+            throw new IllegalArgumentException("Bad topicName.");
         }
         else {
-            this.topic = topic;
+            this.topicName = topicName;
         }
         if (type == null) {
             throw new IllegalArgumentException("Bad type.");
@@ -33,18 +33,18 @@ public class ROSTopic implements Cloneable {
     }
 
     /**
-     * @return the topic
+     * @return the topicName
      */
-    public String getTopic() {
-        return topic;
+    public String getTopicName() {
+        return topicName;
     }
 
     /**
-     * @param topic
-     *            the topic to set
+     * @param topicName
+     *            the topicName to set
      */
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
     }
 
     /**
@@ -79,7 +79,7 @@ public class ROSTopic implements Cloneable {
 
     @Override
     public ROSTopic clone() {
-        return new ROSTopic(topic, type, direction);
+        return new ROSTopic(topicName, type, direction);
     }
 
     /*
@@ -88,7 +88,7 @@ public class ROSTopic implements Cloneable {
      */
     @Override
     public String toString() {
-        return (topic != null ? "topic=" + topic + ", " : "") + (type != null ? "type=" + type + ", " : "") + "direction="
+        return (topicName != null ? "topicName=" + topicName + ", " : "") + (type != null ? "type=" + type + ", " : "") + "direction="
                 + (direction ? "subscribe" : "publish");
     }
 }

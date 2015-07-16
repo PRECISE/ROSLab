@@ -1,0 +1,29 @@
+name: TestConfiguration
+library: TestLibrary
+
+nodes:
+- name: MyIMU
+  node_type: ROSNode
+  spec: IMU1
+  x: 5
+  y: 5
+- name: MyIMU2
+  node_type: ROSNode
+  spec: IMU2
+  x: 15
+  y: 15
+- name: MyController
+  node_type: ROSNode
+  spec: Controller
+  x: 25
+  y: 25
+
+links:
+- src_name: /imu1
+  src_parent: MyIMU
+  dest_name: /imu1
+  dest_parent: MyController
+- src_name: /imu2
+  src_parent: MyIMU2
+  dest_name: /imu2
+  dest_parent: MyController

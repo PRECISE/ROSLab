@@ -39,7 +39,7 @@ public class ROSPort extends Feature implements Endpoint {
             throw new IllegalArgumentException("Bad topic.");
         }
         else {
-            this.annotations.put("Topic", topic.getTopic());
+            this.annotations.put("Topic", topic.getTopicName());
             this.topic = topic;
         }
         this.fanIn = fanIn && topic.isSubscriber();
@@ -61,7 +61,7 @@ public class ROSPort extends Feature implements Endpoint {
             throw new IllegalArgumentException("Bad topic.");
         }
         else {
-            this.annotations.put("Topic", topic.getTopic());
+            this.annotations.put("Topic", topic.getTopicName());
             this.topic = topic;
         }
         this.fanIn = fanIn && topic.isSubscriber();
@@ -109,9 +109,9 @@ public class ROSPort extends Feature implements Endpoint {
      * @param topic
      *            the topic to set
      */
-    public void setTopicName(String topic) {
-        annotations.put("Topic", topic);
-        this.topic.setTopic(topic);
+    public void setTopicName(String topicName) {
+        annotations.put("Topic", topicName);
+        this.topic.setTopicName(topicName);
     }
 
     /**
@@ -148,6 +148,7 @@ public class ROSPort extends Feature implements Endpoint {
     /**
      * @return the links
      */
+    @Override
     public List<Link> getLinks() {
         return links;
     }
@@ -189,8 +190,8 @@ public class ROSPort extends Feature implements Endpoint {
         if (e instanceof ROSPort) {
             ROSPort p = (ROSPort) e;
 
-            // Valid connection if directions are opposite, but topics match.            
-            return (this.isSubscriber() != p.isSubscriber()) && (topic.getTopic().equals(p.getTopic().getTopic()));
+            // Valid connection if directions are opposite, but topics match.
+            return (this.isSubscriber() != p.isSubscriber()) && (topic.getTopicName().equals(p.getTopic().getTopicName()));
         }
         return false;
     }

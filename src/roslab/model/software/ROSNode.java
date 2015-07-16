@@ -30,7 +30,7 @@ public class ROSNode extends Node {
         super(name, new HashMap<String, ROSPort>(), new HashMap<String, String>());
         this.annotations.put("Rate", "50"); // Set default ROS rate to 50Hz
     }
-    
+
     /**
      * Construct a new ROSNode with user-specified rate
      *
@@ -76,6 +76,21 @@ public class ROSNode extends Node {
         this.annotations.put("Rate", Integer.toString(rate));
     }
 
+    /**
+     * @return the custom flag
+     */
+    public boolean getCustomFlag() {
+        return Boolean.getBoolean(this.annotations.get("Custom"));
+    }
+
+    /**
+     * @param custom
+     *            the custom flag to set
+     */
+    public void setCustomFlag(boolean custom) {
+        this.annotations.put("Custom", Boolean.toString(custom));
+    }
+
     @SuppressWarnings("unchecked")
     public void addPort(ROSPort p) {
         ((Map<String, ROSPort>) features).put(p.getName(), p);
@@ -83,7 +98,7 @@ public class ROSNode extends Node {
 
     @SuppressWarnings("unchecked")
     public void removePort(String pName) {
-        ((Map<String, ROSPort>) features).remove(pName);    	
+        ((Map<String, ROSPort>) features).remove(pName);
     }
 
     public ROSPort getPort(String name) {

@@ -1,4 +1,4 @@
-name: Landshark
+name: TestLibrary
 
 nodes:
 - name: IMU1
@@ -30,4 +30,17 @@ nodes:
   topics:
     - name: /cmd_vel
       direction: sub
+      msg_type: Twist
+- name: Controller
+  node_type: ROS
+  custom: True
+  topics:
+    - name: /imu1
+      direction: sub
+      msg_type: Imu
+    - name: /imu2
+      direction: sub
+      msg_type: Imu
+    - name: /cmd_vel
+      direction: pub
       msg_type: Twist
