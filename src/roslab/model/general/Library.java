@@ -76,6 +76,18 @@ public class Library {
     }
 
     /**
+     * @return the specified node
+     */
+    public Node getNode(String name) {
+        for (Node n : nodes) {
+            if (n.getName().equals(name)) {
+                return n;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return the nodes
      */
     public List<Node> getNodesOfClass(Class<?> clazz) {

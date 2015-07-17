@@ -166,6 +166,15 @@ public abstract class Node {
 
     public abstract List<Endpoint> getEndpoints();
 
+    public Endpoint getEndpoint(String name) {
+        for (Endpoint e : getEndpoints()) {
+            if (e.getName().equals(name)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     public abstract Node getSpec();
 
     public abstract Node clone(String name);

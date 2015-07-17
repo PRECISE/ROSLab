@@ -30,6 +30,7 @@ import roslab.model.software.ROSTopic;
 public class LibraryParser {
     private static Yaml yaml;
 
+    @SuppressWarnings("unchecked")
     public static Library parseLibraryYAML(File libraryFile) {
         yaml = new Yaml();
 
@@ -47,18 +48,18 @@ public class LibraryParser {
 
         List<Node> nodes = new ArrayList<Node>();
 
-        for (Map<String, Object> d : (List<Map<String, Object>>) yam.get("nodes")) {
-            switch ((String) d.get("node_type")) {
+        for (Map<String, Object> node : (List<Map<String, Object>>) yam.get("nodes")) {
+            switch ((String) node.get("node_type")) {
                 case "ROS":
-                    ROSNode n = new ROSNode((String) d.get("name"));
-                    if (d.get("custom") != null && (boolean) d.get("custom")) {
-                        n.setCustomFlag(true);
+                    ROSNode rn = new ROSNode((String) node.get("name"));
+                    if (node.get("custom") != null && (boolean) node.get("custom")) {
+                        rn.setCustomFlag(true);
                     }
-                    for (Map<String, Object> t : (List<Map<String, Object>>) d.get("topics")) {
-                        n.addPort(new ROSPort((String) t.get("name"), n, new ROSTopic((String) t.get("name"), new ROSMsgType((String) t
-                                .get("msg_type")), "sub".equals(t.get("direction"))), false, false));
+                    for (Map<String, Object> topic : (List<Map<String, Object>>) node.get("topics")) {
+                        rn.addPort(new ROSPort((String) topic.get("name"), rn, new ROSTopic((String) topic.get("name"), new ROSMsgType((String) topic
+                                .get("msg_type")), "sub".equals(topic.get("direction"))), false, false));
                     }
-                    nodes.add(n);
+                    nodes.add(rn);
                     break;
                 case "HW":
                     // TODO

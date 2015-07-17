@@ -12,6 +12,7 @@ import java.util.List;
 public class Configuration {
 
     String name;
+    Library lib;
     List<Node> nodes;
     List<Link> links;
 
@@ -19,12 +20,18 @@ public class Configuration {
      * @param nodes
      * @param links
      */
-    public Configuration(String name, List<Node> nodes, List<Link> links) {
+    public Configuration(String name, Library lib, List<Node> nodes, List<Link> links) {
         if (name == null) {
             throw new IllegalArgumentException("Bad name input.");
         }
         else {
             this.name = name;
+        }
+        if (lib == null) {
+            throw new IllegalArgumentException("Bad Library input.");
+        }
+        else {
+            this.lib = lib;
         }
         if (nodes == null) {
             this.nodes = new ArrayList<Node>();
@@ -53,6 +60,21 @@ public class Configuration {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the library
+     */
+    public Library getLibrary() {
+        return lib;
+    }
+
+    /**
+     * @param lib
+     *            the library to set
+     */
+    public void setLibrary(Library lib) {
+        this.lib = lib;
     }
 
     public boolean addNode(Node n) {
@@ -174,14 +196,14 @@ public class Configuration {
     public boolean contains(Link l) {
         return this.links.contains(l);
     }
-    
+
     public Node getNodeByName(String name) {
-    	for(Node n: nodes) {
-    		if(name.equals(n.getName())) {
-    			return n;
-    		}
-    	}
-    	return null;
+        for (Node n : nodes) {
+            if (name.equals(n.getName())) {
+                return n;
+            }
+        }
+        return null;
     }
 
 }

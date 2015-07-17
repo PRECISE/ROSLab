@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import roslab.model.general.Configuration;
 import roslab.model.general.Feature;
+import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
 import roslab.model.mechanics.HWBlock;
@@ -94,10 +95,12 @@ public class HardwareModelProcessorTest {
         nodes.add(half1);
         nodes.add(half2);
 
+        Library testLib = new Library(nodes);
+
         links.add(new Link(j13, j21));
         links.add(new Link(j12, j31));
 
-        c = new Configuration(HardwareModelProcessorTest.class.getName(), nodes, links);
+        c = new Configuration(HardwareModelProcessorTest.class.getName(), testLib, nodes, links);
         str = new String(Files.readAllBytes(Paths.get("test/roslab/processors/HWBotTest.py")));
     }
 
