@@ -17,18 +17,35 @@ public class Configuration {
     List<Link> links;
 
     /**
+     * @param lib
+     */
+    public Configuration(Library lib) {
+        this(null, lib, null, null);
+    }
+
+    /**
+     * @param name
+     * @param lib
+     */
+    public Configuration(String name, Library lib) {
+        this(name, lib, null, null);
+    }
+
+    /**
+     * @param name
+     * @param lib
      * @param nodes
      * @param links
      */
     public Configuration(String name, Library lib, List<Node> nodes, List<Link> links) {
         if (name == null) {
-            throw new IllegalArgumentException("Bad name input.");
+            this.name = "Default";
         }
         else {
             this.name = name;
         }
         if (lib == null) {
-            throw new IllegalArgumentException("Bad Library input.");
+            throw new IllegalArgumentException("Bad Library input: Library input cannot be Null.");
         }
         else {
             this.lib = lib;

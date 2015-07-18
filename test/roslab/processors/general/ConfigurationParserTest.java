@@ -3,22 +3,21 @@
  */
 package roslab.processors.general;
 
+import static org.junit.Assert.assertTrue;
+
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.yaml.snakeyaml.Yaml;
 
+import roslab.model.general.Configuration;
 import roslab.model.general.Library;
-import roslab.model.general.Node;
-import roslab.model.software.ROSMsgType;
+import roslab.model.general.Link;
 import roslab.model.software.ROSNode;
-import roslab.model.software.ROSPort;
-import roslab.model.software.ROSTopic;
+import roslab.model.ui.UINode;
 
 /**
  * @author Peter Gebhard
@@ -26,42 +25,35 @@ import roslab.model.software.ROSTopic;
 public class ConfigurationParserTest {
 
     static Library lib = new Library();
-    static Yaml yaml = new Yaml();
+    static Configuration config = new Configuration("TestConfiguration", lib);
 
     /**
      * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        lib.setName("TestLibrary");
-        lib.setNodes(new ArrayList<Node>());
+        lib = LibraryParser.parseLibraryYAML(Paths.get("resources", "platforms", "TestLibrary.yaml").toFile());
+        config.setLibrary(lib);
 
-        ROSNode n1 = new ROSNode("IMU1");
-        n1.addPort(new ROSPort("/imu1", n1, new ROSTopic("/imu1", new ROSMsgType("IMU"), false), false, false));
-        lib.addNode(n1);
+        // Build nodes
+        ROSNode n1 = new ROSNode("MyIMU", (ROSNode) lib.getNode("IMU1"));
+        n1.setUINode(new UINode(n1, 5, 5));
+        config.addNode(n1);
 
-        ROSNode n2 = new ROSNode("IMU2");
-        n2.addPort(new ROSPort("/imu2", n2, new ROSTopic("/imu2", new ROSMsgType("IMU"), false), false, false));
-        lib.addNode(n2);
+        ROSNode n2 = new ROSNode("MyIMU2", (ROSNode) lib.getNode("IMU2"));
+        n2.setUINode(new UINode(n2, 15, 15));
+        config.addNode(n2);
 
-        ROSNode n3 = new ROSNode("GPS");
-        n3.addPort(new ROSPort("/gps", n3, new ROSTopic("/gps", new ROSMsgType("NavSatFix"), false), false, false));
-        lib.addNode(n3);
+        ROSNode n3 = new ROSNode("MyController", (ROSNode) lib.getNode("Controller"));
+        n3.setUINode(new UINode(n3, 25, 25));
+        config.addNode(n3);
 
-        ROSNode n4 = new ROSNode("Joystick");
-        n4.addPort(new ROSPort("/joy", n4, new ROSTopic("/joy", new ROSMsgType("Joy"), false), false, false));
-        lib.addNode(n4);
+        // Build links
+        Link l1 = new Link(n1.getEndpoint("/imu1"), n3.getEndpoint("/imu1"));
+        config.addLink(l1);
 
-        ROSNode n5 = new ROSNode("Cmd_Vel");
-        n5.addPort(new ROSPort("/cmd_vel", n5, new ROSTopic("/cmd_vel", new ROSMsgType("Twist"), true), false, false));
-        lib.addNode(n5);
-
-        ROSNode n6 = new ROSNode("Controller");
-        n6.setCustomFlag(true);
-        n6.addPort(new ROSPort("/imu1", n6, new ROSTopic("/imu1", new ROSMsgType("IMU"), true), false, false));
-        n6.addPort(new ROSPort("/imu2", n6, new ROSTopic("/imu2", new ROSMsgType("IMU"), true), false, false));
-        n6.addPort(new ROSPort("/cmd_vel", n6, new ROSTopic("/cmd_vel", new ROSMsgType("Twist"), false), false, false));
-        lib.addNode(n6);
+        Link l2 = new Link(n2.getEndpoint("/imu2"), n3.getEndpoint("/imu2"));
+        config.addLink(l2);
     }
 
     /**
@@ -87,14 +79,23 @@ public class ConfigurationParserTest {
 
     /**
      * Test method for
-     * {@link roslab.processors.general.LibraryParser#LibraryParser(java.io.File)}
+     * {@link roslab.processors.general.ConfigurationParser#parseRequiredLibrary(java.io.File)}
      * .
      */
     @Test
-    public void testLibraryParser() {
-        Library testLib = LibraryParser.parseLibraryYAML(Paths.get("resources", "platforms", "TestLibrary.yaml").toFile());
-        System.out.println(LibraryParser.emitLibraryYAML(testLib));
-
+    public void testParseRequiredLibrary() {
+        Library testLib = ConfigurationParser.parseRequiredLibrary(Paths.get("resources", "platforms", "TestConfiguration.yaml").toFile());
+        assertTrue(LibraryParser.emitLibraryYAML(testLib).equals(LibraryParser.emitLibraryYAML(lib)));
     }
 
+    /**
+     * Test method for
+     * {@link roslab.processors.general.ConfigurationParser#parseRequiredLibrary(java.io.File)}
+     * .
+     */
+    @Test
+    public void testParseConfigurationYAML() {
+        Configuration testConfig = ConfigurationParser.parseConfigurationYAML(Paths.get("resources", "platforms", "TestConfiguration.yaml").toFile());
+        assertTrue(ConfigurationParser.emitConfigurationYAML(testConfig).equals(ConfigurationParser.emitConfigurationYAML(config)));
+    }
 }

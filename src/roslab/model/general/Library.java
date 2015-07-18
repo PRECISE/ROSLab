@@ -27,21 +27,21 @@ public class Library {
      *
      */
     public Library() {
-        this("Default", new ArrayList<Node>());
+        this(null, null);
     }
 
     /**
      * @param nodes
      */
     public Library(List<Node> nodes) {
-        this("Default", nodes);
+        this(null, nodes);
     }
 
     /**
      * @param name
      */
     public Library(String name) {
-        this(name, new ArrayList<Node>());
+        this(name, null);
     }
 
     /**
@@ -49,8 +49,18 @@ public class Library {
      * @param nodes
      */
     public Library(String name, List<Node> nodes) {
-        this.name = name;
-        this.nodes = nodes;
+        if (name == null) {
+            this.name = "Default";
+        }
+        else {
+            this.name = name;
+        }
+        if (nodes == null) {
+            this.nodes = new ArrayList<Node>();
+        }
+        else {
+            this.nodes = nodes;
+        }
     }
 
     /**

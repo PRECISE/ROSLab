@@ -48,7 +48,7 @@ public class ConfigurationParser {
             e.printStackTrace();
         }
 
-        return LibraryParser.parseLibraryYAML(Paths.get(((String) yam.get("library")) + ".yaml").toFile());
+        return LibraryParser.parseLibraryYAML(Paths.get(configFile.getParent() + "/" + ((String) yam.get("library")) + ".yaml").toFile());
     }
 
     @SuppressWarnings("unchecked")
@@ -67,7 +67,7 @@ public class ConfigurationParser {
             e.printStackTrace();
         }
 
-        Library lib = LibraryParser.parseLibraryYAML(Paths.get(((String) yam.get("library")) + ".yaml").toFile());
+        Library lib = LibraryParser.parseLibraryYAML(Paths.get(configFile.getParent() + "/" + ((String) yam.get("library")) + ".yaml").toFile());
 
         List<Node> nodes = new ArrayList<Node>();
         List<Link> links = new ArrayList<Link>();
@@ -76,7 +76,7 @@ public class ConfigurationParser {
             switch ((String) node.get("node_type")) {
                 case "ROSNode":
                     ROSNode n = new ROSNode((String) node.get("name"), (ROSNode) lib.getNode((String) node.get("spec")));
-                    n.setUINode(new UINode(n, Double.parseDouble((String) node.get("x")), Double.parseDouble((String) node.get("y"))));
+                    n.setUINode(new UINode(n, Double.parseDouble(node.get("x").toString()), Double.parseDouble(node.get("y").toString())));
                     nodes.add(n);
                     break;
                 case "Circuit":

@@ -3,6 +3,8 @@
  */
 package roslab.processors.general;
 
+import static org.junit.Assert.assertTrue;
+
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -11,7 +13,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.yaml.snakeyaml.Yaml;
 
 import roslab.model.general.Library;
 import roslab.model.general.Node;
@@ -26,7 +27,6 @@ import roslab.model.software.ROSTopic;
 public class LibraryParserTest {
 
     static Library lib = new Library();
-    static Yaml yaml = new Yaml();
 
     /**
      * @throws java.lang.Exception
@@ -37,11 +37,11 @@ public class LibraryParserTest {
         lib.setNodes(new ArrayList<Node>());
 
         ROSNode n1 = new ROSNode("IMU1");
-        n1.addPort(new ROSPort("/imu1", n1, new ROSTopic("/imu1", new ROSMsgType("IMU"), false), false, false));
+        n1.addPort(new ROSPort("/imu1", n1, new ROSTopic("/imu1", new ROSMsgType("Imu"), false), false, false));
         lib.addNode(n1);
 
         ROSNode n2 = new ROSNode("IMU2");
-        n2.addPort(new ROSPort("/imu2", n2, new ROSTopic("/imu2", new ROSMsgType("IMU"), false), false, false));
+        n2.addPort(new ROSPort("/imu2", n2, new ROSTopic("/imu2", new ROSMsgType("Imu"), false), false, false));
         lib.addNode(n2);
 
         ROSNode n3 = new ROSNode("GPS");
@@ -58,8 +58,8 @@ public class LibraryParserTest {
 
         ROSNode n6 = new ROSNode("Controller");
         n6.setCustomFlag(true);
-        n6.addPort(new ROSPort("/imu1", n6, new ROSTopic("/imu1", new ROSMsgType("IMU"), true), false, false));
-        n6.addPort(new ROSPort("/imu2", n6, new ROSTopic("/imu2", new ROSMsgType("IMU"), true), false, false));
+        n6.addPort(new ROSPort("/imu1", n6, new ROSTopic("/imu1", new ROSMsgType("Imu"), true), false, false));
+        n6.addPort(new ROSPort("/imu2", n6, new ROSTopic("/imu2", new ROSMsgType("Imu"), true), false, false));
         n6.addPort(new ROSPort("/cmd_vel", n6, new ROSTopic("/cmd_vel", new ROSMsgType("Twist"), false), false, false));
         lib.addNode(n6);
     }
@@ -93,8 +93,7 @@ public class LibraryParserTest {
     @Test
     public void testLibraryParser() {
         Library testLib = LibraryParser.parseLibraryYAML(Paths.get("resources", "platforms", "TestLibrary.yaml").toFile());
-        System.out.println(LibraryParser.emitLibraryYAML(testLib));
-
+        assertTrue(LibraryParser.emitLibraryYAML(testLib).equals(LibraryParser.emitLibraryYAML(lib)));
     }
 
 }

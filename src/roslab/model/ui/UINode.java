@@ -65,7 +65,7 @@ public class UINode extends Rectangle {
     public UINode(Node node, double xx, double yy) {
         super(xx, yy, DEFAULT_WIDTH + node.getName().length() * CHARACTER_SIZE, DEFAULT_HEIGHT);
         nodeText = new Text(getX(), getY() + (getHeight()) - TEXT_Y_OFFSET, node.getName());
-        if (node instanceof ROSNode && node.getAnnotation("custom-type").equals("controller")) {
+        if (node instanceof ROSNode && "controller".equals(node.getAnnotation("custom-type"))) {
             String rate = node.getAnnotation("Rate");
             rateText = new Text(getX(), getY() + (getHeight()) + RATE_Y_OFFSET, "Rate:" + rate + "hz");
         }
@@ -164,11 +164,11 @@ public class UINode extends Rectangle {
             public void handle(DragEvent event) {
                 if (event.getDragboard().hasString()) {
                     String[] portInfo = event.getDragboard().getString().split(" "); // TODO
-                                                                                     // spaces
-                                                                                     // in
-                                                                                     // names
-                                                                                     // a
-                                                                                     // problem
+                    // spaces
+                    // in
+                    // names
+                    // a
+                    // problem
                     boolean isSub = !"1".equals(portInfo[2]);
                     if (!endpoints.contains(event.getGestureSource()) && validPortAdd(portInfo[0], portInfo[1], isSub)) {
                         event.acceptTransferModes(TransferMode.COPY);
@@ -183,11 +183,11 @@ public class UINode extends Rectangle {
             public void handle(DragEvent event) {
                 if (event.getDragboard().hasString()) {
                     String[] portInfo = event.getDragboard().getString().split(" "); // TODO
-                                                                                     // spaces
-                                                                                     // in
-                                                                                     // names
-                                                                                     // a
-                                                                                     // problem
+                    // spaces
+                    // in
+                    // names
+                    // a
+                    // problem
                     boolean isSub = !"1".equals(portInfo[2]);
                     if (!endpoints.contains(event.getGestureSource()) && validPortAdd(portInfo[0], portInfo[1], isSub)) {
                         setStyle("-fx-stroke: green");
@@ -213,11 +213,11 @@ public class UINode extends Rectangle {
             public void handle(DragEvent event) {
                 if (!endpoints.contains(event.getGestureSource()) && event.getDragboard().hasString()) {
                     String[] portInfo = event.getDragboard().getString().split(" "); // TODO
-                                                                                     // spaces
-                                                                                     // in
-                                                                                     // names
-                                                                                     // a
-                                                                                     // problem
+                    // spaces
+                    // in
+                    // names
+                    // a
+                    // problem
                     boolean isSub = !"1".equals(portInfo[2]);
                     controller.addConfigPort(node, portInfo[0], portInfo[1], isSub);
                     event.setDropCompleted(true);
