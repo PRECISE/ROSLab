@@ -1,0 +1,26 @@
+name: Battery_Li-Po_850mAh
+type: battery
+description: Lithium-Polymer single cell with JST-PH
+
+electrical:
+  design_file: Battery_Li-Po_850mAh.sch
+  nets:
+  - name: 3_7V,#,+,O
+    voltage:
+      max: {value: 4.2, unit: volt}
+      min: {value: 3, unit: volt}
+    current: {value: 1.72, unit: amp}
+    energy: {value: 11455, unit: joule}
+
+mechanical:
+  mass: {value: 15, unit: gram}
+  dimensions:
+    thickness: {value: 6, unit: mm}
+    length: {value: 48, unit: mm}
+    width: {value: 30, unit: mm}
+  inputs:
+  - name: JST-PH
+    number: 1
+    pins: 2
+    
+  

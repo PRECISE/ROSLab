@@ -1,0 +1,17 @@
+name: Battery_Coin-Cell_CR2032
+type: battery
+description: Lithium coin cell battery
+
+electrical:
+  design_file: Battery_Coin-Cell_CR2032_Horizontal.sch
+  nets:
+  - name: 3_0V,#,+,O
+    voltage:
+      max: {value: 3, unit: volt}
+      min: {value: 2, unit: volt}
+    current: {value: 0.00019, unit: amp}
+    energy: {value: 2350, unit: joule}
+
+mechanical:
+  mass: {value: 3.0, unit: gram}
+  
