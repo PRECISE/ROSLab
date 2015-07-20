@@ -1,0 +1,31 @@
+name: Motor_Brushed_20x7mm
+type: motor
+description: Put words here.
+
+electrical:
+  design_file: Motor_Brushed_20x7mm.sch
+  defaults:
+    voltage: {value: 3.7, unit: volt}
+    current: {value: 500, unit: milliamp}
+  nets:
+  - name: 3_7V,#,+,I
+    voltage:
+      max: {value: 3.7, unit: volt}
+      min: {value: 3.7, unit: volt}
+    current: {value: 1, unit: amp}
+
+mechanical:
+  mass: {value: 50, unit: gram}
+  torque: {value: 5, unit: gigameter}
+  inputs:
+  - name: blahblah
+    number: {value: 1, unit: none}
+    dimensions:
+      radius: {value: 7, unit: millimeter}
+      height: {value: 20, unit: millimeter}
+  outputs:
+  - name: blahblah2
+    number: {value: 2, unit: none}
+    dimensions:
+      radius: {value: 2, unit: millimeter}
+      height: {value: 5, unit: millimeter}
