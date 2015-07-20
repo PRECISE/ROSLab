@@ -294,9 +294,9 @@ CONN-08352</description>
 </parts>
 <sheets>
 <sheet>
-<description>&lt;h&gt;Battery Li-Po 2000mAh&lt;/h&gt;
+<description>&lt;h&gt;Battery Li-Po 400mAh&lt;/h&gt;
 
-&lt;p&gt;&lt;a href="https://www.sparkfun.com/products/8483"&gt;Sparkfun Page&lt;/a&gt;&lt;\p&gt;</description>
+&lt;p&gt;&lt;a href="https://www.sparkfun.com/products/10718"&gt;Sparkfun Page&lt;/a&gt;&lt;\p&gt;</description>
 <plain>
 </plain>
 <instances>
