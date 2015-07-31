@@ -3,6 +3,7 @@
  */
 package roslab.model.ui;
 
+import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import roslab.model.general.Link;
@@ -115,5 +116,9 @@ public class UILink extends Line {
             this.setEndX(mouseEvent.getX() + mousex);
             this.setEndY(mouseEvent.getY() + mousey);
         }
+    }
+
+    public void removeFromGroup(Group g) {
+        g.getChildren().remove(this);
     }
 }

@@ -431,33 +431,19 @@ public class ROSLabController implements Initializable {
                     e.getUILinks().clear();
                     e.removeFromGroup(swUIObjects);
                 }
-                n.getUINode().removeFromGroup(swUIObjects);
                 swConfig.removeNode(n);
                 swTree.removeConfigNode(n);
+                n.getUINode().removeFromGroup(swUIObjects);
                 break;
             case "HWBlock":
                 hwConfig.removeNode(n);
                 hwTree.removeConfigNode(n);
+                n.getUINode().removeFromGroup(hwUIObjects);
                 break;
             case "Circuit":
-                for (UIEndpoint e : n.getUINode().getUIEndpoints()) {
-                    for (UILink l : e.getUILinks()) {
-                        eeConfig.removeLink(l.getLink());
-                        eeTree.removeConfigLink(l.getLink());
-                        if (e.equals(l.getSrc())) {
-                            l.getDest().removeUILink(l);
-                        }
-                        else {
-                            l.getSrc().removeUILink(l);
-                        }
-                        swUIObjects.getChildren().remove(l);
-                    }
-                    e.getUILinks().clear();
-                    e.removeFromGroup(eeUIObjects);
-                }
-                n.getUINode().removeFromGroup(eeUIObjects);
                 eeConfig.removeNode(n);
                 eeTree.removeConfigNode(n);
+                n.getUINode().removeFromGroup(eeUIObjects);
                 break;
         }
 
@@ -494,14 +480,17 @@ public class ROSLabController implements Initializable {
             case "ROSPort":
                 swConfig.removeLink(l);
                 swTree.removeConfigLink(l);
+                l.getUILink().removeFromGroup(swUIObjects);
                 break;
             case "Joint":
                 hwConfig.removeLink(l);
                 hwTree.removeConfigLink(l);
+                l.getUILink().removeFromGroup(hwUIObjects);
                 break;
             case "Circuit":
                 eeConfig.removeLink(l);
                 eeTree.removeConfigLink(l);
+                l.getUILink().removeFromGroup(eeUIObjects);
                 break;
         }
         l.destroy();
@@ -952,10 +941,8 @@ public class ROSLabController implements Initializable {
     public void addConfigPort(Node node, String pName, String pType, boolean isSub) {
         ROSPort toAdd = new ROSPort(pName, ((ROSNode) node), new ROSTopic(pName, new ROSMsgType(pType), isSub), false, false);
         ((ROSNode) node).addPort(toAdd); // Add to this node's features
-        ((ROSNode) node.getSpec()).addPort(toAdd); // Add to library node's
-        // features
-        updateLibraryNode((ROSNode) node.getSpec()); // Update library with
-        // library node
+        ((ROSNode) node.getSpec()).addPort(toAdd); // Add to library node's features
+        updateLibraryNode((ROSNode) node.getSpec()); // Update library with library node
         // for (Node n : swConfig.getNodes()) {
         // if (n instanceof ROSNode && n.getSpec().equals(node.getSpec())) {
         // ((ROSNode) n).addPort(new ROSPort(pName, ((ROSNode) node), new
