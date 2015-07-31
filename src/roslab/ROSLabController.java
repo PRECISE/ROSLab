@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
@@ -449,11 +449,13 @@ public class ROSLabController implements Initializable {
 
         // Remove any links associated with this node
         for (Endpoint e : n.getEndpoints()) {
-            List<? extends Link> links = e.getLinks();
-            for (Link l : links) {
-                removeConfigLink(l);
+            Iterator<? extends Link> it = e.getLinks().iterator();
+            while (it.hasNext()) {
+                removeConfigLink(it.next());
+                it.remove();
             }
         }
+
         n = null;
     }
 
@@ -469,8 +471,10 @@ public class ROSLabController implements Initializable {
                 removeConfigPort(n, topicName);
             }
         }
-        for (Node n : toRemove) {
-            removeConfigNode(n);
+        Iterator<Node> iter = toRemove.iterator();
+        while (iter.hasNext()) {
+            removeConfigNode(iter.next());
+            iter.remove();
         }
     }
 
