@@ -16,7 +16,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -45,7 +44,7 @@ public class UIEndpoint extends Circle {
     Text endpointText;
     UINode uiparent;
     List<UILink> uilinks = new ArrayList<UILink>();
-    boolean rightSideText;    
+    boolean rightSideText;
     LineDraw drawTask;
     Thread drawLineThread;
 
@@ -79,26 +78,26 @@ public class UIEndpoint extends Circle {
         this.setVisible(visible);
         this.endpointText.setVisible(visible);
         addPortLine.setVisible(false);
-         
+
         setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-            	setCursor(Cursor.CLOSED_HAND);
-            	setParentToFront();
+                setCursor(Cursor.CLOSED_HAND);
+                setParentToFront();
             }
         });
-            
+
         setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 setCursor(Cursor.OPEN_HAND);
                 addPortLine.setVisible(false);
-                if(getEndpoint() instanceof ROSPort && getParentNode() instanceof ROSNode && drawTask != null) {
-                	drawTask.kill();
+                if (getEndpoint() instanceof ROSPort && getParentNode() instanceof ROSNode && drawTask != null) {
+                    drawTask.kill();
                 }
             }
         });
-        
+
         setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -107,7 +106,7 @@ public class UIEndpoint extends Circle {
                 }
             }
         });
-        
+
         setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -116,74 +115,75 @@ public class UIEndpoint extends Circle {
                 }
             }
         });
-                
-        setOnDragDetected(new EventHandler<MouseEvent>(){
-        	@Override
-        	public void handle(MouseEvent event) {
-        		if(getEndpoint() instanceof ROSPort) {
-        			Dragboard db = startDragAndDrop(TransferMode.COPY);
-        			db.setDragView(new Image("/roslab/model/ui/Drag.png"));
-        			ClipboardContent content = new ClipboardContent();
-        			String endpointType = ((ROSPort)getEndpoint()).getType().toString();
-        			String endpointName = getEndpoint().getName();
-        			int isSub = 0;
-        			if(((ROSPort)getEndpoint()).isInput()) {
-        				isSub = 1;
-        			}
-        			content.putString(endpointName + " " + endpointType + " " + isSub);
-        			db.setContent(content);
-        			drawLine();
-        		}
-        		event.consume();
-        	}    	
+
+        setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (getEndpoint() instanceof ROSPort) {
+                    Dragboard db = startDragAndDrop(TransferMode.COPY);
+                    db.setDragView(new Image("/roslab/model/ui/Drag.png"));
+                    ClipboardContent content = new ClipboardContent();
+                    String endpointType = ((ROSPort) getEndpoint()).getType().toString();
+                    String endpointName = getEndpoint().getName();
+                    int isSub = 0;
+                    if (((ROSPort) getEndpoint()).isInput()) {
+                        isSub = 1;
+                    }
+                    content.putString(endpointName + " " + endpointType + " " + isSub);
+                    db.setContent(content);
+                    drawLine();
+                }
+                event.consume();
+            }
         });
-       
+
     }
-    
+
     private class LineDraw implements Runnable {
-    	
-	    private volatile boolean drawing = true;
-	    
-		@Override
-		public void run() {
-			addPortLine.setStartX(getCenterX());
-			addPortLine.setStartY(getCenterY());			
-	    	while(drawing) {
-	    			double x = MouseInfo.getPointerInfo().getLocation().getX();
-	    			double y = MouseInfo.getPointerInfo().getLocation().getY();
-	    			getParentNode();
-	    			getParentNode().getUINode();
-	    			try {
-	    				Point2D p = getParentNode().getUINode().getParent().screenToLocal(x, y);
-		    			addPortLine.setEndX(p.getX());
-		    			addPortLine.setEndY(p.getY());
-		    			addPortLine.setVisible(true); 
-	    			} catch (NullPointerException e) {
-	    				kill();
-	    			}
-	    	}
-	    	addPortLine.setEndX(getCenterX());
-	    	addPortLine.setEndY(getCenterY());
-			addPortLine.setVisible(false);
-		}	
-		
-		public void kill() {
-			drawing = false;
-		}
+
+        private volatile boolean drawing = true;
+
+        @Override
+        public void run() {
+            addPortLine.setStartX(getCenterX());
+            addPortLine.setStartY(getCenterY());
+            while (drawing) {
+                double x = MouseInfo.getPointerInfo().getLocation().getX();
+                double y = MouseInfo.getPointerInfo().getLocation().getY();
+                getParentNode();
+                getParentNode().getUINode();
+                try {
+                    Point2D p = getParentNode().getUINode().getParent().screenToLocal(x, y);
+                    addPortLine.setEndX(p.getX());
+                    addPortLine.setEndY(p.getY());
+                    addPortLine.setVisible(true);
+                }
+                catch (NullPointerException e) {
+                    kill();
+                }
+            }
+            addPortLine.setEndX(getCenterX());
+            addPortLine.setEndY(getCenterY());
+            addPortLine.setVisible(false);
+        }
+
+        public void kill() {
+            drawing = false;
+        }
     }
-    
+
     public void addRemoveCustomListener(final ROSLabController controller) {
         setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.SECONDARY &&
-                	"controller".equals(getParentNode().getAnnotation("custom-type"))) {
+                if (mouseEvent.getButton() == MouseButton.SECONDARY && "controller".equals(getParentNode().getAnnotation("custom-type"))) {
                     ContextMenu editDelete = new ContextMenu();
                     MenuItem deleteItem = new MenuItem("Delete Port");
                     deleteItem.setOnAction(new EventHandler<ActionEvent>() {
-                    	public void handle(ActionEvent event) {
-                    		controller.removeConfigPort(getParentNode(), endpoint.getName());
-                    	}
+                        @Override
+                        public void handle(ActionEvent event) {
+                            controller.removeConfigPort(getParentNode(), endpoint.getName());
+                        }
                     });
                     editDelete.getItems().add(deleteItem);
                     editDelete.show(getThis(), mouseEvent.getScreenX(), mouseEvent.getScreenY());
@@ -191,13 +191,13 @@ public class UIEndpoint extends Circle {
             }
         });
     }
-    
+
     private void drawLine() {
-    	drawTask = new LineDraw();
-    	drawLineThread = new Thread(drawTask);
-    	drawLineThread.start();
+        drawTask = new LineDraw();
+        drawLineThread = new Thread(drawTask);
+        drawLineThread.start();
     }
-    
+
     /**
      * @param endpoint
      * @param rightSideText
@@ -311,63 +311,67 @@ public class UIEndpoint extends Circle {
         addPortLine.setStartX(mouseEvent.getX() + mousexCircle);
         addPortLine.setStartY(mouseEvent.getY() + mouseyCircle);
         addPortLine.setEndX(mouseEvent.getX() + mousexCircle);
-        addPortLine.setEndY(mouseEvent.getY() + mouseyCircle); 
+        addPortLine.setEndY(mouseEvent.getY() + mouseyCircle);
         for (UILink l : uilinks) {
             l.updateXY(mouseEvent, this);
         }
     }
-    
+
     public void setCircleStyle(boolean isSubscriber) {
-    	if(isSubscriber) {
-    		setStyle("-fx-fill:yellow");
-    	} else {
-    		setStyle("-fx-fill:red");   		
-    	}
+        if (isSubscriber) {
+            setStyle("-fx-fill:yellow");
+        }
+        else {
+            setStyle("-fx-fill:red");
+        }
     }
-    
+
     private void setParentToFront() {
-    	uiparent.toTheFront();
+        uiparent.toTheFront();
     }
-    
+
     public Line getPortLine() {
-    	return addPortLine;
+        return addPortLine;
     }
-    
+
     public Text getEndpointText() {
-    	return endpointText;
+        return endpointText;
     }
-    
+
     public boolean killDrawTask() {
-    	if(drawLineThread != null && drawLineThread.isAlive()) {
-        	drawTask.kill();
-        	return true;
+        if (drawLineThread != null && drawLineThread.isAlive()) {
+            drawTask.kill();
+            return true;
         }
         return false;
     }
-    
+
     private UIEndpoint getThis() {
-    	return this;
+        return this;
     }
-    
+
     public void toTheFront() {
-    	this.toFront();
-    	this.endpointText.toFront();
+        this.toFront();
+        this.endpointText.toFront();
     }
-    
+
     public void addToGroup(Group g) {
-		g.getChildren().add(this);
-		g.getChildren().add(endpointText);
-		if(uiparent.getNode() instanceof ROSNode) {
-			g.getChildren().add(addPortLine);  			
-		}
+        g.getChildren().add(this);
+        g.getChildren().add(endpointText);
+        if (uiparent.getNode() instanceof ROSNode) {
+            g.getChildren().add(addPortLine);
+        }
     }
-    
+
     public void removeFromGroup(Group g) {
-		g.getChildren().remove(this);
-		g.getChildren().remove(endpointText);
-		if(uiparent.getNode() instanceof ROSNode) {
-			g.getChildren().remove(addPortLine);
-		}
+        g.getChildren().remove(this);
+        g.getChildren().remove(endpointText);
+        if (uiparent.getNode() instanceof ROSNode) {
+            g.getChildren().remove(addPortLine);
+        }
+        for (UILink uil : uilinks) {
+            uil.removeFromGroup(g);
+        }
     }
-    
+
 }

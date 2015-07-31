@@ -449,13 +449,13 @@ public class ROSLabController implements Initializable {
 
         // Remove any links associated with this node
         for (Endpoint e : n.getEndpoints()) {
-            Iterator<? extends Link> it = e.getLinks().iterator();
-            while (it.hasNext()) {
-                removeConfigLink(it.next());
-                it.remove();
+            Iterator<? extends Link> linkit = e.getLinks().iterator();
+            while (linkit.hasNext()) {
+                Link l = linkit.next();
+                linkit.remove();
+                removeConfigLink(l);
             }
         }
-
         n = null;
     }
 
@@ -471,10 +471,11 @@ public class ROSLabController implements Initializable {
                 removeConfigPort(n, topicName);
             }
         }
-        Iterator<Node> iter = toRemove.iterator();
-        while (iter.hasNext()) {
-            removeConfigNode(iter.next());
-            iter.remove();
+        Iterator<Node> it = toRemove.iterator();
+        while (it.hasNext()) {
+            Node n = it.next();
+            it.remove();
+            removeConfigNode(n);
         }
     }
 
