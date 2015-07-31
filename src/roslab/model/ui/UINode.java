@@ -471,10 +471,9 @@ public class UINode extends Rectangle {
     }
 
     public void addToGroup(Group g, ROSLabController r) {
-        boolean isRos = node instanceof ROSNode;
-        if (isRos) {
+        addRightClickMenu(r);
+        if (node instanceof ROSNode) {
             addCustomPortListener(r);
-            addRightClickMenu(r);
         }
         g.getChildren().add(this);
         g.getChildren().add(nodeText);
@@ -483,7 +482,7 @@ public class UINode extends Rectangle {
         }
         for (UIEndpoint e : endpoints) {
             e.addToGroup(g);
-            if (isRos) {
+            if (node instanceof ROSNode) {
                 e.addRemoveCustomListener(r);
             }
         }

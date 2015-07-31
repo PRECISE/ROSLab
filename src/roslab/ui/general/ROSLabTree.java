@@ -14,7 +14,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 
 import org.controlsfx.dialog.Dialogs;
 
@@ -27,12 +26,11 @@ import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
 import roslab.model.software.ROSNode;
-import roslab.model.software.ROSPort;
 import roslab.processors.electronics.EagleSchematic;
 import roslab.processors.software.ROSNodeCodeGenerator;
 
 public class ROSLabTree extends TreeItem<String> {
-	
+
     LibraryTreeItem libraryTree;
     ConfigTreeItem configTree;
 
@@ -44,7 +42,7 @@ public class ROSLabTree extends TreeItem<String> {
         // Add to top-level tree
         getChildren().addAll(libraryTree, configTree);
     }
-    
+
     public class ContextMenuTreeItem extends TreeItem<String> {
         public ContextMenu menu = new ContextMenu();
         private ROSLabController controller;
@@ -52,14 +50,14 @@ public class ROSLabTree extends TreeItem<String> {
         public ContextMenuTreeItem(String title) {
             super(title);
         }
-        
+
         public ContextMenuTreeItem(String title, ROSLabController controller) {
             super(title);
             this.controller = controller;
         }
 
         public ContextMenu getMenu() {
-        	if("ROSNode".equals(getValue()) && controller != null) {
+            if ("ROSNode".equals(getValue()) && controller != null) {
                 MenuItem controllerItem = new MenuItem("Add Custom Controller Node...");
                 controllerItem.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
@@ -74,10 +72,11 @@ public class ROSLabTree extends TreeItem<String> {
                         controller.showCustomNodeDialog("Topic");
                     }
                 });
-                return new ContextMenu(controllerItem, topicItem);        		
-        	} else {
-        		return new ContextMenu();
-        	}
+                return new ContextMenu(controllerItem, topicItem);
+            }
+            else {
+                return new ContextMenu();
+            }
         }
 
         public void setMenu(ContextMenu menu) {
@@ -100,9 +99,9 @@ public class ROSLabTree extends TreeItem<String> {
             }
             setExpanded(true);
         }
-        
+
         public LibraryTreeItem() {
-        	super("Library");
+            super("Library");
         }
 
         public void addNode(Node n) {
@@ -119,7 +118,7 @@ public class ROSLabTree extends TreeItem<String> {
                 }
             }
             if (!nodeAdded) {
-            	ContextMenuTreeItem newItem = new ContextMenuTreeItem(n.getClass().getSimpleName(), controller);
+                ContextMenuTreeItem newItem = new ContextMenuTreeItem(n.getClass().getSimpleName(), controller);
                 NodeTreeItem newNode = new NodeTreeItem(n, this.controller);
                 for (Feature f : n.getFeatures().values()) {
                     newNode.getChildren().add(new ContextMenuTreeItem(f.toString()));
@@ -156,14 +155,14 @@ public class ROSLabTree extends TreeItem<String> {
 
         @Override
         public ContextMenu getMenu() {
-        	MenuItem libraryItem = new MenuItem("Load Library");
-        	libraryItem.setOnAction(new EventHandler<ActionEvent>() {
-        		@Override
-        		public void handle(ActionEvent event) {
-        			controller.showLoadLibraryDialog();
-        		}
-        	});
-        	return new ContextMenu(libraryItem);
+            MenuItem libraryItem = new MenuItem("Load Library");
+            libraryItem.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    controller.showLoadLibraryDialog();
+                }
+            });
+            return new ContextMenu(libraryItem);
         }
     }
 
@@ -296,101 +295,103 @@ public class ROSLabTree extends TreeItem<String> {
 
         @Override
         public ContextMenu getMenu() {
-        	if(controller.getSWConfig() == configuration) {
-        		MenuItem sourceItem = new MenuItem("Generate source code only");
-        		sourceItem.setOnAction(new EventHandler<ActionEvent>() {
-        			@Override
-        			public void handle(ActionEvent event) {
-        				// Handle ROSNode nodes
-        				for (Node n : configuration.getNodesOfType(ROSNode.class)) {
-        					try {
-        						if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
-        							ROSNodeCodeGenerator.buildNode((ROSNode)n, new File(n.getName() + ".cpp"));
-        						}
-        					}
-        					catch (IOException e) {
-        						e.printStackTrace();
-        					}
-        				}
-        			}
-        		});
-        		MenuItem packageItem = new MenuItem("Generate ROS package");
-        		packageItem.setOnAction(new EventHandler<ActionEvent>() {
-        			@Override
-        			public void handle(ActionEvent event) {
-        				Alert alert = new Alert(AlertType.INFORMATION);
-        				alert.setTitle("ROSLab");
-        				alert.setHeaderText("Select Workspace");
-        				alert.setContentText("Please select your initialized ROS workspace directory.");
-        				alert.showAndWait();
-        				DirectoryChooser directoryChooser = new DirectoryChooser();
-        				directoryChooser.setTitle("Select ROS Workspace directory");
-        				File file = directoryChooser.showDialog(controller.getStage());
-        				if(file != null) {
-            				System.out.println(file.getPath());        					
-        				}
-        				//prompt for workspace location
-        				//catkin_create_pkg [package_name] [dependency messages]* roscpp rospy std_msgs
-        				for (Node n : configuration.getNodesOfType(ROSNode.class)) {
-        					try {
-        						if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
-        							ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
-        						}
-        					}
-        					catch (IOException e) {
-        						e.printStackTrace();
-        					}
-        				}
-        				//put cpp in package's src folder
-        				//modify CMakeLists.txt (in the package, not the workspace)->
-        			}
-        		});
-        		
-    			return new ContextMenu(sourceItem, packageItem);
-        	}
-        	MenuItem circuitItem = new MenuItem("Generate merged circuit");
-            circuitItem.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    // Handle Circuit nodes
-                    List<EagleSchematic> schematics = new ArrayList<EagleSchematic>();
-                    List<Circuit> circuitsWithUnconnectedRequireds = new ArrayList<Circuit>();
-                    for (Node n : configuration.getNodesOfType(Circuit.class)) {
-                        Circuit c = (Circuit) n;
-                        if (c.getUnconnectedRequiredPins().size() > 0) {
-                            circuitsWithUnconnectedRequireds.add(c);
-                        }
-                        schematics.add(c.getSchematic());
-
-                    }
-                    if (circuitsWithUnconnectedRequireds.size() > 0) {
-                        String circuitString = "";
-                        for (Circuit c : circuitsWithUnconnectedRequireds) {
-                            circuitString += c.getName() + "\n";
-                            for (Pin p : c.getUnconnectedRequiredPins().values()) {
-                                circuitString += "  " + p.getName() + "\n";
+            if (configuration == controller.getSWConfig()) {
+                MenuItem sourceItem = new MenuItem("Generate source code only");
+                sourceItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        // Handle ROSNode nodes
+                        for (Node n : configuration.getNodesOfType(ROSNode.class)) {
+                            try {
+                                if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
+                                    ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
+                                }
+                            }
+                            catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
-                        Dialogs.create().owner(controller.getStage()).title("Missing Required Links")
-                                .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
                     }
-                    else if (schematics.size() > 1) {
-                        EagleSchematic.connectWires(configuration.getLinks());
-                        EagleSchematic.merge(schematics, "Merged.sch");
+                });
+                MenuItem packageItem = new MenuItem("Generate ROS package");
+                packageItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("ROSLab");
+                        alert.setHeaderText("Select Workspace");
+                        alert.setContentText("Please select your initialized ROS workspace directory.");
+                        alert.showAndWait();
+                        DirectoryChooser directoryChooser = new DirectoryChooser();
+                        directoryChooser.setTitle("Select ROS Workspace directory");
+                        File file = directoryChooser.showDialog(controller.getStage());
+                        if (file != null) {
+                            System.out.println(file.getPath());
+                        }
+                        // prompt for workspace location
+                        // catkin_create_pkg [package_name] [dependency
+                        // messages]* roscpp rospy std_msgs
+                        for (Node n : configuration.getNodesOfType(ROSNode.class)) {
+                            try {
+                                if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
+                                    ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
+                                }
+                            }
+                            catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        // put cpp in package's src folder
+                        // modify CMakeLists.txt (in the package, not the
+                        // workspace)->
                     }
-                }
-            });
+                });
+                // TODO This item is not yet included in ContextMenu
+                MenuItem m2Item = new MenuItem("Generate multi-system container and code...");
+                m2Item.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        // TODO Pop up external interface dialog
+                    }
+                });
+                menu = new ContextMenu(sourceItem, packageItem);
+            }
+            else if (configuration == controller.getEEConfig()) {
+                MenuItem circuitItem = new MenuItem("Generate merged circuit");
+                circuitItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        // Handle Circuit nodes
+                        List<EagleSchematic> schematics = new ArrayList<EagleSchematic>();
+                        List<Circuit> circuitsWithUnconnectedRequireds = new ArrayList<Circuit>();
+                        for (Node n : configuration.getNodesOfType(Circuit.class)) {
+                            Circuit c = (Circuit) n;
+                            if (c.getUnconnectedRequiredPins().size() > 0) {
+                                circuitsWithUnconnectedRequireds.add(c);
+                            }
+                            schematics.add(c.getSchematic());
 
-            // TODO This item is not yet included in ContextMenu
-            MenuItem m2Item = new MenuItem("Generate multi-system container and code...");
-            m2Item.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    // TODO Pop up external interface dialog
-                }
-            });
-
-            return new ContextMenu(circuitItem);
+                        }
+                        if (circuitsWithUnconnectedRequireds.size() > 0) {
+                            String circuitString = "";
+                            for (Circuit c : circuitsWithUnconnectedRequireds) {
+                                circuitString += c.getName() + "\n";
+                                for (Pin p : c.getUnconnectedRequiredPins().values()) {
+                                    circuitString += "  " + p.getName() + "\n";
+                                }
+                            }
+                            Dialogs.create().owner(controller.getStage()).title("Missing Required Links")
+                            .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
+                        }
+                        else if (schematics.size() > 1) {
+                            EagleSchematic.connectWires(configuration.getLinks());
+                            EagleSchematic.merge(schematics, "Merged.sch");
+                        }
+                    }
+                });
+                menu = new ContextMenu(circuitItem);
+            }
+            return menu;
         }
     }
 
@@ -413,14 +414,14 @@ public class ROSLabTree extends TreeItem<String> {
                     m2Item.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                        	controller.removeMatchingConfigNodes(node, controller.getSWConfig());
-                            controller.removeLibraryNode((ROSNode)node);
+                            controller.removeMatchingConfigNodes(node, controller.getSWConfig());
+                            controller.removeLibraryNode((ROSNode) node);
                         }
                     });
-                    return new ContextMenu(m2Item);
+                    menu = new ContextMenu(m2Item);
                 }
             }
-            return new ContextMenu();
+            return menu;
         }
     }
 
@@ -443,7 +444,6 @@ public class ROSLabTree extends TreeItem<String> {
                     controller.removeConfigLink(link);
                 }
             });
-
             return new ContextMenu(mItem);
         }
     }

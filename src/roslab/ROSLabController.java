@@ -429,26 +429,35 @@ public class ROSLabController implements Initializable {
                         swUIObjects.getChildren().remove(l);
                     }
                     e.getUILinks().clear();
-                    // e.removeFromGroup(swUIObjects);
-                    // swUIObjects.getChildren().remove(e.getEndpointText());
-                    // swUIObjects.getChildren().remove(e.getPortLine());
-                    // swUIObjects.getChildren().remove(e);
+                    e.removeFromGroup(swUIObjects);
                 }
                 n.getUINode().removeFromGroup(swUIObjects);
-                // swUIObjects.getChildren().remove(n.getUINode().getNodeUIText());
-                // swUIObjects.getChildren().remove(n.getUINode());
                 swConfig.removeNode(n);
                 swTree.removeConfigNode(n);
                 break;
             case "HWBlock":
                 hwConfig.removeNode(n);
                 hwTree.removeConfigNode(n);
-                hwPane.getChildren().remove(n.getUINode());
                 break;
             case "Circuit":
+                for (UIEndpoint e : n.getUINode().getUIEndpoints()) {
+                    for (UILink l : e.getUILinks()) {
+                        eeConfig.removeLink(l.getLink());
+                        eeTree.removeConfigLink(l.getLink());
+                        if (e.equals(l.getSrc())) {
+                            l.getDest().removeUILink(l);
+                        }
+                        else {
+                            l.getSrc().removeUILink(l);
+                        }
+                        swUIObjects.getChildren().remove(l);
+                    }
+                    e.getUILinks().clear();
+                    e.removeFromGroup(eeUIObjects);
+                }
+                n.getUINode().removeFromGroup(eeUIObjects);
                 eeConfig.removeNode(n);
                 eeTree.removeConfigNode(n);
-                eePane.getChildren().remove(n.getUINode());
                 break;
         }
 
@@ -582,13 +591,16 @@ public class ROSLabController implements Initializable {
 
                     switch (zEntry.getName()) {
                         case "swConfig.xml":
-                            swConfig = (Configuration) xstream.fromXML(bos.toString());
+                            // swConfig = (Configuration)
+                            // xstream.fromXML(bos.toString());
                             break;
                         case "eeConfig.xml":
-                            eeConfig = (Configuration) xstream.fromXML(bos.toString());
+                            // eeConfig = (Configuration)
+                            // xstream.fromXML(bos.toString());
                             break;
                         case "hwConfig.xml":
-                            hwConfig = (Configuration) xstream.fromXML(bos.toString());
+                            // hwConfig = (Configuration)
+                            // xstream.fromXML(bos.toString());
                             break;
                     }
 
