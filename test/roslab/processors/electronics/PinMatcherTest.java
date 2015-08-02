@@ -12,7 +12,8 @@ import org.junit.Test;
 
 public class PinMatcherTest {
 
-    private Integer[][] testMatrix = { { 1, 1, 0, 0, 0 }, { 1, 0, 1, 1, 0 }, { 0, 1, 1, 0, 1 }, { 1, 0, 1, 1, 0 }, { 0, 1, 0, 0, 1 } };
+    private Integer[][] testMatrix = { { 1, 0, 0, 0, 1, 0 }, { 1, 1, 1, 1, 1, 1 }, { 1, 1, 1, 1, 1, 1 }, { 1, 0, 0, 0, 1, 0 }, { 1, 0, 0, 0, 1, 0 },
+            { 0, 1, 0, 0, 0, 1 } };
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -41,7 +42,10 @@ public class PinMatcherTest {
         // assertEquals(matchMatrix, PinMatcher.match(testMatrix));
         Integer[][] randMatrix = randomMatrix();
         Integer[][] beginMatrix = copyMatrix(randMatrix);
-        matchMatrix = PinMatcher.match(randMatrix, null, null);
+
+        // matchMatrix = PinMatcher.match(randMatrix, null, null);
+        matchMatrix = PinMatcher.match(testMatrix, null, null);
+
         while (matchMatrix == null) {
             randMatrix = randomMatrix();
             beginMatrix = copyMatrix(randMatrix);

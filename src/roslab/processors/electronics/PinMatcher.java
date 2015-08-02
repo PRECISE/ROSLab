@@ -51,6 +51,10 @@ public class PinMatcher {
             if (shouldMaskColumn(rowPins, colPins, minRow, minCol)) {
                 maskMatrixColumn(pinMatrix, minCol);
             }
+
+            // DEBUG
+            // System.out.println("Results: " + result);
+            // System.out.println("Matrix: " + pinMatrix);
         }
 
         // Return the match result
