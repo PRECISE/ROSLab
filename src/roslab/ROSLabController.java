@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -29,6 +31,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
@@ -60,6 +64,8 @@ import roslab.model.software.ROSTopic;
 import roslab.model.ui.UIEndpoint;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
+import roslab.processors.general.ConfigurationParser;
+import roslab.processors.general.LibraryParser;
 import roslab.ui.general.NewLinkDialog;
 import roslab.ui.general.NewNodeDialog;
 import roslab.ui.general.ROSLabTree;
@@ -69,56 +75,63 @@ import roslab.ui.software.NewCustomControllerDialog;
 import roslab.ui.software.NewCustomPortDialog;
 import roslab.ui.software.NewCustomTopicDialog;
 
-import com.thoughtworks.xstream.XStream;
-
 public class ROSLabController implements Initializable {
     static Logger logger = LoggerFactory.getLogger(ROSLabController.class);
 
     @FXML
+    TabPane mainTabPane;
+
+    @FXML
+    Tab swTab;
+
+    @FXML
     TreeView<String> swTreeView;
-
-    ROSLabTree swTree;
-
-    @FXML
-    TreeView<String> hwTreeView;
-
-    ROSLabTree hwTree;
-
-    @FXML
-    TreeView<String> eeTreeView;
-
-    ROSLabTree eeTree;
 
     @FXML
     AnchorPane swPane;
 
+    ROSLabTree swTree;
+    Library swLibrary = new Library(new ArrayList<Node>());
+    Configuration swConfig;
+    ContextMenu addSWNodeMenu;
+    Group swUIObjects = new Group();
+
+    @FXML
+    Tab hwTab;
+
+    @FXML
+    TreeView<String> hwTreeView;
+
     @FXML
     AnchorPane hwPane;
+
+    ROSLabTree hwTree;
+    Library hwLibrary = new Library(new ArrayList<Node>());
+    Configuration hwConfig;
+    ContextMenu addHWNodeMenu;
+    Group hwUIObjects = new Group();
+
+    @FXML
+    Tab eeTab;
+
+    @FXML
+    TreeView<String> eeTreeView;
 
     @FXML
     AnchorPane eePane;
 
-    Random r = new Random();
-
-    Library swLibrary = new Library(new ArrayList<Node>());
-    Library hwLibrary = new Library(new ArrayList<Node>());
+    ROSLabTree eeTree;
     Library eeLibrary = new Library(new ArrayList<Node>());
-    Configuration swConfig;
-    Configuration hwConfig;
     Configuration eeConfig;
-    Group swUIObjects = new Group();
-    Group hwUIObjects = new Group();
+    ContextMenu addEENodeMenu;
     Group eeUIObjects = new Group();
 
+    Random r = new Random();
     Rectangle selectionRectangle;
     double selectionX;
     double selectionY;
     Line addPortLine;
     Point portLineStart = new Point();
-    ContextMenu addSWNodeMenu;
-    ContextMenu addHWNodeMenu;
-    ContextMenu addEENodeMenu;
-
     private Stage primaryStage;
 
     @Override
@@ -546,12 +559,67 @@ public class ROSLabController implements Initializable {
 
     @FXML
     private void openLibrary() {
-        // TODO Use XStream here!
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("YAML files (*.yaml)", "*.yaml");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show open file dialog
+        File openFile = fileChooser.showOpenDialog(primaryStage);
+
+        if (openFile != null) {
+            switch (mainTabPane.getSelectionModel().getSelectedItem().getText()) {
+                case "Software":
+                    swLibrary = LibraryParser.parseLibraryYAML(openFile);
+                    break;
+                case "Electrical":
+                    eeLibrary = LibraryParser.parseLibraryYAML(openFile);
+                    break;
+                case "Mechanical":
+                    hwLibrary = LibraryParser.parseLibraryYAML(openFile);
+                    break;
+            }
+        }
     }
 
     @FXML
     private void saveLibrary() {
-        // TODO Use XStream here!
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("YAML files (*.yaml)", "*.yaml");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Set initial filename
+        switch (mainTabPane.getSelectionModel().getSelectedItem().getText()) {
+            case "Software":
+                fileChooser.setInitialFileName("swLibrary.yaml");
+                break;
+            case "Electrical":
+                fileChooser.setInitialFileName("eeLibrary.yaml");
+                break;
+            case "Mechanical":
+                fileChooser.setInitialFileName("hwLibrary.yaml");
+                break;
+        }
+
+        // Show save file dialog
+        File saveFile = fileChooser.showSaveDialog(primaryStage);
+
+        if (saveFile != null) {
+            switch (mainTabPane.getSelectionModel().getSelectedItem().getText()) {
+                case "Software":
+                    LibraryParser.emitLibraryYAML(swLibrary, saveFile);
+                    break;
+                case "Electrical":
+                    LibraryParser.emitLibraryYAML(eeLibrary, saveFile);
+                    break;
+                case "Mechanical":
+                    LibraryParser.emitLibraryYAML(hwLibrary, saveFile);
+                    break;
+            }
+        }
     }
 
     @FXML
@@ -562,13 +630,15 @@ public class ROSLabController implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("LAB files (*.lab)", "*.lab");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        // Show save file dialog
+        // Show open file dialog
         File openFile = fileChooser.showOpenDialog(primaryStage);
 
-        // Unzip package and load all xml files
+        // Unzip package and load all YAML files
         FileInputStream fis = null;
         ZipInputStream zipIs = null;
         ZipEntry zEntry = null;
+
+        // Read the Library YAML files
         try {
             fis = new FileInputStream(openFile);
             zipIs = new ZipInputStream(new BufferedInputStream(fis));
@@ -584,17 +654,14 @@ public class ROSLabController implements Initializable {
                     bos.flush();
 
                     switch (zEntry.getName()) {
-                        case "swConfig.xml":
-                            // swConfig = (Configuration)
-                            // xstream.fromXML(bos.toString());
+                        case "swLibrary.yaml":
+                            swLibrary = LibraryParser.parseLibraryYAML(bos.toString());
                             break;
-                        case "eeConfig.xml":
-                            // eeConfig = (Configuration)
-                            // xstream.fromXML(bos.toString());
+                        case "eeLibrary.yaml":
+                            eeLibrary = LibraryParser.parseLibraryYAML(bos.toString());
                             break;
-                        case "hwConfig.xml":
-                            // hwConfig = (Configuration)
-                            // xstream.fromXML(bos.toString());
+                        case "hwLibrary.yaml":
+                            hwLibrary = LibraryParser.parseLibraryYAML(bos.toString());
                             break;
                     }
 
@@ -605,6 +672,7 @@ public class ROSLabController implements Initializable {
                 }
             }
             zipIs.close();
+            fis.close();
         }
         catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
@@ -613,6 +681,79 @@ public class ROSLabController implements Initializable {
         catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+        finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (zipIs != null) {
+                    zipIs.close();
+                }
+            }
+            catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        // Read the Configuration YAML files
+        try {
+            fis = new FileInputStream(openFile);
+            zipIs = new ZipInputStream(new BufferedInputStream(fis));
+            while ((zEntry = zipIs.getNextEntry()) != null) {
+                try {
+                    byte[] tmp = new byte[4 * 1024];
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    int size = 0;
+                    while ((size = zipIs.read(tmp)) != -1) {
+                        bos.write(tmp, 0, size);
+                    }
+
+                    bos.flush();
+
+                    switch (zEntry.getName()) {
+                        case "swConfig.yaml":
+                            swConfig = ConfigurationParser.parseConfigurationYAML(bos.toString(), swLibrary);
+                            break;
+                        case "eeConfig.yaml":
+                            eeConfig = ConfigurationParser.parseConfigurationYAML(bos.toString(), eeLibrary);
+                            break;
+                        case "hwConfig.yaml":
+                            hwConfig = ConfigurationParser.parseConfigurationYAML(bos.toString(), hwLibrary);
+                            break;
+                    }
+
+                    bos.reset();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            zipIs.close();
+            fis.close();
+        }
+        catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (zipIs != null) {
+                    zipIs.close();
+                }
+            }
+            catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
@@ -624,19 +765,21 @@ public class ROSLabController implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("LAB files (*.lab)", "*.lab");
         fileChooser.getExtensionFilters().add(extFilter);
 
+        // Set initial filename
+        fileChooser.setInitialFileName("MyConfig_" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + ".lab");
+
         // Show save file dialog
         File saveFile = fileChooser.showSaveDialog(primaryStage);
 
         if (saveFile != null) {
             FileOutputStream fos = null;
             ZipOutputStream zipOut = null;
-            XStream xstream = new XStream();
             try {
                 fos = new FileOutputStream(saveFile);
                 zipOut = new ZipOutputStream(new BufferedOutputStream(fos));
 
-                InputStream is = new ByteArrayInputStream(xstream.toXML(swConfig).getBytes());
-                ZipEntry ze = new ZipEntry("swConfig.xml");
+                InputStream is = new ByteArrayInputStream(ConfigurationParser.emitConfigurationYAML(swConfig).getBytes());
+                ZipEntry ze = new ZipEntry("swConfig.yaml");
                 zipOut.putNextEntry(ze);
                 byte[] tmp = new byte[4 * 1024];
                 int size = 0;
@@ -645,8 +788,8 @@ public class ROSLabController implements Initializable {
                 }
                 zipOut.flush();
 
-                is = new ByteArrayInputStream(xstream.toXML(eeConfig).getBytes());
-                ze = new ZipEntry("eeConfig.xml");
+                is = new ByteArrayInputStream(LibraryParser.emitLibraryYAML(swLibrary).getBytes());
+                ze = new ZipEntry("swLibrary.yaml");
                 zipOut.putNextEntry(ze);
                 tmp = new byte[4 * 1024];
                 while ((size = is.read(tmp)) != -1) {
@@ -654,8 +797,8 @@ public class ROSLabController implements Initializable {
                 }
                 zipOut.flush();
 
-                is = new ByteArrayInputStream(xstream.toXML(hwConfig).getBytes());
-                ze = new ZipEntry("hwConfig.xml");
+                is = new ByteArrayInputStream(ConfigurationParser.emitConfigurationYAML(eeConfig).getBytes());
+                ze = new ZipEntry("eeConfig.yaml");
                 zipOut.putNextEntry(ze);
                 tmp = new byte[4 * 1024];
                 while ((size = is.read(tmp)) != -1) {
@@ -663,7 +806,32 @@ public class ROSLabController implements Initializable {
                 }
                 zipOut.flush();
 
-                zipOut.close();
+                is = new ByteArrayInputStream(LibraryParser.emitLibraryYAML(eeLibrary).getBytes());
+                ze = new ZipEntry("eeLibrary.yaml");
+                zipOut.putNextEntry(ze);
+                tmp = new byte[4 * 1024];
+                while ((size = is.read(tmp)) != -1) {
+                    zipOut.write(tmp, 0, size);
+                }
+                zipOut.flush();
+
+                is = new ByteArrayInputStream(ConfigurationParser.emitConfigurationYAML(hwConfig).getBytes());
+                ze = new ZipEntry("hwConfig.yaml");
+                zipOut.putNextEntry(ze);
+                tmp = new byte[4 * 1024];
+                while ((size = is.read(tmp)) != -1) {
+                    zipOut.write(tmp, 0, size);
+                }
+                zipOut.flush();
+
+                is = new ByteArrayInputStream(LibraryParser.emitLibraryYAML(hwLibrary).getBytes());
+                ze = new ZipEntry("hwLibrary.yaml");
+                zipOut.putNextEntry(ze);
+                tmp = new byte[4 * 1024];
+                while ((size = is.read(tmp)) != -1) {
+                    zipOut.write(tmp, 0, size);
+                }
+                zipOut.flush();
             }
             catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
@@ -678,9 +846,13 @@ public class ROSLabController implements Initializable {
                     if (fos != null) {
                         fos.close();
                     }
+                    if (zipOut != null) {
+                        zipOut.close();
+                    }
                 }
-                catch (Exception ex) {
-
+                catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
             }
         }

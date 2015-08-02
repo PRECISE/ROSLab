@@ -18,10 +18,12 @@ import java.util.Map;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import roslab.model.electronics.Circuit;
 import roslab.model.general.Configuration;
 import roslab.model.general.Library;
 import roslab.model.general.Link;
 import roslab.model.general.Node;
+import roslab.model.mechanics.HWBlock;
 import roslab.model.software.ROSNode;
 import roslab.model.ui.UILink;
 import roslab.model.ui.UINode;
@@ -31,6 +33,37 @@ import roslab.model.ui.UINode;
  */
 public class ConfigurationParser {
     private static Yaml yaml;
+
+    @SuppressWarnings("unchecked")
+    public static Configuration parseConfigurationYAML(String configYAMLStr, String libraryYAMLStr) {
+        return parseConfigurationYAML((Map<String, Object>) new Yaml().load(configYAMLStr), LibraryParser.parseLibraryYAML(libraryYAMLStr));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Configuration parseConfigurationYAML(String configYAMLStr, Library lib) {
+        return parseConfigurationYAML((Map<String, Object>) new Yaml().load(configYAMLStr), lib);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Configuration parseConfigurationYAML(File configFile) {
+        yaml = new Yaml();
+
+        Map<String, Object> yam = new HashMap<String, Object>();
+
+        try {
+            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(configFile.toPath()));
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Library lib = LibraryParser.parseLibraryYAML(Paths.get(configFile.getParent() + "/" + ((String) yam.get("library")) + ".yaml").toFile());
+
+        return parseConfigurationYAML(yam, lib);
+    }
 
     @SuppressWarnings("unchecked")
     public static Library parseRequiredLibrary(File configFile) {
@@ -52,40 +85,26 @@ public class ConfigurationParser {
     }
 
     @SuppressWarnings("unchecked")
-    public static Configuration parseConfigurationYAML(File configFile) {
-        yaml = new Yaml();
-
-        Map<String, Object> yam = new HashMap<String, Object>();
-
-        try {
-            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(configFile.toPath()));
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Library lib = LibraryParser.parseLibraryYAML(Paths.get(configFile.getParent() + "/" + ((String) yam.get("library")) + ".yaml").toFile());
+    private static Configuration parseConfigurationYAML(Map<String, Object> yam, Library lib) {
 
         List<Node> nodes = new ArrayList<Node>();
         List<Link> links = new ArrayList<Link>();
 
         for (Map<String, Object> node : (List<Map<String, Object>>) yam.get("nodes")) {
+            Node n = null;
             switch ((String) node.get("node_type")) {
                 case "ROSNode":
-                    ROSNode n = new ROSNode((String) node.get("name"), (ROSNode) lib.getNode((String) node.get("spec")));
-                    n.setUINode(new UINode(n, Double.parseDouble(node.get("x").toString()), Double.parseDouble(node.get("y").toString())));
-                    nodes.add(n);
+                    n = new ROSNode((String) node.get("name"), (ROSNode) lib.getNode((String) node.get("spec")));
                     break;
                 case "Circuit":
-                    // TODO
+                    n = new Circuit((String) node.get("name"), (Circuit) lib.getNode((String) node.get("spec")));
                     break;
                 case "HWBlock":
-                    // TODO
+                    n = new HWBlock((String) node.get("name"), (HWBlock) lib.getNode((String) node.get("spec")));
                     break;
             }
+            n.setUINode(new UINode(n, Double.parseDouble(node.get("x").toString()), Double.parseDouble(node.get("y").toString())));
+            nodes.add(n);
         }
 
         for (Map<String, Object> link : (List<Map<String, Object>>) yam.get("links")) {

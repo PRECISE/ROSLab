@@ -31,21 +31,7 @@ public class LibraryParser {
     private static Yaml yaml;
 
     @SuppressWarnings("unchecked")
-    public static Library parseLibraryYAML(File libraryFile) {
-        yaml = new Yaml();
-
-        Map<String, Object> yam = new HashMap<String, Object>();
-
-        try {
-            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(libraryFile.toPath()));
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    private static Library parseLibraryYAML(Map<String, Object> yam) {
         List<Node> nodes = new ArrayList<Node>();
 
         for (Map<String, Object> node : (List<Map<String, Object>>) yam.get("nodes")) {
@@ -71,6 +57,30 @@ public class LibraryParser {
         }
 
         return new Library((String) yam.get("name"), nodes);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Library parseLibraryYAML(File libraryFile) {
+        yaml = new Yaml();
+
+        Map<String, Object> yam = new HashMap<String, Object>();
+
+        try {
+            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(libraryFile.toPath()));
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return parseLibraryYAML(yam);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Library parseLibraryYAML(String libraryYAMLStr) {
+        return parseLibraryYAML((Map<String, Object>) new Yaml().load(libraryYAMLStr));
     }
 
     public static String emitLibraryYAML(Library lib) {
