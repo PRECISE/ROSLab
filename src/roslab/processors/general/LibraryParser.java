@@ -36,7 +36,7 @@ public class LibraryParser {
 
         for (Map<String, Object> node : (List<Map<String, Object>>) yam.get("nodes")) {
             switch ((String) node.get("node_type")) {
-                case "ROS":
+                case "ROSNode":
                     ROSNode rn = new ROSNode((String) node.get("name"));
                     if (node.get("custom") != null && (boolean) node.get("custom")) {
                         rn.setCustomFlag(true);
@@ -47,10 +47,10 @@ public class LibraryParser {
                     }
                     nodes.add(rn);
                     break;
-                case "HW":
+                case "HWBlock":
                     // TODO
                     break;
-                case "Elec":
+                case "Circuit":
                     // TODO
                     break;
             }
@@ -99,18 +99,28 @@ public class LibraryParser {
             // Build each node
             Map<String, Object> node = new HashMap<String, Object>();
             node.put("name", n.getName());
-            if (n instanceof ROSNode) {
-                node.put("node_type", "ROS");
-                // Build each topic
-                List<Object> topics = new ArrayList<Object>();
-                for (ROSPort port : ((ROSNode) n).getPorts().values()) {
-                    Map<String, Object> topic = new HashMap<String, Object>();
-                    topic.put("name", port.getTopicName());
-                    topic.put("direction", port.isSubscriber() ? "sub" : "pub");
-                    topic.put("msg_type", port.getType().type);
-                    topics.add(topic);
-                }
-                node.put("topics", topics);
+            switch (n.getClass().getSimpleName()) {
+                case "ROSNode":
+                    node.put("node_type", "ROSNode");
+                    // Build each topic
+                    List<Object> topics = new ArrayList<Object>();
+                    for (ROSPort port : ((ROSNode) n).getPorts().values()) {
+                        Map<String, Object> topic = new HashMap<String, Object>();
+                        topic.put("name", port.getTopicName());
+                        topic.put("direction", port.isSubscriber() ? "sub" : "pub");
+                        topic.put("msg_type", port.getType().type);
+                        topics.add(topic);
+                    }
+                    node.put("topics", topics);
+                    break;
+                case "HWBlock":
+                    node.put("node_type", "HWBlock");
+                    // Build each joint
+                    break;
+                case "Circuit":
+                    node.put("node_type", "Circuit");
+                    // Build each pin
+                    break;
             }
             nodes.add(node);
         }
