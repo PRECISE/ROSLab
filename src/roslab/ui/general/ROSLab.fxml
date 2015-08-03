@@ -18,9 +18,9 @@
             <MenuItem mnemonicParsing="false" onAction="#openConfiguration" text="Open Configuration…" />
             <Menu mnemonicParsing="false" text="Open Recent Configuration" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Save Library" visible="true" />
-            <MenuItem mnemonicParsing="false" text="Save Library As…" visible="true" />
-            <MenuItem disable="false" mnemonicParsing="false" text="Save Configuration" visible="true" />
+            <MenuItem disable="false" mnemonicParsing="false" onAction="#saveLibrary" text="Save Library" visible="false" />
+            <MenuItem mnemonicParsing="false" onAction="#saveLibrary" text="Save Library As…" visible="true" />
+            <MenuItem disable="false" mnemonicParsing="false" onAction="#saveConfiguration" text="Save Configuration" visible="false" />
             <MenuItem mnemonicParsing="false" onAction="#saveConfiguration" text="Save Configuration As…" visible="true" />
             <MenuItem mnemonicParsing="false" text="Close Configuration" />
             <SeparatorMenuItem mnemonicParsing="false" />
@@ -82,9 +82,9 @@
                 </SplitPane>
               </content>
             </Tab>
-            <Tab id="hwTab" fx:id="hwTab" closable="false" onSelectionChanged="#tabChanged" text="Mechanical">
+            <Tab id="hwTab" fx:id="hwTab" closable="false" disable="false" onSelectionChanged="#tabChanged" text="Mechanical">
               <content>
-                <SplitPane dividerPositions="0.11363636363636363" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
+                <SplitPane dividerPositions="0.4744525547445255" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
                   <items>
                     <TreeView fx:id="hwTreeView" />
                     <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="-1.0" prefWidth="-1.0">
