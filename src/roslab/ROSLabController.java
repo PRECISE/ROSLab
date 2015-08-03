@@ -351,9 +351,8 @@ public class ROSLabController implements Initializable {
 
     public void addConfigNode(Node n) {
         UINode uin = new UINode(n, r.nextInt(400), r.nextInt(400));
-        String nodeClassName = uin.getNode().getClass().getName();
         Group grp = null;
-        switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
+        switch (uin.getNode().getClass().getSimpleName()) {
             case "ROSNode":
                 grp = swUIObjects;
                 swConfig.addNode(n);
@@ -387,9 +386,8 @@ public class ROSLabController implements Initializable {
     public void addConfigLink(Link l) {
         UILink uil = new UILink(l);
         l.setUILink(uil);
-        String nodeClassName = l.getSrc().getParent().getClass().getName();
         Group grp = null;
-        switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
+        switch (l.getSrc().getParent().getClass().getSimpleName()) {
             case "ROSNode":
                 swConfig.addLink(l);
                 swTree.addConfigLink(l);
@@ -420,8 +418,7 @@ public class ROSLabController implements Initializable {
     }
 
     public void removeConfigNode(Node n) {
-        String nodeClassName = n.getClass().getName();
-        switch (nodeClassName.substring(nodeClassName.lastIndexOf('.') + 1)) {
+        switch (n.getClass().getSimpleName()) {
             case "ROSNode":
                 for (UIEndpoint e : n.getUINode().getUIEndpoints()) {
                     for (UILink l : e.getUILinks()) {
@@ -493,8 +490,7 @@ public class ROSLabController implements Initializable {
     }
 
     public void removeConfigLink(Link l) {
-        String linkSrcClassName = l.getSrc().getClass().getName();
-        switch (linkSrcClassName.substring(linkSrcClassName.lastIndexOf('.') + 1)) {
+        switch (l.getSrc().getClass().getSimpleName()) {
             case "ROSPort":
                 swConfig.removeLink(l);
                 swTree.removeConfigLink(l);
@@ -638,121 +634,119 @@ public class ROSLabController implements Initializable {
         ZipInputStream zipIs = null;
         ZipEntry zEntry = null;
 
-        // Read the Library YAML files
-        try {
-            fis = new FileInputStream(openFile);
-            zipIs = new ZipInputStream(new BufferedInputStream(fis));
-            while ((zEntry = zipIs.getNextEntry()) != null) {
-                try {
-                    byte[] tmp = new byte[4 * 1024];
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    int size = 0;
-                    while ((size = zipIs.read(tmp)) != -1) {
-                        bos.write(tmp, 0, size);
-                    }
-
-                    bos.flush();
-
-                    switch (zEntry.getName()) {
-                        case "swLibrary.yaml":
-                            swLibrary = LibraryParser.parseLibraryYAML(bos.toString());
-                            break;
-                        case "eeLibrary.yaml":
-                            eeLibrary = LibraryParser.parseLibraryYAML(bos.toString());
-                            break;
-                        case "hwLibrary.yaml":
-                            hwLibrary = LibraryParser.parseLibraryYAML(bos.toString());
-                            break;
-                    }
-
-                    bos.reset();
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            zipIs.close();
-            fis.close();
-        }
-        catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        finally {
+        if (openFile != null) {
+            // Read the Library YAML files
             try {
-                if (fis != null) {
-                    fis.close();
-                }
-                if (zipIs != null) {
-                    zipIs.close();
+                fis = new FileInputStream(openFile);
+                zipIs = new ZipInputStream(new BufferedInputStream(fis));
+                while ((zEntry = zipIs.getNextEntry()) != null) {
+                    try {
+                        byte[] tmp = new byte[4 * 1024];
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        int size = 0;
+                        while ((size = zipIs.read(tmp)) != -1) {
+                            bos.write(tmp, 0, size);
+                        }
+
+                        bos.flush();
+
+                        switch (zEntry.getName()) {
+                            case "swLibrary.yaml":
+                                swLibrary = LibraryParser.parseLibraryYAML(bos.toString());
+                                break;
+                            case "eeLibrary.yaml":
+                                eeLibrary = LibraryParser.parseLibraryYAML(bos.toString());
+                                break;
+                            case "hwLibrary.yaml":
+                                hwLibrary = LibraryParser.parseLibraryYAML(bos.toString());
+                                break;
+                        }
+
+                        bos.reset();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            catch (Exception e) {
+            catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-        }
-
-        // Read the Configuration YAML files
-        try {
-            fis = new FileInputStream(openFile);
-            zipIs = new ZipInputStream(new BufferedInputStream(fis));
-            while ((zEntry = zipIs.getNextEntry()) != null) {
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            finally {
                 try {
-                    byte[] tmp = new byte[4 * 1024];
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    int size = 0;
-                    while ((size = zipIs.read(tmp)) != -1) {
-                        bos.write(tmp, 0, size);
+                    if (fis != null) {
+                        fis.close();
                     }
-
-                    bos.flush();
-
-                    switch (zEntry.getName()) {
-                        case "swConfig.yaml":
-                            swConfig = ConfigurationParser.parseConfigurationYAML(bos.toString(), swLibrary);
-                            break;
-                        case "eeConfig.yaml":
-                            eeConfig = ConfigurationParser.parseConfigurationYAML(bos.toString(), eeLibrary);
-                            break;
-                        case "hwConfig.yaml":
-                            hwConfig = ConfigurationParser.parseConfigurationYAML(bos.toString(), hwLibrary);
-                            break;
+                    if (zipIs != null) {
+                        zipIs.close();
                     }
-
-                    bos.reset();
                 }
                 catch (Exception e) {
+                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
-            zipIs.close();
-            fis.close();
-        }
-        catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        finally {
+
+            // Read the Configuration YAML files
             try {
-                if (fis != null) {
-                    fis.close();
-                }
-                if (zipIs != null) {
-                    zipIs.close();
+                fis = new FileInputStream(openFile);
+                zipIs = new ZipInputStream(new BufferedInputStream(fis));
+                while ((zEntry = zipIs.getNextEntry()) != null) {
+                    try {
+                        byte[] tmp = new byte[4 * 1024];
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        int size = 0;
+                        while ((size = zipIs.read(tmp)) != -1) {
+                            bos.write(tmp, 0, size);
+                        }
+
+                        bos.flush();
+
+                        switch (zEntry.getName()) {
+                            case "swConfig.yaml":
+                                swConfig = ConfigurationParser.parseConfigurationYAML(bos.toString(), swLibrary);
+                                break;
+                            case "eeConfig.yaml":
+                                eeConfig = ConfigurationParser.parseConfigurationYAML(bos.toString(), eeLibrary);
+                                break;
+                            case "hwConfig.yaml":
+                                hwConfig = ConfigurationParser.parseConfigurationYAML(bos.toString(), hwLibrary);
+                                break;
+                        }
+
+                        bos.reset();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            catch (Exception e) {
+            catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+            }
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    if (fis != null) {
+                        fis.close();
+                    }
+                    if (zipIs != null) {
+                        zipIs.close();
+                    }
+                }
+                catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -766,7 +760,7 @@ public class ROSLabController implements Initializable {
         fileChooser.getExtensionFilters().add(extFilter);
 
         // Set initial filename
-        fileChooser.setInitialFileName("MyConfig_" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + ".lab");
+        fileChooser.setInitialFileName("MyConfig_" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + ".lab");
 
         // Show save file dialog
         File saveFile = fileChooser.showSaveDialog(primaryStage);
@@ -845,9 +839,6 @@ public class ROSLabController implements Initializable {
                 try {
                     if (fos != null) {
                         fos.close();
-                    }
-                    if (zipOut != null) {
-                        zipOut.close();
                     }
                 }
                 catch (Exception e) {
