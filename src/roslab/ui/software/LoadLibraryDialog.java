@@ -24,6 +24,7 @@ import roslab.model.software.ROSMsgType;
 import roslab.model.software.ROSNode;
 import roslab.model.software.ROSPort;
 import roslab.model.software.ROSTopic;
+import roslab.processors.general.LibraryParser;
 
 @SuppressWarnings("deprecation")
 public class LoadLibraryDialog implements Initializable {
@@ -81,9 +82,8 @@ public class LoadLibraryDialog implements Initializable {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("resources", "platforms"))) {
             for (Path entry : stream) {
             	String fileName = entry.getFileName().toString();
-            	int i = fileName.lastIndexOf('.');
-            	if (i > 0 && "yaml".equals(fileName.substring(i+1))) {
-            		libraries.add(fileName.substring(0, i));
+            	if (LibraryParser.isValidLibraryYAML(entry.toFile())) {
+            		libraries.add(fileName.substring(0, fileName.lastIndexOf('.')));
             	}
             }
         }

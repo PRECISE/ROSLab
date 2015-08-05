@@ -32,6 +32,11 @@ public class LibraryParser {
 
     @SuppressWarnings("unchecked")
     private static Library parseLibraryYAML(Map<String, Object> yam) {
+        // Check if this is a valid Library file
+        if (!((String) ((Map<String, Object>) yam.get("format")).get("type")).equals("Library")) {
+            return null;
+        }
+
         List<Node> nodes = new ArrayList<Node>();
 
         for (Map<String, Object> node : (List<Map<String, Object>>) yam.get("nodes")) {
@@ -140,5 +145,21 @@ public class LibraryParser {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static boolean isValidLibraryYAML(File yamlFile) {
+        yaml = new Yaml();
+
+        Map<String, Object> yam = new HashMap<String, Object>();
+
+        try {
+            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(yamlFile.toPath()));
+        }
+        catch (Exception e) {
+            return false;
+        }
+
+        return ((String) ((Map<String, Object>) yam.get("format")).get("type")).equals("Library");
     }
 }

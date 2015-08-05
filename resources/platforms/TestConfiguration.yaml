@@ -1,3 +1,6 @@
+format:
+    type: Configuration
+    version: 1.0
 name: TestConfiguration
 library: TestLibrary
 

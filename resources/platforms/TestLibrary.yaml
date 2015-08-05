@@ -1,38 +1,41 @@
+format:
+    type: Library
+    version: 1.0
 name: TestLibrary
 
 nodes:
 - name: IMU1
-  node_type: ROS
+  node_type: ROSNode
   topics:
     - name: /imu1
       direction: pub
       msg_type: Imu
 - name: IMU2
-  node_type: ROS
+  node_type: ROSNode
   topics:
     - name: /imu2
       direction: pub
       msg_type: Imu
 - name: GPS
-  node_type: ROS
+  node_type: ROSNode
   topics:
     - name: /gps
       direction: pub
       msg_type: NavSatFix
 - name: Joystick
-  node_type: ROS
+  node_type: ROSNode
   topics:
     - name: /joy
       direction: pub
       msg_type: Joy
 - name: Cmd_Vel
-  node_type: ROS
+  node_type: ROSNode
   topics:
     - name: /cmd_vel
       direction: sub
       msg_type: Twist
 - name: Controller
-  node_type: ROS
+  node_type: ROSNode
   custom: True
   topics:
     - name: /imu1
