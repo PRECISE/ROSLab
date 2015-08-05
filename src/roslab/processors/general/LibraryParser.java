@@ -29,6 +29,7 @@ import roslab.model.software.ROSTopic;
  */
 public class LibraryParser {
     private static Yaml yaml;
+    private static String LIBRARY_YAML_VERSION = "1.0";
 
     @SuppressWarnings("unchecked")
     private static Library parseLibraryYAML(Map<String, Object> yam) {
@@ -94,8 +95,15 @@ public class LibraryParser {
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         yaml = new Yaml(options);
 
-        // Start making YAML object, set the name element
         Map<String, Object> yam = new HashMap<String, Object>();
+
+        // Start making YAML object, set the format element
+        Map<String, Object> format = new HashMap<String, Object>();
+        format.put("type", "Library");
+        format.put("version", LIBRARY_YAML_VERSION);
+        yam.put("format", format);
+
+        // Set the name element
         yam.put("name", lib.getName());
 
         // Build the nodes element

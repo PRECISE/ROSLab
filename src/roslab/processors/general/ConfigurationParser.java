@@ -33,6 +33,7 @@ import roslab.model.ui.UINode;
  */
 public class ConfigurationParser {
     private static Yaml yaml;
+    private static String CONFIG_YAML_VERSION = "1.0";
 
     @SuppressWarnings("unchecked")
     public static Configuration parseConfigurationYAML(String configYAMLStr, String libraryYAMLStr) {
@@ -143,8 +144,15 @@ public class ConfigurationParser {
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         yaml = new Yaml(options);
 
-        // Start making YAML object, set the name element
         Map<String, Object> yam = new HashMap<String, Object>();
+
+        // Set the format element
+        Map<String, Object> format = new HashMap<String, Object>();
+        format.put("type", "Configuration");
+        format.put("version", CONFIG_YAML_VERSION);
+        yam.put("format", format);
+
+        // Set the name element
         yam.put("name", config.getName());
         yam.put("library", config.getLibrary().getName());
 
