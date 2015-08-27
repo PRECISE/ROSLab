@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -606,13 +607,14 @@ public class EagleSchematic {
         }
     }
 
-    public static Circuit buildCircuitFromSchematic(EagleSchematic sch) {
-        Circuit c = new Circuit(sch.getName());
-        c.setSchematic(sch);
-        for (String net : sch.getNets().keySet()) {
+    public static Circuit buildCircuitFromSchematic(Path sch) {
+        EagleSchematic es = new EagleSchematic(sch.toFile());
+        Circuit c = new Circuit(es.getName());
+        c.setSchematic(es);
+        for (String net : es.getNets().keySet()) {
             Pin p = Pin.getPinFromString(net, c);
             p.setNet(net);
-            p.setRequired(sch.getRequiredNets().contains(net));
+            p.setRequired(es.getRequiredNets().contains(net));
             c.addPin(p);
         }
         return c;

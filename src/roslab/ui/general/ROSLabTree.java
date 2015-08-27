@@ -381,7 +381,7 @@ public class ROSLabTree extends TreeItem<String> {
                                 }
                             }
                             Dialogs.create().owner(controller.getStage()).title("Missing Required Links")
-                            .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
+                                    .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
                         }
                         else if (schematics.size() > 1) {
                             EagleSchematic.connectWires(configuration.getLinks());
@@ -504,10 +504,5 @@ public class ROSLabTree extends TreeItem<String> {
 
     public void removeConfigLink(Link l) {
         configTree.removeLink(l);
-    }
-
-    public void switchLibrary(String libType) {
-        // TODO Handle switching of library node contents based on desired
-        // library type (specified by the input libType string).
     }
 }

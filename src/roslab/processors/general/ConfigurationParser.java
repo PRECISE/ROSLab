@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,13 +46,13 @@ public class ConfigurationParser {
     }
 
     @SuppressWarnings("unchecked")
-    public static Configuration parseConfigurationYAML(File configFile) {
+    public static Configuration parseConfigurationYAML(Path configPath, Library lib) {
         yaml = new Yaml();
 
         Map<String, Object> yam = new HashMap<String, Object>();
 
         try {
-            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(configFile.toPath()));
+            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(configPath));
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -61,7 +61,26 @@ public class ConfigurationParser {
             e.printStackTrace();
         }
 
-        return parseConfigurationYAML(yam, parseRequiredLibrary(configFile));
+        return parseConfigurationYAML(yam, lib);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Configuration parseConfigurationYAML(Path configPath) {
+        yaml = new Yaml();
+
+        Map<String, Object> yam = new HashMap<String, Object>();
+
+        try {
+            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(configPath));
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return parseConfigurationYAML(yam, parseRequiredLibrary(configPath));
     }
 
     @SuppressWarnings("unchecked")
@@ -120,13 +139,13 @@ public class ConfigurationParser {
     }
 
     @SuppressWarnings("unchecked")
-    protected static Library parseRequiredLibrary(File configFile) {
+    protected static Library parseRequiredLibrary(Path configPath) {
         yaml = new Yaml();
 
         Map<String, Object> yam = new HashMap<String, Object>();
 
         try {
-            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(configFile.toPath()));
+            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(configPath));
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -135,7 +154,7 @@ public class ConfigurationParser {
             e.printStackTrace();
         }
 
-        return LibraryParser.parseLibraryYAML(Paths.get(configFile.getParent() + "/" + ((String) yam.get("library")) + ".yaml").toFile());
+        return LibraryParser.parseLibraryYAML(configPath.resolve(((String) yam.get("library")) + ".yaml"));
     }
 
     public static String emitConfigurationYAML(Configuration config) {
@@ -200,13 +219,13 @@ public class ConfigurationParser {
     }
 
     @SuppressWarnings("unchecked")
-    public static boolean isValidConfigurationYAML(File yamlFile) {
+    public static boolean isValidConfigurationYAML(Path yamlPath) {
         yaml = new Yaml();
 
         Map<String, Object> yam = new HashMap<String, Object>();
 
         try {
-            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(yamlFile.toPath()));
+            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(yamlPath));
         }
         catch (Exception e) {
             return false;

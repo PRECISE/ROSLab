@@ -5,8 +5,6 @@ package roslab.processors.general;
 
 import static org.junit.Assert.assertTrue;
 
-import java.nio.file.Paths;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,7 +30,7 @@ public class ConfigurationParserTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        lib = LibraryParser.parseLibraryYAML(Paths.get("resources", "platforms", "TestLibrary.yaml").toFile());
+        lib = LibraryParser.parseLibraryYAML(LibraryParser.SW_LIBRARY_PATH.resolve("TestLibrary.yaml"));
         config.setLibrary(lib);
 
         // Build nodes
@@ -78,24 +76,20 @@ public class ConfigurationParserTest {
     }
 
     /**
-     * Test method for
-     * {@link roslab.processors.general.ConfigurationParser#parseRequiredLibrary(java.io.File)}
-     * .
+     * Test method for {@link roslab.processors.general.ConfigurationParser#parseRequiredLibrary(java.io.File)} .
      */
     @Test
     public void testParseRequiredLibrary() {
-        Library testLib = ConfigurationParser.parseRequiredLibrary(Paths.get("resources", "platforms", "TestConfiguration.yaml").toFile());
+        Library testLib = ConfigurationParser.parseRequiredLibrary(LibraryParser.SW_LIBRARY_PATH.resolve("TestConfiguration.yaml"));
         assertTrue(LibraryParser.emitLibraryYAML(testLib).equals(LibraryParser.emitLibraryYAML(lib)));
     }
 
     /**
-     * Test method for
-     * {@link roslab.processors.general.ConfigurationParser#parseRequiredLibrary(java.io.File)}
-     * .
+     * Test method for {@link roslab.processors.general.ConfigurationParser#parseRequiredLibrary(java.io.File)} .
      */
     @Test
     public void testParseConfigurationYAML() {
-        Configuration testConfig = ConfigurationParser.parseConfigurationYAML(Paths.get("resources", "platforms", "TestConfiguration.yaml").toFile());
+        Configuration testConfig = ConfigurationParser.parseConfigurationYAML(LibraryParser.SW_LIBRARY_PATH.resolve("TestConfiguration.yaml"));
         assertTrue(ConfigurationParser.emitConfigurationYAML(testConfig).equals(ConfigurationParser.emitConfigurationYAML(config)));
     }
 }

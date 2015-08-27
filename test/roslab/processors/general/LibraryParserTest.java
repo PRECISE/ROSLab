@@ -5,7 +5,6 @@ package roslab.processors.general;
 
 import static org.junit.Assert.assertTrue;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -86,13 +85,11 @@ public class LibraryParserTest {
     }
 
     /**
-     * Test method for
-     * {@link roslab.processors.general.LibraryParser#LibraryParser(java.io.File)}
-     * .
+     * Test method for {@link roslab.processors.general.LibraryParser#LibraryParser(java.io.File)} .
      */
     @Test
     public void testLibraryParser() {
-        Library testLib = LibraryParser.parseLibraryYAML(Paths.get("resources", "platforms", "TestLibrary.yaml").toFile());
+        Library testLib = LibraryParser.parseLibraryYAML(LibraryParser.SW_LIBRARY_PATH.resolve("TestLibrary.yaml"));
         assertTrue(LibraryParser.emitLibraryYAML(testLib).equals(LibraryParser.emitLibraryYAML(lib)));
     }
 

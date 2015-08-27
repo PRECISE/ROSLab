@@ -3,7 +3,6 @@
  */
 package roslab.model.general;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -139,11 +138,12 @@ public class Library {
         return nodes.remove(n);
     }
 
-    public void loadElectronics() {
+    public static Library loadBaseElectronicsLibrary() {
+        Library lib = new Library("Base");
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("resources", "electronics_lib"))) {
             for (Path entry : stream) {
                 if (entry.getFileName().toString().endsWith(".sch")) {
-                    addNode(EagleSchematic.buildCircuitFromSchematic(new EagleSchematic(entry.toFile())));
+                    lib.addNode(EagleSchematic.buildCircuitFromSchematic(entry));
                 }
             }
         }
@@ -152,21 +152,7 @@ public class Library {
             // In this snippet, it can only be thrown by newDirectoryStream.
             System.err.println(x);
         }
-    }
-
-    /**
-     * Clear the library contents and load nodes from input platform.
-     *
-     * @param platformName
-     *            the name of the platform to load
-     */
-    public void loadPlatform(String platformName) {
-        Library lib = LibraryParser.parseLibraryYAML(Paths.get("resources", "platforms", platformName + ".yaml").toFile());
-        this.name = lib.name;
-        this.nodes.clear();
-        for (Node n : lib.nodes) {
-            addNode(n);
-        }
+        return lib;
     }
 
     /**
@@ -175,8 +161,8 @@ public class Library {
      * @param libraryFile
      *            the name of the Library file to load
      */
-    public void loadLibrary(File libraryFile) {
-        Library lib = LibraryParser.parseLibraryYAML(libraryFile);
+    public void loadLibrary(Path libraryPath) {
+        Library lib = LibraryParser.parseLibraryYAML(libraryPath);
         this.name = lib.name;
         this.nodes.clear();
         for (Node n : lib.nodes) {

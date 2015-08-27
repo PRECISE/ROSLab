@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,12 +19,14 @@ import java.util.Map;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import roslab.model.electronics.Circuit;
 import roslab.model.general.Library;
 import roslab.model.general.Node;
 import roslab.model.software.ROSMsgType;
 import roslab.model.software.ROSNode;
 import roslab.model.software.ROSPort;
 import roslab.model.software.ROSTopic;
+import roslab.processors.electronics.EagleSchematic;
 
 /**
  * @author Peter Gebhard
@@ -30,6 +34,9 @@ import roslab.model.software.ROSTopic;
 public class LibraryParser {
     private static Yaml yaml;
     private static String LIBRARY_YAML_VERSION = "1.0";
+    public static Path SW_LIBRARY_PATH = Paths.get("resources", "platforms");
+    public static Path EE_LIBRARY_PATH = Paths.get("resources", "electronics_lib");
+    public static Path HW_LIBRARY_PATH = Paths.get("resources", "mechanics_lib");
 
     @SuppressWarnings("unchecked")
     private static Library parseLibraryYAML(Map<String, Object> yam) {
@@ -57,7 +64,7 @@ public class LibraryParser {
                     // TODO
                     break;
                 case "Circuit":
-                    // TODO
+                    nodes.add(EagleSchematic.buildCircuitFromSchematic(HW_LIBRARY_PATH.resolve((String) node.get("schematic"))));
                     break;
             }
         }
@@ -66,13 +73,13 @@ public class LibraryParser {
     }
 
     @SuppressWarnings("unchecked")
-    public static Library parseLibraryYAML(File libraryFile) {
+    public static Library parseLibraryYAML(Path libraryPath) {
         yaml = new Yaml();
 
         Map<String, Object> yam = new HashMap<String, Object>();
 
         try {
-            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(libraryFile.toPath()));
+            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(libraryPath));
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -97,7 +104,7 @@ public class LibraryParser {
 
         Map<String, Object> yam = new HashMap<String, Object>();
 
-        // Start making YAML object, set the format element
+        // Set the format element
         Map<String, Object> format = new HashMap<String, Object>();
         format.put("type", "Library");
         format.put("version", LIBRARY_YAML_VERSION);
@@ -132,7 +139,7 @@ public class LibraryParser {
                     break;
                 case "Circuit":
                     node.put("node_type", "Circuit");
-                    // Build each pin
+                    node.put("schematic", ((Circuit) n).getSchematic().getSchematicFile().getName());
                     break;
             }
             nodes.add(node);
@@ -156,13 +163,13 @@ public class LibraryParser {
     }
 
     @SuppressWarnings("unchecked")
-    public static boolean isValidLibraryYAML(File yamlFile) {
+    public static boolean isValidLibraryYAML(Path yamlPath) {
         yaml = new Yaml();
 
         Map<String, Object> yam = new HashMap<String, Object>();
 
         try {
-            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(yamlFile.toPath()));
+            yam = (Map<String, Object>) yaml.load(Files.newBufferedReader(yamlPath));
         }
         catch (Exception e) {
             return false;

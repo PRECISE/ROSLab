@@ -5,7 +5,6 @@ import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -14,21 +13,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import org.controlsfx.dialog.Dialogs;
-
 import roslab.ROSLabController;
-import roslab.model.software.ROSMsgType;
-import roslab.model.software.ROSNode;
-import roslab.model.software.ROSPort;
-import roslab.model.software.ROSTopic;
 import roslab.processors.general.LibraryParser;
 
-@SuppressWarnings("deprecation")
 public class LoadLibraryDialog implements Initializable {
-	
+
     @FXML
     private ComboBox<String> libraryBox;
 
@@ -60,7 +50,7 @@ public class LoadLibraryDialog implements Initializable {
      */
     @FXML
     private void handleLoad() {
-    	controller.loadSWComponents(libraryBox.getValue().toString());
+        controller.loadSWLibrary(LibraryParser.SW_LIBRARY_PATH.resolve(libraryBox.getValue().toString() + ".yaml"));
         addClicked = true;
         dialogStage.close();
     }
@@ -76,25 +66,25 @@ public class LoadLibraryDialog implements Initializable {
     public void setRLController(ROSLabController rosLabController) {
         this.controller = rosLabController;
     }
-    
+
     private ArrayList<String> getLibraries() {
-    	ArrayList<String> libraries = new ArrayList<String>();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("resources", "platforms"))) {
+        ArrayList<String> libraries = new ArrayList<String>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(LibraryParser.SW_LIBRARY_PATH)) {
             for (Path entry : stream) {
-            	String fileName = entry.getFileName().toString();
-            	if (LibraryParser.isValidLibraryYAML(entry.toFile())) {
-            		libraries.add(fileName.substring(0, fileName.lastIndexOf('.')));
-            	}
+                String fileName = entry.getFileName().toString();
+                if (LibraryParser.isValidLibraryYAML(entry)) {
+                    libraries.add(fileName.substring(0, fileName.lastIndexOf('.')));
+                }
             }
         }
         catch (IOException x) {
             System.err.println(x);
         }
-    	return libraries;
+        return libraries;
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {  	
+    public void initialize(URL location, ResourceBundle resources) {
         ObservableList<String> libraries = FXCollections.observableArrayList(getLibraries());
         FXCollections.sort(libraries);
         libraryBox.setItems(libraries);

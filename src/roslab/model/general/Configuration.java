@@ -92,6 +92,10 @@ public class Configuration {
      */
     public void setLibrary(Library lib) {
         this.lib = lib;
+
+        // Clear nodes and links now that there's a new library
+        this.nodes.clear();
+        this.links.clear();
     }
 
     public boolean addNode(Node n) {
