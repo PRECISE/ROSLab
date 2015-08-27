@@ -317,6 +317,26 @@ public class UIEndpoint extends Circle {
         }
     }
 
+    public void updateX(MouseEvent mouseEvent) {
+        this.setCenterX(mouseEvent.getX() + mousexCircle);
+        endpointText.setX(mouseEvent.getX() + mousexText);
+        addPortLine.setStartX(mouseEvent.getX() + mousexCircle);
+        addPortLine.setEndX(mouseEvent.getX() + mousexCircle);
+        for (UILink l : uilinks) {
+            l.updateX(mouseEvent, this);
+        }
+    }
+
+    public void updateY(MouseEvent mouseEvent) {
+        this.setCenterY(mouseEvent.getY() + mouseyCircle);
+        endpointText.setY(mouseEvent.getY() + mouseyText);
+        addPortLine.setStartY(mouseEvent.getY() + mouseyCircle);
+        addPortLine.setEndY(mouseEvent.getY() + mouseyCircle);
+        for (UILink l : uilinks) {
+            l.updateY(mouseEvent, this);
+        }
+    }
+
     public void setCircleStyle(boolean isSubscriber) {
         if (isSubscriber) {
             setStyle("-fx-fill:yellow");

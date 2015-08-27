@@ -7,13 +7,10 @@ import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
-import javafx.stage.DirectoryChooser;
 
 import org.controlsfx.dialog.Dialogs;
 
@@ -313,48 +310,39 @@ public class ROSLabTree extends TreeItem<String> {
                         }
                     }
                 });
-                MenuItem packageItem = new MenuItem("Generate ROS package");
-                packageItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle("ROSLab");
-                        alert.setHeaderText("Select Workspace");
-                        alert.setContentText("Please select your initialized ROS workspace directory.");
-                        alert.showAndWait();
-                        DirectoryChooser directoryChooser = new DirectoryChooser();
-                        directoryChooser.setTitle("Select ROS Workspace directory");
-                        File file = directoryChooser.showDialog(controller.getStage());
-                        if (file != null) {
-                            System.out.println(file.getPath());
-                        }
-                        // prompt for workspace location
-                        // catkin_create_pkg [package_name] [dependency
-                        // messages]* roscpp rospy std_msgs
-                        for (Node n : configuration.getNodesOfType(ROSNode.class)) {
-                            try {
-                                if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
-                                    ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
-                                }
-                            }
-                            catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        // put cpp in package's src folder
-                        // modify CMakeLists.txt (in the package, not the
-                        // workspace)->
-                    }
-                });
-                // TODO This item is not yet included in ContextMenu
-                MenuItem m2Item = new MenuItem("Generate multi-system container and code...");
-                m2Item.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        // TODO Pop up external interface dialog
-                    }
-                });
-                menu = new ContextMenu(sourceItem, packageItem);
+                // MenuItem packageItem = new MenuItem("Generate ROS package");
+                // packageItem.setOnAction(new EventHandler<ActionEvent>() {
+                // @Override
+                // public void handle(ActionEvent event) {
+                // Alert alert = new Alert(AlertType.INFORMATION);
+                // alert.setTitle("ROSLab");
+                // alert.setHeaderText("Select Workspace");
+                // alert.setContentText("Please select your initialized ROS workspace directory.");
+                // alert.showAndWait();
+                // DirectoryChooser directoryChooser = new DirectoryChooser();
+                // directoryChooser.setTitle("Select ROS Workspace directory");
+                // File file = directoryChooser.showDialog(controller.getStage());
+                // if(file != null) {
+                // System.out.println(file.getPath());
+                // }
+                // //prompt for workspace location
+                // //catkin_create_pkg [package_name] [dependency messages]* roscpp rospy std_msgs
+                // for (Node n : configuration.getNodesOfType(ROSNode.class)) {
+                // try {
+                // if (n.getAnnotation("custom-type") != null && n.getAnnotation("custom-type").equals("controller")) {
+                // ROSNodeCodeGenerator.buildNode((ROSNode) n, new File(n.getName() + ".cpp"));
+                // }
+                // }
+                // catch (IOException e) {
+                // e.printStackTrace();
+                // }
+                // }
+                // //put cpp in package's src folder
+                // //modify CMakeLists.txt (in the package, not the workspace)->
+                // }
+                // });
+                // return new ContextMenu(sourceItem, packageItem);
+                return new ContextMenu(sourceItem);
             }
             else if (configuration == controller.getEEConfig()) {
                 MenuItem circuitItem = new MenuItem("Generate merged circuit");
@@ -381,7 +369,7 @@ public class ROSLabTree extends TreeItem<String> {
                                 }
                             }
                             Dialogs.create().owner(controller.getStage()).title("Missing Required Links")
-                                    .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
+                            .masthead("The following Circuit nodes are missing required links").message(circuitString).showError();
                         }
                         else if (schematics.size() > 1) {
                             EagleSchematic.connectWires(configuration.getLinks());

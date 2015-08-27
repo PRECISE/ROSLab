@@ -9,6 +9,7 @@ package roslab.ui.general;
  * @author Peter Gebhard
  */
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -38,6 +39,7 @@ public class NewNodeDialog implements Initializable {
     private ObservableList<Node> nodes;
 
     private ROSLabController controller;
+    private ArrayList<String> configNodeNames;
 
     /**
      * Sets the stage of this dialog.
@@ -89,6 +91,13 @@ public class NewNodeDialog implements Initializable {
             errorMessage += "No name given!\n";
         }
 
+        for (String n : configNodeNames) {
+            if (n.toLowerCase().equals(nameField.getText().toLowerCase())) {
+                errorMessage += "Node name already exists in configuration!\n";
+                break;
+            }
+        }
+
         if (nodeBox.getValue() == null) {
             errorMessage += "No node type selected!\n";
         }
@@ -110,6 +119,10 @@ public class NewNodeDialog implements Initializable {
 
     public void setRLController(ROSLabController rosLabController) {
         this.controller = rosLabController;
+    }
+
+    public void setConfigNodeNames(ArrayList<String> configNodeNames) {
+        this.configNodeNames = configNodeNames;
     }
 
     @Override

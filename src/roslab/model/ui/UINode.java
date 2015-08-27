@@ -12,6 +12,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -47,6 +48,7 @@ public class UINode extends Rectangle {
     List<UIEndpoint> endpoints = new ArrayList<UIEndpoint>();
     boolean inNode;
     ContextMenu rightClickMenu;
+    ScrollPane scrollPane;
 
     // X AND Y position of mouse during selection
     double mousex = 0;
@@ -122,17 +124,38 @@ public class UINode extends Rectangle {
         this.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                setX(mouseEvent.getX() + mousex);
-                setY(mouseEvent.getY() + mousey);
-                nodeText.setX(mouseEvent.getX() + mousexName);
-                nodeText.setY(mouseEvent.getY() + mouseyName);
-                if (rateText != null) {
-                    rateText.setX(mouseEvent.getX() + mousexRate);
-                    rateText.setY(mouseEvent.getY() + mouseyRate);
+                if (mouseEvent.getX() + mousex > 0) {
+                    setX(mouseEvent.getX() + mousex);
+                    nodeText.setX(mouseEvent.getX() + mousexName);
+                    if (rateText != null) {
+                        rateText.setX(mouseEvent.getX() + mousexRate);
+                    }
+                    for (UIEndpoint e : endpoints) {
+                        e.updateX(mouseEvent);
+                    }
                 }
-                for (UIEndpoint e : endpoints) {
-                    e.updateXY(mouseEvent);
+                if (mouseEvent.getY() + mousey > 0) {
+                    setY(mouseEvent.getY() + mousey);
+                    nodeText.setY(mouseEvent.getY() + mouseyName);
+                    if (rateText != null) {
+                        rateText.setY(mouseEvent.getY() + mouseyRate);
+                    }
+                    for (UIEndpoint e : endpoints) {
+                        e.updateY(mouseEvent);
+                    }
                 }
+                // if(scrollPane.getViewportBounds().getWidth() - mouseEvent.getX() <= 20) {
+                // // System.out.println("VP: " + scrollPane.getViewportBounds().getWidth());
+                // // System.out.println("M: " + mouseEvent.getX());
+                // scrollPane.setHmax(scrollPane.getHmax() + 0.01);
+                // scrollPane.setHvalue(scrollPane.getHmax() + 0.01);
+                // System.out.println("Max: " + scrollPane.getHmax());
+                //
+                // // scrollPane.setHmax(1.1);
+                // // scrollPane.setHvalue(1.1);
+                // }
+                // System.out.println("Val: " + scrollPane.getHvalue());
+
             }
         });
 
@@ -497,6 +520,10 @@ public class UINode extends Rectangle {
         for (UIEndpoint e : endpoints) {
             e.removeFromGroup(g);
         }
+    }
+
+    public void setScrollPane(ScrollPane scrollPane) {
+        this.scrollPane = scrollPane;
     }
 
 }

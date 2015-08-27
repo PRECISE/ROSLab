@@ -118,6 +118,24 @@ public class UILink extends Line {
         }
     }
 
+    public void updateX(MouseEvent mouseEvent, UIEndpoint uiEndpoint) {
+        if (uiEndpoint == this.src) {
+            this.setStartX(mouseEvent.getX() + mousex);
+        }
+        else {
+            this.setEndX(mouseEvent.getX() + mousex);
+        }
+    }
+
+    public void updateY(MouseEvent mouseEvent, UIEndpoint uiEndpoint) {
+        if (uiEndpoint == this.src) {
+            this.setStartY(mouseEvent.getY() + mousey);
+        }
+        else {
+            this.setEndY(mouseEvent.getY() + mousey);
+        }
+    }
+
     public void removeFromGroup(Group g) {
         g.getChildren().remove(this);
     }

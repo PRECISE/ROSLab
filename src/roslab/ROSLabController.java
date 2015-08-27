@@ -32,6 +32,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeCell;
@@ -135,6 +136,9 @@ public class ROSLabController implements Initializable {
     Configuration eeConfig;
     ContextMenu addEENodeMenu;
     Group eeUIObjects = new Group();
+
+    @FXML
+    ScrollPane swScroll;
 
     Random r = new Random();
     Rectangle selectionRectangle;
@@ -364,6 +368,7 @@ public class ROSLabController implements Initializable {
                 swTree.addConfigNode(n);
                 refreshSWConfigLinks();
                 grp = swUIObjects;
+                uin.setScrollPane(swScroll);
                 break;
             case "HWBlock":
                 hwConfig.addNode(n);
@@ -1081,8 +1086,11 @@ public class ROSLabController implements Initializable {
             NewNodeDialog controller = loader.getController();
             controller.setDialogStage(dialogStage);
             ArrayList<Node> nodeTypes = new ArrayList<Node>(library.getNodes());
+            ArrayList<String> configNodeNames = new ArrayList<String>();
+            Configuration config = null;
             if (library == swLibrary) {
                 for (Node configNode : swConfig.getNodes()) {
+                    configNodeNames.add(configNode.getName());
                     if ("controller".equals(configNode.getAnnotation("custom-type"))) {
                         Node toRemove = null;
                         for (Node n : nodeTypes) {
@@ -1093,7 +1101,18 @@ public class ROSLabController implements Initializable {
                         nodeTypes.remove(toRemove);
                     }
                 }
+                config = swConfig;
             }
+            else if (library == hwLibrary) {
+                config = hwConfig;
+            }
+            else if (library == eeLibrary) {
+                config = eeConfig;
+            }
+            for (Node configNode : config.getNodes()) {
+                configNodeNames.add(configNode.getName());
+            }
+            controller.setConfigNodeNames(configNodeNames);
             controller.setNodes(nodeTypes);
             controller.setRLController(this);
 

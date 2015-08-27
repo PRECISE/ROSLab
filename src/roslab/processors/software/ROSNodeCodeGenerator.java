@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
 
@@ -34,21 +37,31 @@ public class ROSNodeCodeGenerator {
         // Define templates
         StringTemplate nodeTemplate = group.getInstanceOf("ROSNode");
 
+        String warnings = "";
+
         // Generate Includes
         String includes = "#include <stdlib.h>\n#include <signal.h>\n#include <ros/ros.h>\n";
         List<String> includesList = new ArrayList<String>();
         for (ROSPort port : node.getPorts().values()) {
-        	if (port.getLinks().size() == 0) {
-        		System.out.println("Warning: " + node.getName() +  "_node. No link on port \"" 
-        				+ port.getName() + "\". Code for this port not generated.");
-        		continue;
-        	}
+            if (port.getLinks().size() == 0) {
+                warnings += node.getName() + "_node: No link on port \"" + port.getName() + "\". Code for this port not generated.\n";
+                System.out.println(node.getName() + "_node: No link on port \"" + port.getName() + "\". Code for this port not generated.\n");
+                continue;
+            }
             StringTemplate includeTemplate = group.getInstanceOf("ROSInclude");
             includeTemplate.setAttribute("include_file", ROSMsgType.typeMap.get(port.getType()) + "/" + port.getType().toString());
             if (!includesList.contains(includeTemplate.toString())) {
                 includesList.add(includeTemplate.toString());
             }
         }
+
+        if (!"".equals(warnings)) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setContentText(warnings);
+            alert.showAndWait();
+        }
+
         // Sort list of Includes
         Collections.sort(includesList);
         // Generate string output of Includes
@@ -62,10 +75,12 @@ public class ROSNodeCodeGenerator {
         String publishers = "";
         String publishCommands = "";
         for (ROSPort port : node.getPublisherPorts().values()) {
-        	if (port.getLinks().size() == 0) continue;
+            if (port.getLinks().size() == 0) {
+                continue;
+            }
             StringTemplate publisherTemplate = group.getInstanceOf("ROSPublisher");
             StringTemplate publishCommandTemplate = group.getInstanceOf("ROSPublishCommand");
-            String pName = port.getName().replace("/","");
+            String pName = port.getName().replace("/", "");
             publisherTemplate.setAttribute("port_name", pName);
             publisherTemplate.setAttribute("port_type", ROSMsgType.typeMap.get(port.getType()) + "::" + port.getType().toString());
             publisherTemplate.setAttribute("port_topic", port.getTopicName());
@@ -81,10 +96,12 @@ public class ROSNodeCodeGenerator {
         String subscribers = "";
         String subscriberCallbacks = "";
         for (ROSPort port : node.getSubscriberPorts().values()) {
-        	if (port.getLinks().size() == 0) continue;
+            if (port.getLinks().size() == 0) {
+                continue;
+            }
             StringTemplate subscriberTemplate = group.getInstanceOf("ROSSubscriber");
             StringTemplate subscriberCallbackTemplate = group.getInstanceOf("ROSCallback");
-            String pName = port.getName().replace("/","");
+            String pName = port.getName().replace("/", "");
             subscriberTemplate.setAttribute("port_name", pName);
             subscriberTemplate.setAttribute("port_type", ROSMsgType.typeMap.get(port.getType()) + "::" + port.getType().toString());
             subscriberTemplate.setAttribute("port_topic", port.getTopicName());

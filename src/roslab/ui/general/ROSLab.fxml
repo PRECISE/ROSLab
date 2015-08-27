@@ -73,9 +73,9 @@
                 <SplitPane dividerPositions="0.310948905109489" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
                   <items>
                     <TreeView fx:id="swTreeView" />
-                    <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="517.0" prefWidth="309.0">
+                    <ScrollPane fx:id="swScroll" fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="517.0" prefWidth="309.0">
                       <content>
-                        <AnchorPane fx:id="swPane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                        <AnchorPane fx:id="swPane" prefHeight="200.0" prefWidth="200.0" />
                       </content>
                     </ScrollPane>
                   </items>
